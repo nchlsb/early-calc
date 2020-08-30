@@ -125,13 +125,22 @@
 
 	let riemannRectangles: Rectangle[]
 	$: riemannRectangles = range(numberRectangles).map(n => {
-		const x = lowerBound + (n * (upperBound - lowerBound) / numberRectangles);			
-		return {
-			height: f(x),
+		const x = lowerBound + (n * (upperBound - lowerBound) / numberRectangles);
+		const y = f(x);	
+	
+		return (y > 0)? {
+			height: y,
 			width: dx,
 			lowerLeftCorner: {x: x, y: 0}
+		} 
+		:
+		{ // correct rectangles with f(x) < 0 
+			height: -y,
+			width: dx,
+			lowerLeftCorner: {x: x, y: y}
 		};
 	});
+
 </script>
 
 <main>
@@ -159,13 +168,15 @@
 			<line stroke="black" fill="none" x1="0" y1={lowerBound} x2="0" y2={upperBound} />
 
 			{#each riemannRectangles as rectangle}
-				<rect
-					class="riemann-rectangle"
-					x={rectangle.lowerLeftCorner.x}
-					y={rectangle.lowerLeftCorner.y}
-					width={rectangle.width}
-					height={rectangle.height}
-				/>
+				{#if true}
+					<rect
+						class="riemann-rectangle"
+						x={rectangle.lowerLeftCorner.x}
+						y={rectangle.lowerLeftCorner.y}
+						width={rectangle.width}
+						height={rectangle.height}
+					/>
+				{/if}
 			{/each}
 			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
 
