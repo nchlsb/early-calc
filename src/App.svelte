@@ -134,7 +134,7 @@
 			lowerLeftCorner: {x: x, y: 0}
 		} 
 		:
-		{ // correct rectangles with f(x) < 0 
+		{ // SVG can't process negative height 
 			height: -y,
 			width: dx,
 			lowerLeftCorner: {x: x, y: y}
