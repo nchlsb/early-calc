@@ -168,7 +168,6 @@
 			<line stroke="black" fill="none" x1="0" y1={lowerBound} x2="0" y2={upperBound} />
 
 			{#each riemannRectangles as rectangle}
-				{#if true}
 					<rect
 						class="riemann-rectangle"
 						x={rectangle.lowerLeftCorner.x}
@@ -176,7 +175,6 @@
 						width={rectangle.width}
 						height={rectangle.height}
 					/>
-				{/if}
 			{/each}
 			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
 
