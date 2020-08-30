@@ -37,7 +37,7 @@
 		return rectangle.width * rectangle.height;
 	}
 
-	function allAreas(rectangles: Rectangle[]): number {
+	function sumRectangleAreas(rectangles: Rectangle[]): number {
 		return sumBy(rectangles, area)
 	}
 
@@ -141,12 +141,15 @@
 		};
 	});
 
+	let riemannSum;
+	$: riemannSum = sumRectangleAreas(riemannRectangles);
+
 </script>
 
 <main>
 	<ul>
 		<li>
-			X Axis Bounds
+			X Axis Bounds {boundQuantity}
 			<input type="range" min="50" max="300" bind:value={boundQuantity}>
 		</li>
 		<li>
@@ -159,6 +162,9 @@
 				<option value={x => (x * x) / 250}>Squared</option>
 				<option value={x => Math.sin(x / 50) * 100}>Sine</option>
 			</select>
+		</li>
+		<li>
+			The sum of the rectangles rounded to 1's place is {Math.round(riemannSum)}
 		</li>
 	</ul>
 
