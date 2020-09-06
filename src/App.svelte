@@ -1,9 +1,4 @@
 <script lang="ts">
-	let width: number = 100;
-	let height: number = 100;
-
-	let numberString: string = '1 2 3 4 5'
-
 	type Point = {
 		x: number
 		y: number
@@ -13,15 +8,6 @@
 		lowerLeftCorner: Point,
 		width: number,
 		height: number
-	}
-	
-	function sum(numbers: number[]): number {
-		let sum = 0;
-		for (let number of numbers) {
-			sum += number
-		}
-
-		return sum;
 	}
 
 	function sumBy<T>(array: T[], getNumber: (a: T) => number): number {
@@ -37,47 +23,6 @@
 		return rectangle.width * rectangle.height;
 	}
 
-	function sumRectangleAreas(rectangles: Rectangle[]): number {
-		return sumBy(rectangles, area)
-	}
-
-
-	function integrate(lowerBound: number, upperBound: number, rectangleWidth: number): number {
-		return 0
-	}
-
-	type Maybe<T> = {
-		kind: 'Just'
-		value: T
-	} | {
-		kind: 'Nothing'
-	}
-
-	function myParseInt(string: string): Maybe<number> {
-		const value = parseInt(string) // May give back NaN
-		return isNaN(value) ? {kind: 'Nothing'} : {kind: 'Just', value}
-	}
-
-	function justs<T>(maybes: Maybe<T>[]): T[] {
-		let retVal: T[] = []
-		
-		for (let maybe of maybes) {
-			if (maybe.kind === "Just") {
-				retVal.push(maybe.value)
-			}
-		}
-
-		return retVal;
-	}
-
-	function parse(stringOfSpaceSeparatedNumbers: string): number[] {
-		return justs(stringOfSpaceSeparatedNumbers.split(' ').map(myParseInt));
-	}
-
-	let mySum: number
-	$: mySum = sum(parse(numberString))
-
-
 	function range(n: number): number[] {
 		let retVal: number[] = [];
 
@@ -88,24 +33,24 @@
 		return retVal;
 	}
 
-	// varibles of graph 
-	let boundQuantity = 100
+	// variables of graph 
+	const DEFAULT_BOUND_MAGNITUDE = 100
 
-	let upperBound
-	$: upperBound = boundQuantity
+	let xMaxBound = DEFAULT_BOUND_MAGNITUDE
+	let xMinBound = -DEFAULT_BOUND_MAGNITUDE
 
-	let lowerBound
-	$: lowerBound = -boundQuantity
+	let yMaxBound = DEFAULT_BOUND_MAGNITUDE
+	let yMinBound = -DEFAULT_BOUND_MAGNITUDE
 
-	let dx = 250;
+	let integralUpperBound = DEFAULT_BOUND_MAGNITUDE
+	let integralLowerBound = -DEFAULT_BOUND_MAGNITUDE
 
-	let f
-	$: f = function(x: number): number {
+	let dx: number = 5
+
+	let f: (x: number) => number
+	$: f = function(x) {
 		return (x * x) / 250;
 	}
-
-	let domain
-	$: domain = (upperBound - lowerBound)
 
 	let numberOfPoints: number = 50
 
@@ -116,45 +61,36 @@
 
 	let points: Point[]
 	$: points = [...range(numberOfPoints).map(n => {
-		const x = lowerBound + (n * (domain / numberOfPoints))
+		const x = xMinBound + (n * ((xMaxBound - xMinBound) / numberOfPoints))
 		return {x: x, y: f(x)}
-	}), {x: upperBound, y: f(upperBound)}];
+	}), {x: xMaxBound, y: f(xMaxBound)}];
 
-	let numberRectangles
-	$: numberRectangles = (upperBound - lowerBound) / dx;
+	let numberRectangles: number;
+	$: numberRectangles = (integralUpperBound - integralLowerBound) / dx;
 
 	let riemannRectangles: Rectangle[]
 	$: riemannRectangles = range(numberRectangles).map(n => {
-		const x = lowerBound + (n * (upperBound - lowerBound) / numberRectangles);
-		const y = f(x);	
-	
-		return (y > 0)? {
-			height: y,
+		const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / numberRectangles);
+		const y = f(x);
+
+		// SVG can't process negative height 
+		return {
+			height: Math.abs(y),
 			width: dx,
-			lowerLeftCorner: {x: x, y: 0}
-		} 
-		:
-		{ // SVG can't process negative height 
-			height: -y,
-			width: dx,
-			lowerLeftCorner: {x: x, y: y}
+			lowerLeftCorner: {x: x, y: (y > 0) ? 0 : y}
 		};
 	});
-
-	let riemannSum;
-	$: riemannSum = sumRectangleAreas(riemannRectangles);
 
 </script>
 
 <main>
 	<ul>
 		<li>
-			X Axis Bounds {boundQuantity}
-			<input type="range" min="50" max="300" bind:value={boundQuantity}>
+			Brett has <input type="number"> dollars in his bank account.
 		</li>
 		<li>
 			Rectangle Width {dx}
-			<input type="range" min="1" max="100" bind:value={dx}>
+			<input type="range" min="1" max={integralUpperBound - integralLowerBound} bind:value={dx}>
 		</li>
 		<li>
 			Function
@@ -164,14 +100,17 @@
 			</select>
 		</li>
 		<li>
-			The sum of the rectangles rounded to 1's place is {Math.round(riemannSum)}
+			The sum of the rectangles rounded to 1's place is {Math.round(sumBy(riemannRectangles, area))}
 		</li>
 	</ul>
 
-	<svg width="800" height="800" class="cartesian" viewBox="{lowerBound} {lowerBound} {upperBound - lowerBound} {upperBound - lowerBound}">
+	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {xMaxBound - xMinBound} {yMaxBound - yMinBound}">
 		<g>
-			<line stroke="black" fill="none" x1={lowerBound} y1="0" x2={upperBound} y2="0" />
-			<line stroke="black" fill="none" x1="0" y1={lowerBound} x2="0" y2={upperBound} />
+			<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
+			<line stroke="black" fill="none" x1="0" y1={yMinBound} x2="0" y2={yMaxBound} />
+
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
 
 			{#each riemannRectangles as rectangle}
 					<rect
@@ -186,6 +125,14 @@
 
 		</g>
 	</svg>
+
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} bind:value={integralLowerBound}>
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} bind:value={integralUpperBound}>
+
+	<input type="number" max={xMaxBound} bind:value={xMinBound}>
+	<input type="number" min={xMinBound} bind:value={xMaxBound}>
+	<input type="number" max={yMaxBound} bind:value={yMinBound}>
+	<input type="number" min={yMinBound} bind:value={yMaxBound}>
 </main>
 
 <style>
@@ -219,12 +166,18 @@
 		}
 	}
 
+	.bound-range {
+		width: 100%;
+	}
+
 	svg.cartesian {
-		display:flex;
+		display: flex;
+		width: 100%;
 	}
 
 	/* Flip the vertical axis in <g> to emulate cartesian. */
 	svg.cartesian > g {
+		width: 100%;
 		transform: scaleY(-1);
 	}
 
