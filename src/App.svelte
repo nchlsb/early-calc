@@ -80,7 +80,19 @@
 			lowerLeftCorner: {x: x, y: (y > 0) ? 0 : y}
 		};
 	});
-
+/*
+	Todo list
+		1. Change the consts at the bottom
+		2. Bounderies should be aligned on the axes or use scroll to zoom
+		3. Add automatically-updating LaTeX equations
+		4. Desktop and mobile friendliness
+		5. Negative areas and colors
+			Especially when the lower bound is greater than the upper bound
+		6. Add testing
+			Property based test: symbolic integration and riemann sum give similar results
+		7. Custom user equations
+		8. Automatically determine Y upper and lower bounds via min and max f(x) value
+*/
 </script>
 
 <main>
