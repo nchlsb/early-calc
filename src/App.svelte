@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { result } from './expression'
+	import {range, sumBy} from "./helpers";
+
 	type Point = {
 		x: number
 		y: number
@@ -10,31 +13,8 @@
 		height: number
 	}
 
-	function sumBy<T>(array: T[], getNumber: (a: T) => number): number {
-		let sum = 0;
-		for (let a of array) {
-			sum += getNumber(a)
-		}
-
-		return sum;
-	}
-
-	function area(rectangle: Rectangle): number {
-		return rectangle.width * rectangle.height;
-	}
-
-	function range(n: number): number[] {
-		let retVal: number[] = [];
-
-		for (let i = 0; i < n; i++) {
-			retVal.push(i);
-		}
-
-		return retVal;
-	}
-
 	// variables of graph 
-	const DEFAULT_BOUND_MAGNITUDE = 100
+	const DEFAULT_BOUND_MAGNITUDE = 10
 
 	let xMaxBound = DEFAULT_BOUND_MAGNITUDE
 	let xMinBound = -DEFAULT_BOUND_MAGNITUDE
@@ -44,12 +24,12 @@
 
 	let integralUpperBound = DEFAULT_BOUND_MAGNITUDE
 	let integralLowerBound = -DEFAULT_BOUND_MAGNITUDE
-
-	let dx: number = 5
+	
+	let dx: number = 1
 
 	let f: (x: number) => number
 	$: f = function(x) {
-		return (x * x) / 250;
+		return (x * x);
 	}
 
 	let numberOfPoints: number = 50
@@ -80,60 +60,71 @@
 			lowerLeftCorner: {x: x, y: (y > 0) ? 0 : y}
 		};
 	});
+
+	let scale = 500;
 /*
 	Todo list
-		1. Change the consts at the bottom
-		2. Bounderies should be aligned on the axes or use scroll to zoom
-		3. Add automatically-updating LaTeX equations
-		4. Desktop and mobile friendliness
-		5. Negative areas and colors
-			Especially when the lower bound is greater than the upper bound
-		6. Add testing
-			Property based test: symbolic integration and riemann sum give similar results
-		7. Custom user equations
-		8. Automatically determine Y upper and lower bounds via min and max f(x) value
+		1. (X)Change the consts at the bottom 
+		2. ( )Bounderies should be aligned on the axes or use scroll to zoom
+		3. ( )Add automatically-updating LaTeX equations
+		4. ( )Desktop and mobile friendliness
+		5. ( )Negative areas and colors
+			  Especially when the lower bound is greater than the upper bound
+		6. ( )Add testing
+			  Property based test: symbolic integration and riemann sum give similar results
+		7. ( )Custom user equations
+		8. ( )Automatically determine Y upper and lower bounds via min and max f(x) value
+		9. ( )Dragging uppwer and lower bounds on graph 
+		10.( ) Highlight over or under estimations as differnt color 
+		11.( ) Math shold work out so scale varible is always 1 px
 */
+
 </script>
 
 <main>
 	<ul>
 		<li>
-			Brett has <input type="number"> dollars in his bank account.
+			Should be 143.1407 : ..... {result}
+		</li>
+		<li>
+			Scale {scale}
+			<input class="bound-range" type="range" min={10} max={1000} bind:value={scale}>
 		</li>
 		<li>
 			Rectangle Width {dx}
-			<input type="range" min="1" max={integralUpperBound - integralLowerBound} bind:value={dx}>
+			<input type="range" min="0.1" step=".1" max={integralUpperBound - integralLowerBound} bind:value={dx}>
 		</li>
 		<li>
 			Function
 			<select bind:value={f}>
-				<option value={x => (x * x) / 250}>Squared</option>
-				<option value={x => Math.sin(x / 50) * 100}>Sine</option>
+				<option value={x => (x * x)}>Squared</option>
+				<option value={x => Math.sin(x)}>Sine</option>
 			</select>
 		</li>
 		<li>
-			The sum of the rectangles rounded to 1's place is {Math.round(sumBy(riemannRectangles, area))}
+			The sum of the rectangles rounded to 1's place is {Math.round(sumBy(riemannRectangles, 
+				rectangle => rectangle.width * rectangle.height))}
 		</li>
 	</ul>
 
-	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {xMaxBound - xMinBound} {yMaxBound - yMinBound}">
+	<svg class="cartesian" viewBox="{xMinBound * scale} {yMinBound * scale} {(xMaxBound - xMinBound) * scale} {(yMaxBound - yMinBound)  * scale}">
 		<g>
-			<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
-			<line stroke="black" fill="none" x1="0" y1={yMinBound} x2="0" y2={yMaxBound} />
+			<line stroke="black" fill="none" x1={xMinBound * scale} y1="0" x2={xMaxBound * scale} y2="0" />
+			<line stroke="black" fill="none" x1="0" y1={yMinBound * scale} x2="0" y2={yMaxBound * scale} />
 
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound * scale} y1={yMinBound * scale} x2={integralLowerBound * scale} y2={yMaxBound * scale} />
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound * scale} y1={yMinBound * scale} x2={integralUpperBound * scale} y2={yMaxBound * scale} />
 
 			{#each riemannRectangles as rectangle}
 					<rect
 						class="riemann-rectangle"
-						x={rectangle.lowerLeftCorner.x}
-						y={rectangle.lowerLeftCorner.y}
-						width={rectangle.width}
-						height={rectangle.height}
+						x={rectangle.lowerLeftCorner.x * scale}
+						y={rectangle.lowerLeftCorner.y * scale}
+						width={rectangle.width * scale}
+						height={rectangle.height * scale}
 					/>
 			{/each}
-			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
+			<polyline stroke="black" fill="none" points={points.map(point => `${point.x * scale},${point.y * scale}`).join(' ')} />
 
 		</g>
 	</svg>
