@@ -1,3 +1,5 @@
+import { productBy, sumBy } from "./helpers";
+
 export let brett = 'brett'
 
 // x^2 => 
@@ -50,20 +52,18 @@ export let brett = 'brett'
 // Math.sin(10) <-- (kind: Sine, expr: 10)
 type Expression = {
     kind: 'Add'
-    left: Expression
-    right: Expression
+    expressions: Expression[] // (1 + 2) + 3 === 1 + (2 + 3)
 } | {
     kind: 'Subtract'
     left: Expression
     right: Expression
 } | {
     kind: 'Multiply'
-    left: Expression
-    right: Expression
+    expressions: Expression[] // ((1)(2))(3) === (1)((2)(3))
 } | {
     kind: 'Divide'
-    left: Expression
-    right: Expression
+    numerator: Expression
+    denominator: Expression
 } | {
     kind: 'Negate'
     argument: Expression
@@ -89,7 +89,7 @@ type Expression = {
     base: Expression
     argument: Expression
 } | {
-    kind: 'Absoultevaluateue'
+    kind: 'AbsoulteValue'
     argument: Expression
 } | {
     kind: 'Modular'
@@ -112,36 +112,30 @@ type Expression = {
 
 export const brettsFavorite: Expression = {
     kind: 'Add',
-    right: {
+    expressions: [{
         kind: 'Power',
         base: {kind: 'X'},
         exponent: {
             kind: 'Literal',
             value: 2
         }
-    },
-    left: {
-        kind: 'Add',
-        left: {
-            kind: 'Multiply',
-            left: {
-                kind: 'Literal',
-                value: 2
-            },
-            right: {
-                kind: 'X'
-            }
+    }, {
+        kind: 'Multiply',
+        expressions: [{
+            kind: 'Literal',
+            value: 2
+        }, {
+            kind: 'X'
+        }]
+    }, {
+        kind: 'Power',
+        base: {
+            kind: 'E'
         },
-        right: {
-            kind: 'Power',
-            base: {
-                kind: 'E'
-            },
-            exponent: {
-                kind: 'Pi'
-            }
+        exponent: {
+            kind: 'Pi'
         }
-    }
+    }]
 }
 
 // f(x) = x^2 + (2x + e^pi)
@@ -167,13 +161,13 @@ function evaluate(expression: Expression, x: number): number {
         case 'Tangent':
             return Math.tan(evaluate(expression.argument, x));
         case 'Add':
-            return evaluate(expression.left, x) + evaluate(expression.right, x);
+            return sumBy(expression.expressions, expression => evaluate(expression, x));
         case 'Subtract':
             return evaluate(expression.left, x) - evaluate(expression.right, x);
         case 'Multiply':
-            return evaluate(expression.left, x) * evaluate(expression.right, x);    
+            return productBy(expression.expressions, expression => evaluate(expression, x))
         case 'Divide':
-            return evaluate(expression.left, x) / evaluate(expression.right, x);
+            return evaluate(expression.numerator, x) / evaluate(expression.denominator, x);
         case 'Modular':
             return evaluate(expression.left, x) % evaluate(expression.right, x);
         case 'Negate':
@@ -184,10 +178,70 @@ function evaluate(expression: Expression, x: number): number {
             return Math.log(evaluate(expression.argument, x)) / Math.log(evaluate(expression.base, x));
         case 'Radical':
             return Math.pow(evaluate(expression.radicand, x), 1 / evaluate(expression.index, x));
-        case 'Absoultevaluateue':
+        case 'AbsoulteValue':
             return Math.abs(evaluate(expression.argument, x));
     } endSwitch(expression)
 }
+
+/*
+
+data Maybe = Nothing | Just Int
+
+sum :: [Int] -> Int
+sum [] = 0
+sum (x:xs) = x + sum xs
+
+switch (list.kind) {
+    case NIL:
+        return 0
+
+    case CONS:
+        return list.first + sum (list.rest)
+}
+
+*/
+
+export function toTeX(expression: Expression): string {
+    switch (expression.kind) {
+        case "Add":
+            return `\\left(${expression.expressions.map(toTeX).join(" + ")}\\right)`;
+        case "Divide":
+            return `\\frac{${toTeX(expression.numerator)}}{${toTeX(expression.denominator)}}`
+        case "Multiply":
+            return `${expression.expressions.map(toTeX).join('')}`;
+        case "Subtract":
+            return `\\left(${toTeX(expression.left)} - ${toTeX(expression.right)}\\right)`;
+        case "Sine":
+            return `\\sin\\left(${toTeX(expression.argument)}\\right)`;
+        case "Cosine":
+            return `\\cos\\left(${toTeX(expression.argument)}\\right)`;
+        case "Tangent":
+            return `\\tan\\left(${toTeX(expression.argument)}\\right)`;
+        case "E":
+            return `e`;
+        case "Pi":
+            return `\\pi`;
+        case "X":
+            return `x`;
+        case "Log":
+            return `\\log_{${toTeX(expression.base)}}\\left(${toTeX(expression.argument)}\\right)`;
+        case "Negate":
+            return `\\left(${toTeX(expression.argument)}\\right)`;
+        case "Modular":
+            return `\\left(${toTeX(expression.left)} \\mod ${toTeX(expression.right)}\\right)`;
+        case "Power":
+            return `${toTeX(expression.base)}^{${toTeX(expression.exponent)}}`;
+        case "Radical":
+            return `\\sqrt[{${toTeX(expression.index)}}]{${toTeX(expression.radicand)}}`;
+        case "Literal":
+            return `${expression.value}`;
+        case "AbsoulteValue":
+            return `\\left|${expression.argument}\\right|`;
+    } endSwitch(expression)
+}
+
+export const tex = toTeX(brettsFavorite);
+
 
 function endSwitch(x: never): never {
     throw Error('Shouldn\'t get here.');

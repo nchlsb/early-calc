@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { result } from './expression'
-	import {range, sumBy} from "./helpers";
+	import { result, tex } from './expression'
+	import {maxBy, minBy, orElse, range, sumBy} from "./helpers";
+	import { onMount } from 'svelte';
 
 	type Point = {
 		x: number
@@ -19,20 +20,23 @@
 	let xMaxBound = DEFAULT_BOUND_MAGNITUDE
 	let xMinBound = -DEFAULT_BOUND_MAGNITUDE
 
-	let yMaxBound = DEFAULT_BOUND_MAGNITUDE
-	let yMinBound = -DEFAULT_BOUND_MAGNITUDE
+	let yMaxBound: number
+	$: yMaxBound = orElse(maxBy(points.map(point => point.y), y => y), DEFAULT_BOUND_MAGNITUDE) + 1
+
+	let yMinBound: number
+	$: yMinBound = orElse(minBy(points.map(point => point.y), y => y), -DEFAULT_BOUND_MAGNITUDE) - 1
 
 	let integralUpperBound = DEFAULT_BOUND_MAGNITUDE
 	let integralLowerBound = -DEFAULT_BOUND_MAGNITUDE
 	
-	let dx: number = 1
+	let dx: number = 1;
 
 	let f: (x: number) => number
 	$: f = function(x) {
 		return (x * x);
 	}
 
-	let numberOfPoints: number = 50
+	let numberOfPoints: number = 100;
 
 	// -10 -> 5
 	// offset => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
@@ -61,11 +65,24 @@
 		};
 	});
 
-	let scale = 500;
+	let scale = 50;
+
+	onMount(() => {
+		let script = document.createElement('script');
+		script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+		document.head.append(script);	
+		script.onload = () => {
+			MathJax = {
+				tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},
+				svg: {fontCache: 'global'}
+			};
+		};
+	});
+
 /*
 	Todo list
 		1. (X)Change the consts at the bottom 
-		2. ( )Bounderies should be aligned on the axes or use scroll to zoom
+		2. (-)Bounderies should be aligned on the axes or use scroll to zoom
 		3. ( )Add automatically-updating LaTeX equations
 		4. ( )Desktop and mobile friendliness
 		5. ( )Negative areas and colors
@@ -83,6 +100,10 @@
 
 <main>
 	<ul>
+		<li>
+			Should be \[ {tex} \]
+		</li>
+
 		<li>
 			Should be 143.1407 : ..... {result}
 		</li>
@@ -105,16 +126,20 @@
 			The sum of the rectangles rounded to 1's place is {Math.round(sumBy(riemannRectangles, 
 				rectangle => rectangle.width * rectangle.height))}
 		</li>
+		<li>{yMinBound} {yMaxBound}</li>
 	</ul>
 
 	<svg class="cartesian" viewBox="{xMinBound * scale} {yMinBound * scale} {(xMaxBound - xMinBound) * scale} {(yMaxBound - yMinBound)  * scale}">
 		<g>
+			<!-- x and y axis -->
 			<line stroke="black" fill="none" x1={xMinBound * scale} y1="0" x2={xMaxBound * scale} y2="0" />
 			<line stroke="black" fill="none" x1="0" y1={yMinBound * scale} x2="0" y2={yMaxBound * scale} />
 
+			<!-- bounds of intergral -->
 			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound * scale} y1={yMinBound * scale} x2={integralLowerBound * scale} y2={yMaxBound * scale} />
 			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound * scale} y1={yMinBound * scale} x2={integralUpperBound * scale} y2={yMaxBound * scale} />
 
+			<!-- rectangles -->
 			{#each riemannRectangles as rectangle}
 					<rect
 						class="riemann-rectangle"
@@ -124,6 +149,8 @@
 						height={rectangle.height * scale}
 					/>
 			{/each}
+
+			<!-- graph of function -->
 			<polyline stroke="black" fill="none" points={points.map(point => `${point.x * scale},${point.y * scale}`).join(' ')} />
 
 		</g>
@@ -132,10 +159,8 @@
 	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} bind:value={integralLowerBound}>
 	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} bind:value={integralUpperBound}>
 
-	<input type="number" max={xMaxBound} bind:value={xMinBound}>
-	<input type="number" min={xMinBound} bind:value={xMaxBound}>
-	<input type="number" max={yMaxBound} bind:value={yMinBound}>
-	<input type="number" min={yMinBound} bind:value={yMaxBound}>
+	<input type="number" max={xMaxBound - 1} bind:value={xMinBound}>
+	<input type="number" min={xMinBound + 1} bind:value={xMaxBound}>
 </main>
 
 <style>
