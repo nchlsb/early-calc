@@ -1,4 +1,4 @@
-import { productBy, sumBy } from "./helpers";
+import { productBy, sumBy, endSwitch } from "./helpers";
 
 export let brett = 'brett'
 
@@ -241,8 +241,3 @@ export function toTeX(expression: Expression): string {
 }
 
 export const tex = toTeX(brettsFavorite);
-
-
-function endSwitch(x: never): never {
-    throw Error('Shouldn\'t get here.');
-}

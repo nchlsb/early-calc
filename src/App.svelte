@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { result, tex } from './expression'
-	import {maxBy, minBy, orElse, range, sumBy} from "./helpers";
+	import type { Maybe } from "./helpers";
+	import { endSwitch, maxBy, minBy, orElse, range, sumBy } from "./helpers";
 	import { onMount } from 'svelte';
 
 	type Point = {
@@ -65,8 +66,6 @@
 		};
 	});
 
-	let scale = 50;
-
 	onMount(() => {
 		let script = document.createElement('script');
 		script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
@@ -94,11 +93,69 @@
 		9. ( )Dragging uppwer and lower bounds on graph 
 		10.( ) Highlight over or under estimations as differnt color 
 		11.( ) Math shold work out so scale varible is always 1 px
+		12.( ) Copy out math as text
 */
+
+type IncompleteExpression = {
+	kind: 'Plus'
+	left: IncompleteExpression
+	right: IncompleteExpression
+} | {
+	kind: '1'
+} | {
+	kind: 'Active'
+} | {
+	kind: 'Inactive'
+}
+
+function render(expression: IncompleteExpression): string {
+	switch (expression.kind) {
+		case 'Plus': return `\\left(${render(expression.left)} + ${render(expression.right)} \\right)`
+		case '1': return '1'
+		case 'Active': return '\\square'
+		case 'Inactive': return '\\blacksquare'
+	} endSwitch(expression)
+}
+
+function turnActiveIntoPlus(expression: IncompleteExpression): IncompleteExpression {
+	console.log('Calling Jaffa')
+	switch (expression.kind) {
+		case '1': return {kind: '1'};
+		case 'Inactive': return {kind: 'Inactive'};
+		case 'Active': return {kind: 'Plus', left: {kind: 'Active'}, right: {kind: 'Inactive'}};
+		case 'Plus': return {kind: 'Plus', left: turnActiveIntoPlus(expression.left), right: turnActiveIntoPlus(expression.right)}
+	} endSwitch(expression)
+}
+
+function hasActive(expression: IncompleteExpression): boolean {
+	switch (expression.kind) {
+		case '1': return false;
+		case 'Inactive': return false;
+		case 'Active': return true;
+		case 'Plus': return hasActive(expression.left) || hasActive(expression.right);
+	} endSwitch(expression)
+}
+
+let expression: IncompleteExpression = {kind: 'Active'}
+
+let brett: number = 12
 
 </script>
 
 <main>
+	<p>$$ {brett} $$</p>
+	<p>{brett}</p>
+	<button on:click={() => {
+		brett++;
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+	}}>Click me </button>
+
+	$$ { render(expression) } $$
+	<button on:click={() => {
+		expression = turnActiveIntoPlus(expression);
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub])
+	}}> Add Plus </button>
+
 	<ul>
 		<li>
 			Should be \[ {tex} \]
@@ -106,10 +163,6 @@
 
 		<li>
 			Should be 143.1407 : ..... {result}
-		</li>
-		<li>
-			Scale {scale}
-			<input class="bound-range" type="range" min={10} max={1000} bind:value={scale}>
 		</li>
 		<li>
 			Rectangle Width {dx}
@@ -129,35 +182,35 @@
 		<li>{yMinBound} {yMaxBound}</li>
 	</ul>
 
-	<svg class="cartesian" viewBox="{xMinBound * scale} {yMinBound * scale} {(xMaxBound - xMinBound) * scale} {(yMaxBound - yMinBound)  * scale}">
+	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound) }">
 		<g>
 			<!-- x and y axis -->
-			<line stroke="black" fill="none" x1={xMinBound * scale} y1="0" x2={xMaxBound * scale} y2="0" />
-			<line stroke="black" fill="none" x1="0" y1={yMinBound * scale} x2="0" y2={yMaxBound * scale} />
+			<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
+			<line stroke="black" fill="none" x1="0" y1={yMinBound} x2="0" y2={yMaxBound} />
 
 			<!-- bounds of intergral -->
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound * scale} y1={yMinBound * scale} x2={integralLowerBound * scale} y2={yMaxBound * scale} />
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound * scale} y1={yMinBound * scale} x2={integralUpperBound * scale} y2={yMaxBound * scale} />
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
 
 			<!-- rectangles -->
 			{#each riemannRectangles as rectangle}
 					<rect
 						class="riemann-rectangle"
-						x={rectangle.lowerLeftCorner.x * scale}
-						y={rectangle.lowerLeftCorner.y * scale}
-						width={rectangle.width * scale}
-						height={rectangle.height * scale}
+						x={rectangle.lowerLeftCorner.x}
+						y={rectangle.lowerLeftCorner.y}
+						width={rectangle.width}
+						height={rectangle.height}
 					/>
 			{/each}
 
 			<!-- graph of function -->
-			<polyline stroke="black" fill="none" points={points.map(point => `${point.x * scale},${point.y * scale}`).join(' ')} />
+			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
 
 		</g>
 	</svg>
 
-	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} bind:value={integralLowerBound}>
-	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} bind:value={integralUpperBound}>
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralLowerBound}>
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralUpperBound}>
 
 	<input type="number" max={xMaxBound - 1} bind:value={xMinBound}>
 	<input type="number" min={xMinBound + 1} bind:value={xMaxBound}>
@@ -184,8 +237,9 @@
 		stroke-width: 1;
 	}
 
-	line {
+	line, rect, polyline {
 		stroke-width: 1px;
+		vector-effect: non-scaling-stroke;
 	}
 
 	@media (min-width: 640px) {

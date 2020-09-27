@@ -16,7 +16,7 @@ export function productBy<T>(array: T[], getNumber: (a: T) => number): number {
     return product;
 }
 
-type Maybe<T> = {
+export type Maybe<T> = {
     kind: 'Just'
     value: T
 } | {
@@ -63,4 +63,8 @@ export function range(n: number): number[] {
     }
 
     return retVal;
+}
+
+export function endSwitch(x: never): never {
+    throw Error('Shouldn\'t get here.');
 }
