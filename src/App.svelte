@@ -33,9 +33,7 @@
 	let dx: number = 1;
 
 	let f: (x: number) => number
-	$: f = function(x) {
-		return (x * x);
-	}
+	$: f = x => Math.sin(x)
 
 	let numberOfPoints: number = 100;
 
@@ -63,18 +61,6 @@
 			height: Math.abs(y),
 			width: dx,
 			lowerLeftCorner: {x: x, y: (y > 0) ? 0 : y}
-		};
-	});
-
-	onMount(() => {
-		let script = document.createElement('script');
-		script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-		document.head.append(script);	
-		script.onload = () => {
-			MathJax = {
-				tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},
-				svg: {fontCache: 'global'}
-			};
 		};
 	});
 
@@ -110,10 +96,10 @@ type IncompleteExpression = {
 
 function render(expression: IncompleteExpression): string {
 	switch (expression.kind) {
-		case 'Plus': return `\\left(${render(expression.left)} + ${render(expression.right)} \\right)`
+		case 'Plus': return `(${render(expression.left)} + ${render(expression.right)})`
 		case '1': return '1'
-		case 'Active': return '\\square'
-		case 'Inactive': return '\\blacksquare'
+		case 'Active': return '□'
+		case 'Inactive': return '■'
 	} endSwitch(expression)
 }
 
@@ -138,23 +124,11 @@ function hasActive(expression: IncompleteExpression): boolean {
 
 let expression: IncompleteExpression = {kind: 'Active'}
 
-let brett: number = 12
-
 </script>
 
 <main>
-	<p>$$ {brett} $$</p>
-	<p>{brett}</p>
-	<button on:click={() => {
-		brett++;
-		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-	}}>Click me </button>
-
-	$$ { render(expression) } $$
-	<button on:click={() => {
-		expression = turnActiveIntoPlus(expression);
-		MathJax.Hub.Queue(["Typeset", MathJax.Hub])
-	}}> Add Plus </button>
+	<p><code>{ render(expression) }</code></p>
+	<button on:click={() => expression = turnActiveIntoPlus(expression)}> Add Plus </button>
 
 	<ul>
 		<li>
@@ -171,8 +145,8 @@ let brett: number = 12
 		<li>
 			Function
 			<select bind:value={f}>
-				<option value={x => (x * x)}>Squared</option>
-				<option value={x => Math.sin(x)}>Sine</option>
+				<option default value={x => Math.sin(x)}>Sine</option>
+				<option value={x => (x * x)}>Squared</option>	
 			</select>
 		</li>
 		<li>
