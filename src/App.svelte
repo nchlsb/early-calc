@@ -35,7 +35,7 @@ import { each, onMount } from 'svelte/internal';
 	let dx: number = 1;
 
 	let f: (x: number) => number
-	$: f = x => Math.sin(x)
+	$: f = functions[selectedIndex].implementation
 
 	let numberOfPoints: number = 100;
 
@@ -67,17 +67,18 @@ import { each, onMount } from 'svelte/internal';
 	});
 
 	const functions = [
+		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
 		{id: 'const', implementation: (x: number) => 1, representation: 'f(x) = 1'},
 		{id: 'linear', implementation: (x: number) => x, representation: 'f(x) = x'},
 		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2'},
 		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
-		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
-		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'}
+		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
+		{id: 'shlub', implementation: (x: number) => Math.abs(Math.sin(x)), representation: 'f(x) = a(x)'}
 	];
 
-	onMount(_ => {
+	onMount(() => {
 		for (let f of functions) {
-			katex.render(f.representation, document.getElementById(`${f.id}-label`), {output: 'mathml'});
+			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'mathml'});
 		}
 	});
 
@@ -232,17 +233,24 @@ function turnFirstInactiveIntoActive(expression: IncompleteExpression): Incomple
 }
 
 let expression: IncompleteExpression = {kind: 'Active'}
+let scoops: (x: number) => number
+
+let selectedIndex = 0;
 
 </script>
 
 <main>
-	{#each functions as f, index}
+	<!-- {#each functions as f, index}
 		<label id={`${f.id}-label`} for={f.id}></label>
 		{#if index === 0}
-			<input id={f.id} type="radio" bind:group={f} checked>
+			<input id={f.id} type="radio" bind:group={scoops} value={f.representation} checked>
 		{:else}
-			<input id={f.id} type="radio" bind:group={f}>
-		{/if}	
+			<input id={f.id} type="radio" bind:group={scoops} value={f.representation}>
+		{/if}
+	{/each} -->
+
+	{#each functions as f, index}
+		<button class={index === selectedIndex ? 'highlighted' : ''} on:click={_ => selectedIndex = index}><span id={f.id}>{f.representation}</span></button>
 	{/each}
 
 	<!-- <select>
@@ -270,13 +278,13 @@ let expression: IncompleteExpression = {kind: 'Active'}
 			Rectangle Width {dx}
 			<input type="range" min="0.1" step=".1" max={integralUpperBound - integralLowerBound} bind:value={dx}>
 		</li>
-		<li>
+		<!--<li>
 			Function
 			<select bind:value={f}>
 				<option default value={x => Math.sin(x)}>Sine</option>
 				<option value={x => (x * x)}>Squared</option>	
 			</select>
-		</li>
+		</li>-->
 		<li>
 			Type in here <input type="text" on:input={x => {
 				// f u, js
@@ -379,5 +387,9 @@ let expression: IncompleteExpression = {kind: 'Active'}
 	/* Re-flip all <text> element descendants to their original side up. */
 	svg.cartesian > g text {
 		transform: scaleY(-1);
+	}
+
+	.highlighted {
+		background-color: limegreen;
 	}
 </style>
