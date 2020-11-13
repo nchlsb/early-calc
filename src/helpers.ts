@@ -68,3 +68,11 @@ export function range(n: number): number[] {
 export function endSwitch(x: never): never {
     throw Error('Shouldn\'t get here.');
 }
+
+export function just<T>(value: T): Maybe<T> {
+    return {kind: 'Just', value: value}
+}
+
+export function nothing<T>(): Maybe<T> {
+    return {kind: 'Nothing'}
+}

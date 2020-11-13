@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { result, tex } from './expression'
 	import type { Maybe } from "./helpers";
-	import { endSwitch, maxBy, minBy, orElse, range, sumBy } from "./helpers";
-	import { onMount } from 'svelte';
+	import { endSwitch, maxBy, minBy, orElse, range, sumBy, just, nothing } from "./helpers";
+	import * as katex from "katex";
+import { each, onMount } from 'svelte/internal';
+	
 
 	type Point = {
 		x: number
@@ -64,22 +66,59 @@
 		};
 	});
 
+	const functions = [
+		{id: 'const', implementation: (x: number) => 1, representation: 'f(x) = 1'},
+		{id: 'linear', implementation: (x: number) => x, representation: 'f(x) = x'},
+		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2'},
+		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
+		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
+		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'}
+	];
+
+	onMount(_ => {
+		for (let f of functions) {
+			katex.render(f.representation, document.getElementById(`${f.id}-label`), {output: 'mathml'});
+		}
+	});
+
 /*
-	Todo list
+
+	Done list (for next push)
+
 		1. (X)Change the consts at the bottom 
+		3. (X)Add automatically-updating LaTeX equations
+
+
+	Todo list
+
+		-. ( )2-3 example functions in drop down
+			- sine
+			- linear
+			- const
+			- quadratic
+			- y = (x - 1)(x)(x + 1)
+			- y = e^x
 		2. (-)Bounderies should be aligned on the axes or use scroll to zoom
-		3. ( )Add automatically-updating LaTeX equations
 		4. ( )Desktop and mobile friendliness
-		5. ( )Negative areas and colors
+
+
+
+				5. ( )Negative areas and colors
 			  Especially when the lower bound is greater than the upper bound
 		6. ( )Add testing
-			  Property based test: symbolic integration and riemann sum give similar results
-		7. ( )Custom user equations
+			  Property based test: symbolic integration and riemann sum give similar results		
 		8. ( )Automatically determine Y upper and lower bounds via min and max f(x) value
-		9. ( )Dragging uppwer and lower bounds on graph 
+
 		10.( ) Highlight over or under estimations as differnt color 
-		11.( ) Math shold work out so scale varible is always 1 px
-		12.( ) Copy out math as text
+
+
+		-. ( ) Estimation style drop down
+				below
+				above
+				trapezoid
+				both above and below to compare 
+		9. ( )Dragging uppwer and lower bounds on graph 
+		7. ( )Custom user equations
 */
 
 type IncompleteExpression = {
@@ -104,7 +143,6 @@ function render(expression: IncompleteExpression): string {
 }
 
 function turnActiveIntoPlus(expression: IncompleteExpression): IncompleteExpression {
-	console.log('Calling Jaffa')
 	switch (expression.kind) {
 		case '1': return {kind: '1'};
 		case 'Inactive': return {kind: 'Inactive'};
@@ -113,13 +151,84 @@ function turnActiveIntoPlus(expression: IncompleteExpression): IncompleteExpress
 	} endSwitch(expression)
 }
 
-function hasActive(expression: IncompleteExpression): boolean {
+function turnActiveInto1(expression: IncompleteExpression): IncompleteExpression {
 	switch (expression.kind) {
-		case '1': return false;
-		case 'Inactive': return false;
-		case 'Active': return true;
-		case 'Plus': return hasActive(expression.left) || hasActive(expression.right);
+		case '1': return {kind: '1'};
+		case 'Inactive': return {kind: 'Inactive'};
+		case 'Active': return {kind: '1'};
+		case 'Plus': return {kind: 'Plus', left: turnActiveInto1(expression.left), right: turnActiveInto1(expression.right)}
 	} endSwitch(expression)
+}
+
+function copyIncompleteExpression(expression: IncompleteExpression): IncompleteExpression {
+	switch (expression.kind) {
+		case '1': return {kind: '1'};
+		case 'Inactive': return {kind: 'Inactive'};
+		case 'Active': return {kind: 'Active'};
+		case 'Plus': return {kind: 'Plus', left: copyIncompleteExpression(expression.left), right: copyIncompleteExpression(expression.right)}
+	} endSwitch(expression)
+}
+
+function maybeGetLeft(expression: IncompleteExpression): Maybe<IncompleteExpression> {
+	if (expression.kind === 'Plus') {
+		return just(expression.left)
+	}
+
+	return nothing()
+}
+
+
+function maybeGetRight(expression: IncompleteExpression): Maybe<IncompleteExpression> {
+	if (expression.kind === 'Plus') {
+		return just(expression.right)
+	}
+
+	return nothing()
+}
+
+function turnFirstInactiveIntoActive(expression: IncompleteExpression): IncompleteExpression {
+	const copy = copyIncompleteExpression(expression)
+
+	/*
+		iterativeInorder(firstNode)
+			s ← empty stack
+			node <- firstNode
+			while (not s.isEmpty() or node ≠ null)
+				if (node ≠ null)
+					s.push(node)
+					node ← node.left
+				else
+					node ← s.pop()
+					visit(node)
+					node ← node.right
+	*/
+
+	// let S be a stack
+	let stack: IncompleteExpression[] = []
+	// node <- firstNode
+	let node = just(copy)
+	while (stack.length !== 0 || node.kind !== 'Nothing') {
+		if (node.kind !== 'Nothing') {
+			stack.push(node.value)
+			node = maybeGetLeft(node.value)
+		} else {
+			const value = stack.pop()
+			// visit
+			if (value.kind === 'Plus') {
+				if (value.left.kind === 'Inactive') {
+					// Guaranteed to be the first found, because it's an in-order traversal
+					value.left = {kind: 'Active'}
+					break
+				} else if (value.right.kind === 'Inactive') {
+					value.right = {kind: 'Active'}
+					break
+				}
+			}
+			node = maybeGetRight(value) // nullable expressionn
+		}
+	}
+
+	return copy
 }
 
 let expression: IncompleteExpression = {kind: 'Active'}
@@ -127,9 +236,28 @@ let expression: IncompleteExpression = {kind: 'Active'}
 </script>
 
 <main>
-	<p><code>{ render(expression) }</code></p>
-	<button on:click={() => expression = turnActiveIntoPlus(expression)}> Add Plus </button>
+	{#each functions as f, index}
+		<label id={`${f.id}-label`} for={f.id}></label>
+		{#if index === 0}
+			<input id={f.id} type="radio" bind:group={f} checked>
+		{:else}
+			<input id={f.id} type="radio" bind:group={f}>
+		{/if}	
+	{/each}
 
+	<!-- <select>
+		{#each functions as f, index}
+			<option id={f.id} value={f.implementation} default={index === 0 ? true : false}></option>
+		{/each}
+	</select> -->
+
+
+
+	<p id="nick"></p>
+	<button on:click={() => {expression = turnActiveIntoPlus(expression)
+		katex.render(render(expression),document.getElementById("nick"), {output: "html"})} }> Add Plus </button>
+	<button on:click={() => {expression = turnFirstInactiveIntoActive(turnActiveInto1(expression))
+		katex.render(render(expression),document.getElementById("nick"), {output: "html"})} }> Add 1 </button>
 	<ul>
 		<li>
 			Should be \[ {tex} \]
@@ -148,6 +276,16 @@ let expression: IncompleteExpression = {kind: 'Active'}
 				<option default value={x => Math.sin(x)}>Sine</option>
 				<option value={x => (x * x)}>Squared</option>	
 			</select>
+		</li>
+		<li>
+			Type in here <input type="text" on:input={x => {
+				// f u, js
+				const brett = document.getElementById("brett");
+				katex.render(x.currentTarget.value, brett, {output: "html"});
+			}}>
+		</li>
+		<li id="brett">
+			Output: 
 		</li>
 		<li>
 			The sum of the rectangles rounded to 1's place is {Math.round(sumBy(riemannRectangles, 
@@ -189,7 +327,7 @@ let expression: IncompleteExpression = {kind: 'Active'}
 	<input type="number" max={xMaxBound - 1} bind:value={xMinBound}>
 	<input type="number" min={xMinBound + 1} bind:value={xMaxBound}>
 </main>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <style>
 	main {
 		text-align: center;
@@ -229,6 +367,7 @@ let expression: IncompleteExpression = {kind: 'Active'}
 	svg.cartesian {
 		display: flex;
 		width: 100%;
+		height: 400px;
 	}
 
 	/* Flip the vertical axis in <g> to emulate cartesian. */
