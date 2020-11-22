@@ -1,0 +1,170 @@
+[33mcommit 3b57feb29bce4563228e92aa2cbb38cbfefdbd8a[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Nov 22 14:32:56 2020 -0500
+
+    Rendering equation on non-Firefox
+
+[33mcommit c8263d70babb2f8975c9d840331a1f19309b3bde[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Nov 22 14:24:44 2020 -0500
+
+    Updated docs
+
+[33mcommit a21fea6ba8c920cee1b7e735e1c9b820001c95f9[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Nov 22 14:22:54 2020 -0500
+
+    Removed features we no longer wanted to have simpler version of app
+
+[33mcommit 811ff95365ff0a2bb9297018d090389181eb3143[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Fri Nov 13 19:22:52 2020 -0500
+
+    Place most recent version of public into docs for viewing
+
+[33mcommit bf3073d3e1e33c791c277c6b2f6dfc76d39753b1[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Fri Nov 13 18:04:54 2020 -0500
+
+    Replaced radio button function selectors with buttons
+
+[33mcommit 859f416afa330f7a98ca71581f99d083f9d3c98f[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Thu Nov 12 20:46:57 2020 -0500
+
+    Latest code in docs for viewing
+
+[33mcommit ddd56ff2bbe12a119f01e8f03d0a781db93004d1[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Thu Nov 12 20:45:08 2020 -0500
+
+    Able to render functions as latex again
+
+[33mcommit ff0297dc0482ea6cd6842eb9e98a995568f2a5b5[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 27 16:10:09 2020 -0400
+
+    Publishing 2
+
+[33mcommit 4c7c0007b5dda62960d966eff43390d8d1285472[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 27 16:03:58 2020 -0400
+
+    Publishing
+
+[33mcommit d9a9d21334294c866b4ec72223988f68e299ae30[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 27 16:01:34 2020 -0400
+
+    Switching to expressions in ascii
+
+[33mcommit 1547fab7b552b4a491fb133f3d2a55f287a7862a[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 27 15:41:30 2020 -0400
+
+    Trying equation input with mathJax, but found problem
+
+[33mcommit cef154ae7f0e5847463eeb9d835672a9bf1f3206[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 20 16:40:14 2020 -0400
+
+    Changes for docs 4
+
+[33mcommit b4eadce50bc66b279c67fffe7933260e9b1156bb[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 20 16:35:46 2020 -0400
+
+    Changes for docs 3
+
+[33mcommit 83bff3e867c9f080507d7c3d2eb2b1d083b149ab[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 20 16:34:10 2020 -0400
+
+    Changes for docs 2
+
+[33mcommit b0efbbefa68fd85cecc3b00caeea52e82db5458b[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 20 16:32:22 2020 -0400
+
+    Changes for docs
+
+[33mcommit e06e904eccb554fa281fe69a658c4ead006ae7cb[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 20 16:29:56 2020 -0400
+
+    Expression to string that can shown as a function
+
+[33mcommit 3b6f8084f27edaab12ff51bb57fa4e5a6797139e[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 13 16:16:11 2020 -0400
+
+    Interpreter of algebra
+
+[33mcommit 6f513e5db65a139145e7d5a6b5d5237282b96ebd[m[33m ([m[1;32msingleRangeInputAsSlider[m[33m)[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Mon Sep 7 20:51:42 2020 -0400
+
+    to-do list
+
+[33mcommit b6afe29561f183d04a0d350ed5ac5c6218f01a22[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 6 15:30:01 2020 -0400
+
+    Public public under docs
+
+[33mcommit 3a3837e4a3eee7e8221cb6c7bf95bdad66faae19[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Sep 6 15:22:56 2020 -0400
+
+    Improved UI
+
+[33mcommit a36e35cf62f0710549424721a6eac7c5c09b0da2[m
+Merge: ff5a6c2 112c1c2
+Author: nchlsb <40240167+nchlsb@users.noreply.github.com>
+Date:   Sun Aug 30 15:52:05 2020 -0400
+
+    Merge pull request #1 from nchlsb/RealIntegralVsRiemannSum
+    
+    Added display of rum of riemann rectangles
+
+[33mcommit 112c1c28b170d7af7582c6a80acac0f3eee4dc1b[m[33m ([m[1;31morigin/RealIntegralVsRiemannSum[m[33m, [m[1;32mRealIntegralVsRiemannSum[m[33m)[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Aug 30 15:51:20 2020 -0400
+
+    Added display of rum of riemann rectangles
+
+[33mcommit ff5a6c286d6a7d90ad882953bb815cfad0b3fb34[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Aug 30 10:30:32 2020 -0400
+
+    Trying to get docs deploy working
+
+[33mcommit becc0ec85811535fa47590c259141a56fa4bb741[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Aug 30 09:56:30 2020 -0400
+
+    Docs for github as the page itself
+
+[33mcommit eed62c0610c2566fa7e88bdbe53cd0c970c43e02[m[33m ([m[1;32mrectangelsUnderXAxis[m[33m)[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Aug 30 09:49:30 2020 -0400
+
+    Better comment
+
+[33mcommit 99effb5d2123396e2bd05a21d81939a7e9cca481[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Aug 30 09:45:24 2020 -0400
+
+    Removing code from testing
+
+[33mcommit 14ebb5cfb1cc5f81acdc6eeb6929f435d71f88aa[m[33m ([m[1;31morigin/rectangelsUnderXAxis[m[33m)[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sun Aug 30 09:42:53 2020 -0400
+
+    Rectangles with f(x) < 0 now appear correctly
+
+[33mcommit f7a2bd8cdc80c3607b1afbbf7323cd92fb61fe15[m
+Author: nchlsb <nchlsbrdy@gmail.com>
+Date:   Sat Aug 29 18:23:16 2020 -0400
+
+    First
