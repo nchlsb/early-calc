@@ -75,7 +75,7 @@ import { each, onMount } from 'svelte/internal';
 
 	onMount(() => {
 		for (let f of functions) {
-			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'mathml'});
+			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'html'});
 		}
 	});
 
