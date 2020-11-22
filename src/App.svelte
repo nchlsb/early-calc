@@ -18,7 +18,7 @@ import { each, onMount } from 'svelte/internal';
 	}
 
 	// variables of graph 
-	const DEFAULT_BOUND_MAGNITUDE = 10
+	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
 
 	const xMaxBound = DEFAULT_BOUND_MAGNITUDE
 	const xMinBound = -DEFAULT_BOUND_MAGNITUDE
@@ -29,7 +29,10 @@ import { each, onMount } from 'svelte/internal';
 	let integralUpperBound = DEFAULT_BOUND_MAGNITUDE
 	let integralLowerBound = -DEFAULT_BOUND_MAGNITUDE
 	
-	let dx: number = 1;
+	let slider = Math.log((xMaxBound - xMinBound) / 2);
+
+	let dx: number;
+	$: dx = Math.exp(slider) - 1;
 
 	let f: (x: number) => number
 	$: f = functions[selectedIndex].implementation
@@ -70,7 +73,6 @@ import { each, onMount } from 'svelte/internal';
 		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2'},
 		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
 		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
-		{id: 'shlub', implementation: (x: number) => Math.abs(Math.sin(x)), representation: 'f(x) = a(x)'}
 	];
 
 	onMount(() => {
@@ -120,22 +122,6 @@ import { each, onMount } from 'svelte/internal';
 		7. ( )Custom user equations
 */
 
-
-
-// function render(expression: IncompleteExpression): string {
-// 	switch (expression.kind) {
-// 		case 'Plus': return `(${render(expression.left)} + ${render(expression.right)})`
-// 		case '1': return '1'
-// 		case 'Active': return '□'
-// 		case 'Inactive': return '■'
-// 	} endSwitch(expression)
-// }
-
-
-
-// let expression: IncompleteExpression = {kind: 'Active'}
-let scoops: (x: number) => number
-
 let selectedIndex = 0;
 
 </script>
@@ -145,7 +131,7 @@ let selectedIndex = 0;
 		<button class={index === selectedIndex ? 'highlighted' : ''} on:click={_ => selectedIndex = index}><span id={f.id}>{f.representation}</span></button>
 	{/each}
 
-	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={xMaxBound - xMinBound} bind:value={dx}>
+	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)} bind:value={slider}>
 	<label for="rectangle-width">Rectangle Width {dx}</label>
 
 	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralLowerBound}>
