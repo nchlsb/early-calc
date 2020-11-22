@@ -20,14 +20,11 @@ import { each, onMount } from 'svelte/internal';
 	// variables of graph 
 	const DEFAULT_BOUND_MAGNITUDE = 10
 
-	let xMaxBound = DEFAULT_BOUND_MAGNITUDE
-	let xMinBound = -DEFAULT_BOUND_MAGNITUDE
+	const xMaxBound = DEFAULT_BOUND_MAGNITUDE
+	const xMinBound = -DEFAULT_BOUND_MAGNITUDE
 
-	let yMaxBound: number
-	$: yMaxBound = orElse(maxBy(points.map(point => point.y), y => y), DEFAULT_BOUND_MAGNITUDE) + 1
-
-	let yMinBound: number
-	$: yMinBound = orElse(minBy(points.map(point => point.y), y => y), -DEFAULT_BOUND_MAGNITUDE) - 1
+	const yMaxBound = DEFAULT_BOUND_MAGNITUDE
+	const yMinBound = -DEFAULT_BOUND_MAGNITUDE
 
 	let integralUpperBound = DEFAULT_BOUND_MAGNITUDE
 	let integralLowerBound = -DEFAULT_BOUND_MAGNITUDE
@@ -92,14 +89,14 @@ import { each, onMount } from 'svelte/internal';
 
 	Todo list
 
-		-. ( )2-3 example functions in drop down
+		-. (x)2-3 example functions in drop down
 			- sine
 			- linear
 			- const
 			- quadratic
 			- y = (x - 1)(x)(x + 1)
 			- y = e^x
-		2. (-)Bounderies should be aligned on the axes or use scroll to zoom
+		2. (x)Bounderies should be aligned on the axes or use scroll to zoom
 		4. ( )Desktop and mobile friendliness
 
 
@@ -111,6 +108,7 @@ import { each, onMount } from 'svelte/internal';
 		8. ( )Automatically determine Y upper and lower bounds via min and max f(x) value
 
 		10.( ) Highlight over or under estimations as differnt color 
+		11.( ) make curve smoother 
 
 
 		-. ( ) Estimation style drop down
@@ -122,117 +120,20 @@ import { each, onMount } from 'svelte/internal';
 		7. ( )Custom user equations
 */
 
-type IncompleteExpression = {
-	kind: 'Plus'
-	left: IncompleteExpression
-	right: IncompleteExpression
-} | {
-	kind: '1'
-} | {
-	kind: 'Active'
-} | {
-	kind: 'Inactive'
-}
-
-function render(expression: IncompleteExpression): string {
-	switch (expression.kind) {
-		case 'Plus': return `(${render(expression.left)} + ${render(expression.right)})`
-		case '1': return '1'
-		case 'Active': return '□'
-		case 'Inactive': return '■'
-	} endSwitch(expression)
-}
-
-function turnActiveIntoPlus(expression: IncompleteExpression): IncompleteExpression {
-	switch (expression.kind) {
-		case '1': return {kind: '1'};
-		case 'Inactive': return {kind: 'Inactive'};
-		case 'Active': return {kind: 'Plus', left: {kind: 'Active'}, right: {kind: 'Inactive'}};
-		case 'Plus': return {kind: 'Plus', left: turnActiveIntoPlus(expression.left), right: turnActiveIntoPlus(expression.right)}
-	} endSwitch(expression)
-}
-
-function turnActiveInto1(expression: IncompleteExpression): IncompleteExpression {
-	switch (expression.kind) {
-		case '1': return {kind: '1'};
-		case 'Inactive': return {kind: 'Inactive'};
-		case 'Active': return {kind: '1'};
-		case 'Plus': return {kind: 'Plus', left: turnActiveInto1(expression.left), right: turnActiveInto1(expression.right)}
-	} endSwitch(expression)
-}
-
-function copyIncompleteExpression(expression: IncompleteExpression): IncompleteExpression {
-	switch (expression.kind) {
-		case '1': return {kind: '1'};
-		case 'Inactive': return {kind: 'Inactive'};
-		case 'Active': return {kind: 'Active'};
-		case 'Plus': return {kind: 'Plus', left: copyIncompleteExpression(expression.left), right: copyIncompleteExpression(expression.right)}
-	} endSwitch(expression)
-}
-
-function maybeGetLeft(expression: IncompleteExpression): Maybe<IncompleteExpression> {
-	if (expression.kind === 'Plus') {
-		return just(expression.left)
-	}
-
-	return nothing()
-}
 
 
-function maybeGetRight(expression: IncompleteExpression): Maybe<IncompleteExpression> {
-	if (expression.kind === 'Plus') {
-		return just(expression.right)
-	}
+// function render(expression: IncompleteExpression): string {
+// 	switch (expression.kind) {
+// 		case 'Plus': return `(${render(expression.left)} + ${render(expression.right)})`
+// 		case '1': return '1'
+// 		case 'Active': return '□'
+// 		case 'Inactive': return '■'
+// 	} endSwitch(expression)
+// }
 
-	return nothing()
-}
 
-function turnFirstInactiveIntoActive(expression: IncompleteExpression): IncompleteExpression {
-	const copy = copyIncompleteExpression(expression)
 
-	/*
-		iterativeInorder(firstNode)
-			s ← empty stack
-			node <- firstNode
-			while (not s.isEmpty() or node ≠ null)
-				if (node ≠ null)
-					s.push(node)
-					node ← node.left
-				else
-					node ← s.pop()
-					visit(node)
-					node ← node.right
-	*/
-
-	// let S be a stack
-	let stack: IncompleteExpression[] = []
-	// node <- firstNode
-	let node = just(copy)
-	while (stack.length !== 0 || node.kind !== 'Nothing') {
-		if (node.kind !== 'Nothing') {
-			stack.push(node.value)
-			node = maybeGetLeft(node.value)
-		} else {
-			const value = stack.pop()
-			// visit
-			if (value.kind === 'Plus') {
-				if (value.left.kind === 'Inactive') {
-					// Guaranteed to be the first found, because it's an in-order traversal
-					value.left = {kind: 'Active'}
-					break
-				} else if (value.right.kind === 'Inactive') {
-					value.right = {kind: 'Active'}
-					break
-				}
-			}
-			node = maybeGetRight(value) // nullable expressionn
-		}
-	}
-
-	return copy
-}
-
-let expression: IncompleteExpression = {kind: 'Active'}
+// let expression: IncompleteExpression = {kind: 'Active'}
 let scoops: (x: number) => number
 
 let selectedIndex = 0;
@@ -240,70 +141,17 @@ let selectedIndex = 0;
 </script>
 
 <main>
-	<!-- {#each functions as f, index}
-		<label id={`${f.id}-label`} for={f.id}></label>
-		{#if index === 0}
-			<input id={f.id} type="radio" bind:group={scoops} value={f.representation} checked>
-		{:else}
-			<input id={f.id} type="radio" bind:group={scoops} value={f.representation}>
-		{/if}
-	{/each} -->
-
 	{#each functions as f, index}
 		<button class={index === selectedIndex ? 'highlighted' : ''} on:click={_ => selectedIndex = index}><span id={f.id}>{f.representation}</span></button>
 	{/each}
 
-	<!-- <select>
-		{#each functions as f, index}
-			<option id={f.id} value={f.implementation} default={index === 0 ? true : false}></option>
-		{/each}
-	</select> -->
+	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={xMaxBound - xMinBound} bind:value={dx}>
+	<label for="rectangle-width">Rectangle Width {dx}</label>
 
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralLowerBound}>
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralUpperBound}>
 
-
-	<p id="nick"></p>
-	<button on:click={() => {expression = turnActiveIntoPlus(expression)
-		katex.render(render(expression),document.getElementById("nick"), {output: "html"})} }> Add Plus </button>
-	<button on:click={() => {expression = turnFirstInactiveIntoActive(turnActiveInto1(expression))
-		katex.render(render(expression),document.getElementById("nick"), {output: "html"})} }> Add 1 </button>
-	<ul>
-		<li>
-			Should be \[ {tex} \]
-		</li>
-
-		<li>
-			Should be 143.1407 : ..... {result}
-		</li>
-		<li>
-			Rectangle Width {dx}
-			<input type="range" min="0.1" step=".1" max={integralUpperBound - integralLowerBound} bind:value={dx}>
-		</li>
-		<!--<li>
-			Function
-			<select bind:value={f}>
-				<option default value={x => Math.sin(x)}>Sine</option>
-				<option value={x => (x * x)}>Squared</option>	
-			</select>
-		</li>-->
-		<li>
-			Type in here <input type="text" on:input={x => {
-				// f u, js
-				const brett = document.getElementById("brett");
-				katex.render(x.currentTarget.value, brett, {output: "html"});
-			}}>
-		</li>
-		<li id="brett">
-			Output: 
-		</li>
-		<li>
-			The sum of the rectangles rounded to 1's place is {Math.round(sumBy(riemannRectangles, 
-				rectangle => rectangle.width * rectangle.height))}
-		</li>
-		<li>{yMinBound} {yMaxBound}</li>
-	</ul>
-
-	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound) }">
-		<g>
+	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">		<g>
 			<!-- x and y axis -->
 			<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
 			<line stroke="black" fill="none" x1="0" y1={yMinBound} x2="0" y2={yMaxBound} />
@@ -328,29 +176,9 @@ let selectedIndex = 0;
 
 		</g>
 	</svg>
-
-	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralLowerBound}>
-	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralUpperBound}>
-
-	<input type="number" max={xMaxBound - 1} bind:value={xMinBound}>
-	<input type="number" min={xMinBound + 1} bind:value={xMaxBound}>
 </main>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
 	.riemann-rectangle {
 		fill: gray;
 		stroke: black;
@@ -368,19 +196,13 @@ let selectedIndex = 0;
 		}
 	}
 
-	.bound-range {
-		width: 100%;
-	}
-
-	svg.cartesian {
-		display: flex;
-		width: 100%;
-		height: 400px;
+	input[type="range"], svg.cartesian {
+		width: min(65vh, 100%);
+		display: block;
 	}
 
 	/* Flip the vertical axis in <g> to emulate cartesian. */
 	svg.cartesian > g {
-		width: 100%;
 		transform: scaleY(-1);
 	}
 

@@ -1,4 +1,4 @@
-import { productBy, sumBy, endSwitch } from "./helpers";
+import { productBy, sumBy, endSwitch, Maybe, nothing, just } from "./helpers";
 
 export let brett = 'brett'
 
@@ -47,7 +47,18 @@ export let brett = 'brett'
     // | Pi
     // | E 
 
-
+    type IncompleteExpression = {
+        kind: 'Plus'
+        left: IncompleteExpression
+        right: IncompleteExpression
+    } | {
+        kind: '1'
+    } | {
+        kind: 'Active'
+    } | {
+        kind: 'Inactive'
+    }
+    
 // Code versus data
 // Math.sin(10) <-- (kind: Sine, expr: 10)
 type Expression = {
@@ -241,3 +252,92 @@ export function toTeX(expression: Expression): string {
 }
 
 export const tex = toTeX(brettsFavorite);
+
+function turnActiveIntoPlus(expression: IncompleteExpression): IncompleteExpression {
+	switch (expression.kind) {
+		case '1': return {kind: '1'};
+		case 'Inactive': return {kind: 'Inactive'};
+		case 'Active': return {kind: 'Plus', left: {kind: 'Active'}, right: {kind: 'Inactive'}};
+		case 'Plus': return {kind: 'Plus', left: turnActiveIntoPlus(expression.left), right: turnActiveIntoPlus(expression.right)}
+	} endSwitch(expression)
+}
+
+function turnActiveInto1(expression: IncompleteExpression): IncompleteExpression {
+	switch (expression.kind) {
+		case '1': return {kind: '1'};
+		case 'Inactive': return {kind: 'Inactive'};
+		case 'Active': return {kind: '1'};
+		case 'Plus': return {kind: 'Plus', left: turnActiveInto1(expression.left), right: turnActiveInto1(expression.right)}
+	} endSwitch(expression)
+}
+
+function copyIncompleteExpression(expression: IncompleteExpression): IncompleteExpression {
+	switch (expression.kind) {
+		case '1': return {kind: '1'};
+		case 'Inactive': return {kind: 'Inactive'};
+		case 'Active': return {kind: 'Active'};
+		case 'Plus': return {kind: 'Plus', left: copyIncompleteExpression(expression.left), right: copyIncompleteExpression(expression.right)}
+	} endSwitch(expression)
+}
+
+function maybeGetLeft(expression: IncompleteExpression): Maybe<IncompleteExpression> {
+	if (expression.kind === 'Plus') {
+		return just(expression.left)
+	}
+
+	return nothing()
+}
+
+
+function maybeGetRight(expression: IncompleteExpression): Maybe<IncompleteExpression> {
+	if (expression.kind === 'Plus') {
+		return just(expression.right)
+	}
+
+	return nothing()
+}
+
+function turnFirstInactiveIntoActive(expression: IncompleteExpression): IncompleteExpression {
+	const copy = copyIncompleteExpression(expression)
+
+	/*
+		iterativeInorder(firstNode)
+			s ← empty stack
+			node <- firstNode
+			while (not s.isEmpty() or node ≠ null)
+				if (node ≠ null)
+					s.push(node)
+					node ← node.left
+				else
+					node ← s.pop()
+					visit(node)
+					node ← node.right
+	*/
+
+	// let S be a stack
+	let stack: IncompleteExpression[] = []
+	// node <- firstNode
+	let node = just(copy)
+	while (stack.length !== 0 || node.kind !== 'Nothing') {
+		if (node.kind !== 'Nothing') {
+			stack.push(node.value)
+			node = maybeGetLeft(node.value)
+		} else {
+			const value = stack.pop()
+			// visit
+			if (value.kind === 'Plus') {
+				if (value.left.kind === 'Inactive') {
+					// Guaranteed to be the first found, because it's an in-order traversal
+					value.left = {kind: 'Active'}
+					break
+				} else if (value.right.kind === 'Inactive') {
+					value.right = {kind: 'Active'}
+					break
+				}
+			}
+			node = maybeGetRight(value) // nullable expressionn
+		}
+	}
+
+	return copy
+}
