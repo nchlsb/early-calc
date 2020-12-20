@@ -26,8 +26,14 @@ import { each, onMount } from 'svelte/internal';
 	const yMaxBound = DEFAULT_BOUND_MAGNITUDE
 	const yMinBound = -DEFAULT_BOUND_MAGNITUDE
 
-	let integralUpperBound = DEFAULT_BOUND_MAGNITUDE
-	let integralLowerBound = -DEFAULT_BOUND_MAGNITUDE
+	let integralBound1 = DEFAULT_BOUND_MAGNITUDE
+	let integralBound2 = -DEFAULT_BOUND_MAGNITUDE
+	
+	let integralLowerBound: number;
+	$: integralLowerBound = Math.min(integralBound1, integralBound2);
+
+	let integralUpperBound: number;
+	$: integralUpperBound = Math.max(integralBound1, integralBound2);
 	
 	let slider = Math.log((xMaxBound - xMinBound) / 2);
 
@@ -151,11 +157,11 @@ let selectedIndex = 0;
 
 		</g>
 	</svg>
-	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)} bind:value={slider}>
-	<label for="rectangle-width">Rectangle Width {dx}</label>
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
+	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
 
-	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralLowerBound}>
-	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralUpperBound}>
+	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)} bind:value={slider}>
+	<label for="rectangle-width">Rectangle Width: {(dx).toFixed(3)}</label>
 </div>
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
