@@ -19,6 +19,7 @@ import { each, onMount } from 'svelte/internal';
 
 	// variables of graph 
 	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
+	const TANGENT = 2;
 
 	const xMaxBound = DEFAULT_BOUND_MAGNITUDE
 	const xMinBound = -DEFAULT_BOUND_MAGNITUDE
@@ -163,8 +164,9 @@ let selectedIndex = 0;
 			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
 
 			<!-- derivative stuff-->
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={dxAt - 1} y1={f(dxAt) - fPrime(dxAt)} x2={dxAt + 1} y2={f(dxAt) + fPrime(dxAt)} />
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={dxAt - TANGENT} y1={f(dxAt) - TANGENT * fPrime(dxAt)} x2={dxAt + TANGENT} y2={f(dxAt) + TANGENT * fPrime(dxAt)} />
 			
+			<circle cx={dxAt} cy={f(dxAt)} r=".075" fill="red"></circle>
 		</g>
 	</svg>
 	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
