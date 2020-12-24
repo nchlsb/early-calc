@@ -36,12 +36,19 @@ import { each, onMount } from 'svelte/internal';
 	$: integralUpperBound = Math.max(integralBound1, integralBound2);
 	
 	let slider = Math.log((xMaxBound - xMinBound) / 2);
+	let slider2 = 0;
 
 	let dx: number;
 	$: dx = Math.exp(slider) - 1;
 
+	let dxAt: number;
+	$: dxAt = slider2;
+
 	let f: (x: number) => number
 	$: f = functions[selectedIndex].implementation
+
+	let fPrime: (x: number) => number
+	$: fPrime = functions[selectedIndex].derv;
 
 	let numberOfPoints: number = 100;
 
@@ -73,10 +80,10 @@ import { each, onMount } from 'svelte/internal';
 	});
 
 	const functions = [
-		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
+		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)', derv: (x: number) => Math.cos(x)},
 		{id: 'const', implementation: (x: number) => 1, representation: 'f(x) = 1'},
 		{id: 'linear', implementation: (x: number) => x, representation: 'f(x) = x'},
-		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2'},
+		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2', derv: (x: number) => 2 * x},
 		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
 		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
 	];
@@ -155,6 +162,9 @@ let selectedIndex = 0;
 			<!-- graph of function -->
 			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
 
+			<!-- derivative stuff-->
+			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={dxAt - 1} y1={f(dxAt) - fPrime(dxAt)} x2={dxAt + 1} y2={f(dxAt) + fPrime(dxAt)} />
+			
 		</g>
 	</svg>
 	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
@@ -162,6 +172,10 @@ let selectedIndex = 0;
 
 	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)} bind:value={slider}>
 	<label for="rectangle-width">Rectangle Width: {(dx).toFixed(3)}</label>
+
+	<input id="derv" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={slider2}>
+	<label for="rectangle-width">Derivative at: {dxAt}</label>
+
 </div>
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
