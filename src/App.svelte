@@ -189,7 +189,7 @@ let selectedIndex = 0;
 		</g>
 	</svg>
 	
-	<label for="derivative">Derivative at: {x}</label>
+	<label for="derivative">x: {x}</label>
 	<input id="derivative" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
 
 	<label for="deltaX">Delta x: {deltaX.toFixed(2)}</label>
