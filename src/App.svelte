@@ -19,13 +19,20 @@ import { each, onMount } from 'svelte/internal';
 
 	// variables of graph 
 	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
-	const TANGENT = 2;
 
 	const xMaxBound = DEFAULT_BOUND_MAGNITUDE
 	const xMinBound = -DEFAULT_BOUND_MAGNITUDE
 
 	const yMaxBound = DEFAULT_BOUND_MAGNITUDE
 	const yMinBound = -DEFAULT_BOUND_MAGNITUDE
+
+	let sliderX = 0;
+	let x: number;
+	$: x = sliderX;
+
+	let sliderDeltaX = Math.log((xMaxBound - xMinBound) / 2);
+	let deltaX: number;
+	$: deltaX = Math.exp(sliderDeltaX) - 1;
 
 	let integralBound1 = DEFAULT_BOUND_MAGNITUDE
 	let integralBound2 = -DEFAULT_BOUND_MAGNITUDE
@@ -36,14 +43,13 @@ import { each, onMount } from 'svelte/internal';
 	let integralUpperBound: number;
 	$: integralUpperBound = Math.max(integralBound1, integralBound2);
 	
-	let slider = Math.log((xMaxBound - xMinBound) / 2);
-	let slider2 = 0;
-
+	let sliderRectangleWidth = Math.log((xMaxBound - xMinBound) / 2);
 	let dx: number;
-	$: dx = Math.exp(slider) - 1;
+	$: dx = Math.exp(sliderRectangleWidth) - 1;
 
-	let dxAt: number;
-	$: dxAt = slider2;
+
+
+
 
 	let f: (x: number) => number
 	$: f = functions[selectedIndex].implementation
@@ -52,6 +58,31 @@ import { each, onMount } from 'svelte/internal';
 	$: fPrime = functions[selectedIndex].derv;
 
 	let numberOfPoints: number = 100;
+
+	let secantLine: {x1: number, y1: number, x2: number, y2: number}
+	$: secantLine = {
+		x1: xMinBound, y1: leftmostY(x, x + deltaX, f(x), f(x + deltaX)),
+		x2: xMaxBound, y2: rightmostY(x, x + deltaX, f(x), f(x + deltaX))
+	}
+
+	function leftmostY(x1: number, x2: number, y1: number, y2: number): number {
+		const lineFunction: (x: number) => number = function (x) {
+			const m = (y2 - y1) / (x2 - x1)
+			return m * (x - x1) + y1
+		}
+
+		return lineFunction(xMinBound)
+	}
+
+	function rightmostY(x1: number, x2: number, y1: number, y2: number): number {
+		const lineFunction: (x: number) => number = function (x) {
+			const m = (y2 - y1) / (x2 - x1)
+			return m * (x - x1) + y1
+		}
+
+		return lineFunction(xMaxBound)
+	}
+
 
 	// -10 -> 5
 	// offset => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
@@ -139,6 +170,35 @@ let selectedIndex = 0;
 		<button class={index === selectedIndex ? 'highlighted' : ''} on:click={_ => selectedIndex = index}><span id={f.id}>{f.representation}</span></button>
 	{/each}
 
+	<!-- derivatives -->
+	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
+		<g>
+			<!-- x and y axis -->
+			<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
+			<line stroke="black" fill="none" x1="0" y1={yMinBound} x2="0" y2={yMaxBound} />
+
+			<!-- graph of function -->
+			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
+
+			<line stroke="black" stroke-dasharray="2,2" fill="none"
+				x1={secantLine.x1} y1={secantLine.y1}
+				x2={secantLine.x2} y2={secantLine.y2}
+			/>
+			<circle cx={x} cy={f(x)} r=".075" fill="red"></circle>
+			<circle cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
+		</g>
+	</svg>
+	
+	<label for="derivative">Derivative at: {x}</label>
+	<input id="derivative" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
+
+	<label for="deltaX">Delta x: {deltaX.toFixed(2)}</label>
+	<input id="deltaX" type="range" min="0.001" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX}>
+
+
+
+	<!-- integrals -->
+
 	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
 		<g>
 			<!-- x and y axis -->
@@ -162,22 +222,14 @@ let selectedIndex = 0;
 
 			<!-- graph of function -->
 			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
-
-			<!-- derivative stuff-->
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={dxAt - TANGENT} y1={f(dxAt) - TANGENT * fPrime(dxAt)} x2={dxAt + TANGENT} y2={f(dxAt) + TANGENT * fPrime(dxAt)} />
-			
-			<circle cx={dxAt} cy={f(dxAt)} r=".075" fill="red"></circle>
 		</g>
 	</svg>
+	
 	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
 	<input class="bound-range" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
 
-	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)} bind:value={slider}>
 	<label for="rectangle-width">Rectangle Width: {(dx).toFixed(3)}</label>
-
-	<input id="derv" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={slider2}>
-	<label for="rectangle-width">Derivative at: {dxAt}</label>
-
+	<input id="rectangle-width" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)} bind:value={sliderRectangleWidth}>
 </div>
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
