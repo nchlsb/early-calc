@@ -19,6 +19,11 @@ describe("Range", () => {
     expect(range(n).reduce((sum, current) => sum + current)).to.equal((m * (m +1)) / 2);
   });
 
-
+  it('For all n, range(n + 1) === range(n) ++ [n]', () => {
+    for (let i = 0; i < 10000; i++) {
+      const n = Math.trunc(Math.random() * 300);
+      expect(range(n + 1)).to.deep.equal(range(n).concat([n]))
+    }
+  });
 
 });
