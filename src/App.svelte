@@ -124,9 +124,17 @@ import { each, onMount } from 'svelte/internal';
 	];
 
 	onMount(() => {
+
+		// functions at the top
 		for (let f of functions) {
 			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'html'});
 		}
+
+		// input for location of tangent line
+		katex.render("x:", document.getElementById("labelDerivative"), {output: 'html'});
+
+		// input for delta x
+		katex.render("\\Delta x:", document.getElementById("labelDeltaX"), {output: 'html'});
 	});
 
 /*
@@ -208,10 +216,10 @@ let selectedIndex = 0;
 		</g>
 	</svg>
 	
-	<label for="derivative">x: {x}</label>
+	<label id="labelDerivative" for="derivative">x: {x}</label>
 	<input id="derivative" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
 
-	<label for="deltaX">Delta x: {deltaX.toFixed(2)}</label>
+	<label id="labelDeltaX" for="deltaX">Delta x: {deltaX.toFixed(2)}</label>
 	<input id="deltaX" type="range" min="0.001" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX}>
 
 
