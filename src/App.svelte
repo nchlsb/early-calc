@@ -130,11 +130,12 @@ import { each, onMount } from 'svelte/internal';
 			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'html'});
 		}
 
-		// input for location of tangent line
-		katex.render("x:", document.getElementById("labelDerivative"), {output: 'html'});
+		// issue: this overwrites the values
+		// // input for location of tangent line
+		// katex.render("x:", document.getElementById("labelDerivative"), {output: 'html'});
 
-		// input for delta x
-		katex.render("\\Delta x:", document.getElementById("labelDeltaX"), {output: 'html'});
+		// // input for delta x
+		// katex.render("\\Delta x:", document.getElementById("labelDeltaX"), {output: 'html'});
 	});
 
 /*
