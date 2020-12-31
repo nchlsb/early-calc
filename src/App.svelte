@@ -130,12 +130,11 @@ import { each, onMount } from 'svelte/internal';
 			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'html'});
 		}
 
-		// issue: this overwrites the values
-		// // input for location of tangent line
-		// katex.render("x:", document.getElementById("labelDerivative"), {output: 'html'});
+		// input for location of tangent line
+		katex.render("x:", document.getElementById("labelDerivative"), {output: 'html'});
 
-		// // input for delta x
-		// katex.render("\\Delta x:", document.getElementById("labelDeltaX"), {output: 'html'});
+		// input for delta x
+		katex.render("\\Delta x:", document.getElementById("labelDeltaXSymbol"), {output: 'html'});
 	});
 
 /*
@@ -220,7 +219,14 @@ let selectedIndex = 0;
 	<label id="labelDerivative" for="derivative">x: {x}</label>
 	<input id="derivative" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
 
-	<label id="labelDeltaX" for="deltaX">Delta x: {deltaX.toFixed(2)}</label>
+	<!-- todo - is there a better way to in-line this?-->
+	<span style="display: inline-block;">
+		<label id="labelDeltaXSymbol" for="deltaX">Delta x:</label>
+	</span>
+	<span style="display: inline-block;">
+		<label id="labelDeltaXValue" for="deltaX">{deltaX.toFixed(2)}</label>
+	</span>
+	
 	<input id="deltaX" type="range" min="0.001" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX}>
 
 
