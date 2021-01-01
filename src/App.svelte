@@ -131,7 +131,7 @@ import { each, onMount } from 'svelte/internal';
 		}
 
 		// input for location of tangent line
-		katex.render("x:", document.getElementById("labelDerivative"), {output: 'html'});
+		katex.render("x:", document.getElementById("labelX"), {output: 'html'});
 
 		// input for delta x
 		katex.render("\\Delta x:", document.getElementById("labelDeltaXSymbol"), {output: 'html'});
@@ -216,8 +216,8 @@ let selectedIndex = 0;
 		</g>
 	</svg>
 	
-	<label id="labelDerivative" for="derivative">x: {x}</label>
-	<input id="derivative" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
+	<label id="labelX" for="x">x: {x}</label>
+	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
 
 	<!-- todo - is there a better way to in-line this?-->
 	<span style="display: inline-block;">
