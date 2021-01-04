@@ -137,40 +137,6 @@ import { each, onMount } from 'svelte/internal';
 		katex.render("\\Delta x:", document.getElementById("labelDeltaXSymbol"), {output: 'html'});
 	});
 
-/*
-
-	Done list (for next push)
-
-		- (X)Change the consts at the bottom 
-		- (X)Add automatically-updating LaTeX equations
-		- (x)2-3 example functions in drop down
-			- sine
-			- linear
-			- const
-			- quadratic
-			- y = (x - 1)(x)(x + 1)
-			- y = e^x
-		- (x)Bounderies should be aligned on the axes or use scroll to zoom
-
-		- (x)Desktop and mobile friendliness
-		- (x) make curve smoother
-
-	Todo list
-		5. ( )Negative areas and colors
-			  Especially when the lower bound is greater than the upper bound
-		6. ( )Add testing
-			  Property based test: symbolic integration and riemann sum give similar results		
-
-		10.( ) Highlight over or under estimations as differnt color 
-
-
-		-. ( ) Estimation style drop down
-				below
-				above
-				trapezoid
-				both above and below to compare 
-		7. ( )Custom user equations
-*/
 
 let selectedIndex = 0;
 
