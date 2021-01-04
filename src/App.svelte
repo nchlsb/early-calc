@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { result, tex } from './expression'
-	import { Maybe, yAt } from "./helpers";
-	import { endSwitch, maxBy, minBy, orElse, range, sumBy, just, nothing } from "./helpers";
+	import {range, yAt} from "./helpers";
 	import * as katex from "katex";
 import { each, onMount } from 'svelte/internal';
 	
