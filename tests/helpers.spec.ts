@@ -20,9 +20,8 @@ describe("Range", () => {
   });
 
   it('For all n, range(n + 1) === range(n) ++ [n]', () => {
-    for (let i = 0; i < 10000; i++) {
-      const n = Math.trunc(Math.random() * 300);
-      expect(range(n + 1)).to.deep.equal(range(n).concat([n]))
+    for (let i = 0; i < 1000; i++) {
+      expect(range(i + 1)).to.deep.equal(range(i).concat([i]))
     }
   });
 
