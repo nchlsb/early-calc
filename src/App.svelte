@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { result, tex } from './expression'
-	import type { Maybe } from "./helpers";
+	import { Maybe, yAt } from "./helpers";
 	import { endSwitch, maxBy, minBy, orElse, range, sumBy, just, nothing } from "./helpers";
 	import * as katex from "katex";
 import { each, onMount } from 'svelte/internal';
@@ -27,7 +27,7 @@ import { each, onMount } from 'svelte/internal';
 	const yMaxBound = DEFAULT_BOUND_MAGNITUDE
 	const yMinBound = -DEFAULT_BOUND_MAGNITUDE
 
-
+	const DELTX_X_APPROACHES_0 = 0.000000001;
 
 	let sliderX = 0;
 	let x: number;
@@ -50,25 +50,24 @@ import { each, onMount } from 'svelte/internal';
 	let dx: number;
 	$: dx = Math.exp(sliderRectangleWidth) - 1;
 
-
-
-
-
 	let f: (x: number) => number
 	$: f = functions[selectedIndex].implementation
-
-	let fPrime: (x: number) => number
-	$: fPrime = functions[selectedIndex].derv;
 
 	let numberOfPoints: number = 100;
 
 	let secantLine: {x1: number, y1: number, x2: number, y2: number}
 	$: secantLine = {
-		x1: xMinBound, y1: leftmostY(x, x + deltaX, f(x), f(x + deltaX)),
-		x2: xMaxBound, y2: rightmostY(x, x + deltaX, f(x), f(x + deltaX))
+		x1: xMinBound, y1: yAt(xMinBound, x, f(x), x + deltaX, f(x + deltaX)),
+		x2: xMaxBound, y2: yAt(xMaxBound, x, f(x), x + deltaX, f(x + deltaX))
 	}
 
-	function leftmostY(x1: number, x2: number, y1: number, y2: number): number {
+	let tangentLine: {x1: number, y1: number, x2: number, y2: number}
+	$: tangentLine = {
+		x1: xMinBound, y1: yAt(xMinBound, x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)),
+		x2: xMaxBound, y2: yAt(xMaxBound, x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0))
+	}
+
+	function leftmostY(x1: number, y1: number, x2: number, y2: number): number {
 		const lineFunction: (x: number) => number = function (x) {
 			const m = (y2 - y1) / (x2 - x1)
 			return m * (x - x1) + y1
@@ -77,7 +76,7 @@ import { each, onMount } from 'svelte/internal';
 		return lineFunction(xMinBound)
 	}
 
-	function rightmostY(x1: number, x2: number, y1: number, y2: number): number {
+	function rightmostY(x1: number, y1: number, x2: number, y2: number): number {
 		const lineFunction: (x: number) => number = function (x) {
 			const m = (y2 - y1) / (x2 - x1)
 			return m * (x - x1) + y1
@@ -115,10 +114,10 @@ import { each, onMount } from 'svelte/internal';
 	});
 
 	const functions = [
-		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)', derv: (x: number) => Math.cos(x)},
+		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
 		{id: 'const', implementation: (x: number) => 1, representation: 'f(x) = 1'},
 		{id: 'linear', implementation: (x: number) => x, representation: 'f(x) = x'},
-		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2', derv: (x: number) => 2 * x},
+		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2'},
 		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
 		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
 	];
@@ -177,8 +176,15 @@ let selectedIndex = 0;
 				x1={secantLine.x1} y1={secantLine.y1}
 				x2={secantLine.x2} y2={secantLine.y2}
 			/>
+			<!-- <line stroke="grey" stroke-dasharray="2,2" fill="none"
+				x1={tangentLine.x1} y1={tangentLine.y1}
+				x2={tangentLine.x2} y2={tangentLine.y2}
+			/> -->
+
 			<circle cx={x} cy={f(x)} r=".075" fill="red"></circle>
 			<circle cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
+
+			<!-- <text x={x} y={-f(x)} font-size=".4">Delt X</text> -->
 		</g>
 	</svg>
 	

@@ -1,4 +1,4 @@
-import { range } from '../src/helpers';
+import { range, yAt } from '../src/helpers';
 import { expect } from 'chai';
 import 'mocha';
 
@@ -16,13 +16,24 @@ describe("Range", () => {
   it("Should have elelments that sum to nth triangluar number where n is the arugment - 1", () => {
     const n = 10;
     const m = n - 1
-    expect(range(n).reduce((sum, current) => sum + current)).to.equal((m * (m +1)) / 2);
+    expect(range(n).reduce((sum, current) => sum + current)).to.equal((m * (m + 1)) / 2);
   });
 
   it('For all n, range(n + 1) === range(n) ++ [n]', () => {
     for (let i = 0; i < 1000; i++) {
       expect(range(i + 1)).to.deep.equal(range(i).concat([i]))
     }
+  });
+
+});
+
+describe("yAt", () => {
+  it("Find points less than the input value", () => {
+    expect(yAt(-1, 0, 0, 1, 1)).to.equal(-1);
+  });
+
+  it("Find points greater than the input value", () => {
+    expect(yAt(2, 0, 0, 1, 1)).to.equal(2);
   });
 
 });

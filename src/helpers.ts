@@ -76,3 +76,12 @@ export function just<T>(value: T): Maybe<T> {
 export function nothing<T>(): Maybe<T> {
     return {kind: 'Nothing'}
 }
+
+export function yAt(x: number, x1: number, y1: number, x2: number, y2: number): number {
+    const lineFunction: (x: number) => number = function (x) {
+        const m = (y2 - y1) / (x2 - x1)
+        return m * (x - x1) + y1
+    }
+
+    return lineFunction(x)
+}
