@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {range, yAt} from "./helpers";
+	import {pointSlope, range, slope, yAt} from "./helpers";
 	import * as katex from "katex";
 import { each, onMount } from 'svelte/internal';
 	
@@ -55,34 +55,15 @@ import { each, onMount } from 'svelte/internal';
 
 	let secantLine: {x1: number, y1: number, x2: number, y2: number}
 	$: secantLine = {
-		x1: xMinBound, y1: yAt(xMinBound, x, f(x), x + deltaX, f(x + deltaX)),
-		x2: xMaxBound, y2: yAt(xMaxBound, x, f(x), x + deltaX, f(x + deltaX))
+		x1: xMinBound, y1: pointSlope(xMinBound, slope(x, f(x), x + deltaX, f(x + deltaX)), x, f(x)),
+		x2: xMaxBound, y2: pointSlope(xMaxBound, slope(x, f(x), x + deltaX, f(x + deltaX)), x, f(x))
 	}
 
 	let tangentLine: {x1: number, y1: number, x2: number, y2: number}
 	$: tangentLine = {
-		x1: xMinBound, y1: yAt(xMinBound, x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)),
-		x2: xMaxBound, y2: yAt(xMaxBound, x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0))
+		x1: xMinBound, y1: pointSlope(xMinBound, slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)), x, f(x)),
+		x2: xMaxBound, y2: pointSlope(xMaxBound, slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)), x, f(x))
 	}
-
-	function leftmostY(x1: number, y1: number, x2: number, y2: number): number {
-		const lineFunction: (x: number) => number = function (x) {
-			const m = (y2 - y1) / (x2 - x1)
-			return m * (x - x1) + y1
-		}
-
-		return lineFunction(xMinBound)
-	}
-
-	function rightmostY(x1: number, y1: number, x2: number, y2: number): number {
-		const lineFunction: (x: number) => number = function (x) {
-			const m = (y2 - y1) / (x2 - x1)
-			return m * (x - x1) + y1
-		}
-
-		return lineFunction(xMaxBound)
-	}
-
 
 	// -10 -> 5
 	// offset => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
@@ -185,8 +166,18 @@ let selectedIndex = 0;
 			<!-- <text x={x} y={-f(x)} font-size=".4">Delt X</text> -->
 		</g>
 	</svg>
-	
-	<label id="labelX" for="x">x: {x}</label>
+
+	<!-- todo - is there a better way to in-line this?-->
+	<span>
+		Slope of the secant: {slope(x, f(x), x + deltaX, f(x + deltaX)).toFixed(2)} | Slope of the tagent {slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)).toFixed(2)}
+	</span>
+	<br/>
+	<span style="display: inline-block;">
+		<label id="labelX" for="x">x:</label>
+	</span>
+	<span style="display: inline-block;">
+		<label id="labelDeltaXValue" for="deltaX">{x.toFixed(2)}</label>
+	</span>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
 
 	<!-- todo - is there a better way to in-line this?-->

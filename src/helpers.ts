@@ -85,3 +85,17 @@ export function yAt(x: number, x1: number, y1: number, x2: number, y2: number): 
 
     return lineFunction(x)
 }
+
+export function pointSlope(x: number, m: number, x0: number, y0: number,){
+    return m * (x - x0) + y0;
+}
+
+export function slope( x1: number, y1: number, x2: number, y2: number): number{
+    return (y2 - y1) / (x2 - x1);
+}
+
+// export function slope( x1: number, y1: number, x2: number, y2: number): Maybe<number>{
+//     return (x2-x1 != 0) ? 
+//     {kind: "Just", value: (y2 - y1) / (x2 - x1) } : 
+//     {kind : 'Nothing'};
+// }
