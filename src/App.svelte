@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {pointSlope, range, slope, yAt} from "./helpers";
+	import {pointSlope, range, slope} from "./helpers";
 	import * as katex from "katex";
 import { each, onMount } from 'svelte/internal';
 	

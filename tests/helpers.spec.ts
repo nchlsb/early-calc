@@ -1,4 +1,4 @@
-import { range, yAt } from '../src/helpers';
+import { pointSlope, range } from '../src/helpers';
 import { expect } from 'chai';
 import 'mocha';
 
@@ -27,13 +27,17 @@ describe("Range", () => {
 
 });
 
-describe("yAt", () => {
-  it("Find points less than the input value", () => {
-    expect(yAt(-1, 0, 0, 1, 1)).to.equal(-1);
+describe("pointSlope", () => {
+  it("Should work for a postive", () => {
+    expect(pointSlope(100, 1, 1, 1)).to.equal(100);
   });
 
-  it("Find points greater than the input value", () => {
-    expect(yAt(2, 0, 0, 1, 1)).to.equal(2);
+  it("Should work for a negative slope", () => {
+    expect(pointSlope(100, -1, 1, -1)).to.equal(-100);
   });
 
+
+  it("Should work for a slope of 0", () => {
+    expect(pointSlope(100, 0, 1, 1)).to.equal(1);
+  });
 });

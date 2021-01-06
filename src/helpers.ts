@@ -77,20 +77,11 @@ export function nothing<T>(): Maybe<T> {
     return {kind: 'Nothing'}
 }
 
-export function yAt(x: number, x1: number, y1: number, x2: number, y2: number): number {
-    const lineFunction: (x: number) => number = function (x) {
-        const m = (y2 - y1) / (x2 - x1)
-        return m * (x - x1) + y1
-    }
-
-    return lineFunction(x)
-}
-
-export function pointSlope(x: number, m: number, x0: number, y0: number,){
+export function pointSlope(x: number, m: number, x0: number, y0: number,): number {
     return m * (x - x0) + y0;
 }
 
-export function slope( x1: number, y1: number, x2: number, y2: number): number{
+export function slope( x1: number, y1: number, x2: number, y2: number): number {
     return (y2 - y1) / (x2 - x1);
 }
 
