@@ -6,7 +6,8 @@
     "dev": "rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
-    "test": "mocha -r ts-node/register tests/**/*.spec.ts" 
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts", 
+    "updateDocs": "rm -r ./docs/* && cp -r ./public/* ./docs/"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",

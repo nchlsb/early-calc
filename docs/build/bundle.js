@@ -377,13 +377,17 @@ var app = (function () {
         }
         return retVal;
     }
-    function yAt(x, x1, y1, x2, y2) {
-        const lineFunction = function (x) {
-            const m = (y2 - y1) / (x2 - x1);
-            return m * (x - x1) + y1;
-        };
-        return lineFunction(x);
+    function pointSlope(x, m, x0, y0) {
+        return m * (x - x0) + y0;
     }
+    function slope(x1, y1, x2, y2) {
+        return (y2 - y1) / (x2 - x1);
+    }
+    // export function slope( x1: number, y1: number, x2: number, y2: number): Maybe<number>{
+    //     return (x2-x1 != 0) ? 
+    //     {kind: "Just", value: (y2 - y1) / (x2 - x1) } : 
+    //     {kind : 'Nothing'};
+    // }
 
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -17711,18 +17715,18 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[32] = list[i];
+    	child_ctx[30] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[14] = list[i];
-    	child_ctx[36] = i;
+    	child_ctx[34] = i;
     	return child_ctx;
     }
 
-    // (98:1) {#each functions as f, index}
+    // (84:1) {#each functions as f, index}
     function create_each_block_1(ctx) {
     	let button;
     	let span;
@@ -17734,7 +17738,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler(...args) {
-    		return /*click_handler*/ ctx[20](/*index*/ ctx[36], ...args);
+    		return /*click_handler*/ ctx[20](/*index*/ ctx[34], ...args);
     	}
 
     	const block = {
@@ -17743,13 +17747,13 @@ var app = (function () {
     			span = element("span");
     			t = text(t_value);
     			attr_dev(span, "id", span_id_value = /*f*/ ctx[14].id);
-    			add_location(span, file, 98, 101, 4047);
+    			add_location(span, file, 84, 101, 3744);
 
-    			attr_dev(button, "class", button_class_value = "" + (null_to_empty(/*index*/ ctx[36] === /*selectedIndex*/ ctx[13]
+    			attr_dev(button, "class", button_class_value = "" + (null_to_empty(/*index*/ ctx[34] === /*selectedIndex*/ ctx[13]
     			? "highlighted"
     			: "") + " svelte-xg3565"));
 
-    			add_location(button, file, 98, 2, 3948);
+    			add_location(button, file, 84, 2, 3645);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -17764,7 +17768,7 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*selectedIndex*/ 8192 && button_class_value !== (button_class_value = "" + (null_to_empty(/*index*/ ctx[36] === /*selectedIndex*/ ctx[13]
+    			if (dirty[0] & /*selectedIndex*/ 8192 && button_class_value !== (button_class_value = "" + (null_to_empty(/*index*/ ctx[34] === /*selectedIndex*/ ctx[13]
     			? "highlighted"
     			: "") + " svelte-xg3565"))) {
     				attr_dev(button, "class", button_class_value);
@@ -17781,14 +17785,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(98:1) {#each functions as f, index}",
+    		source: "(84:1) {#each functions as f, index}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (188:3) {#each riemannRectangles as rectangle}
+    // (184:3) {#each riemannRectangles as rectangle}
     function create_each_block(ctx) {
     	let rect;
     	let rect_x_value;
@@ -17800,29 +17804,29 @@ var app = (function () {
     		c: function create() {
     			rect = svg_element("rect");
     			attr_dev(rect, "class", "riemann-rectangle svelte-xg3565");
-    			attr_dev(rect, "x", rect_x_value = /*rectangle*/ ctx[32].lowerLeftCorner.x);
-    			attr_dev(rect, "y", rect_y_value = /*rectangle*/ ctx[32].lowerLeftCorner.y);
-    			attr_dev(rect, "width", rect_width_value = /*rectangle*/ ctx[32].width);
-    			attr_dev(rect, "height", rect_height_value = /*rectangle*/ ctx[32].height);
-    			add_location(rect, file, 188, 5, 10044);
+    			attr_dev(rect, "x", rect_x_value = /*rectangle*/ ctx[30].lowerLeftCorner.x);
+    			attr_dev(rect, "y", rect_y_value = /*rectangle*/ ctx[30].lowerLeftCorner.y);
+    			attr_dev(rect, "width", rect_width_value = /*rectangle*/ ctx[30].width);
+    			attr_dev(rect, "height", rect_height_value = /*rectangle*/ ctx[30].height);
+    			add_location(rect, file, 184, 5, 10172);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_x_value !== (rect_x_value = /*rectangle*/ ctx[32].lowerLeftCorner.x)) {
+    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_x_value !== (rect_x_value = /*rectangle*/ ctx[30].lowerLeftCorner.x)) {
     				attr_dev(rect, "x", rect_x_value);
     			}
 
-    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_y_value !== (rect_y_value = /*rectangle*/ ctx[32].lowerLeftCorner.y)) {
+    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_y_value !== (rect_y_value = /*rectangle*/ ctx[30].lowerLeftCorner.y)) {
     				attr_dev(rect, "y", rect_y_value);
     			}
 
-    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_width_value !== (rect_width_value = /*rectangle*/ ctx[32].width)) {
+    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_width_value !== (rect_width_value = /*rectangle*/ ctx[30].width)) {
     				attr_dev(rect, "width", rect_width_value);
     			}
 
-    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_height_value !== (rect_height_value = /*rectangle*/ ctx[32].height)) {
+    			if (dirty[0] & /*riemannRectangles*/ 4096 && rect_height_value !== (rect_height_value = /*rectangle*/ ctx[30].height)) {
     				attr_dev(rect, "height", rect_height_value);
     			}
     		},
@@ -17835,7 +17839,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(188:3) {#each riemannRectangles as rectangle}",
+    		source: "(184:3) {#each riemannRectangles as rectangle}",
     		ctx
     	});
 
@@ -17896,23 +17900,37 @@ var app = (function () {
     	let circle1_cy_value;
     	let svg0_viewBox_value;
     	let t1;
-    	let label0;
+    	let span0;
     	let t2;
+    	let t3_value = slope(/*x*/ ctx[1], /*f*/ ctx[14](/*x*/ ctx[1]), /*x*/ ctx[1] + /*deltaX*/ ctx[3], /*f*/ ctx[14](/*x*/ ctx[1] + /*deltaX*/ ctx[3])).toFixed(2) + "";
     	let t3;
     	let t4;
-    	let input0;
+    	let t5_value = slope(/*x*/ ctx[1], /*f*/ ctx[14](/*x*/ ctx[1]), /*x*/ ctx[1] + DELTX_X_APPROACHES_0, /*f*/ ctx[14](/*x*/ ctx[1] + DELTX_X_APPROACHES_0)).toFixed(2) + "";
     	let t5;
-    	let span0;
-    	let label1;
+    	let t6;
+    	let br;
     	let t7;
     	let span1;
-    	let label2;
-    	let t8_value = /*deltaX*/ ctx[3].toFixed(2) + "";
-    	let t8;
+    	let label0;
     	let t9;
+    	let span2;
+    	let label1;
+    	let t10_value = /*x*/ ctx[1].toFixed(2) + "";
+    	let t10;
+    	let t11;
+    	let input0;
+    	let t12;
+    	let span3;
+    	let label2;
+    	let t14;
+    	let span4;
+    	let label3;
+    	let t15_value = /*deltaX*/ ctx[3].toFixed(2) + "";
+    	let t15;
+    	let t16;
     	let input1;
     	let input1_max_value;
-    	let t10;
+    	let t17;
     	let svg1;
     	let g1;
     	let line19;
@@ -17954,23 +17972,23 @@ var app = (function () {
     	let polyline1;
     	let polyline1_points_value;
     	let svg1_viewBox_value;
-    	let t11;
-    	let label3;
-    	let t13;
-    	let input2;
-    	let t14;
-    	let label4;
-    	let t16;
-    	let input3;
-    	let t17;
-    	let label5;
     	let t18;
-    	let t19_value = /*dx*/ ctx[9].toFixed(3) + "";
-    	let t19;
+    	let label4;
     	let t20;
+    	let input2;
+    	let t21;
+    	let label5;
+    	let t23;
+    	let input3;
+    	let t24;
+    	let label6;
+    	let t25;
+    	let t26_value = /*dx*/ ctx[9].toFixed(3) + "";
+    	let t26;
+    	let t27;
     	let input4;
     	let input4_max_value;
-    	let t21;
+    	let t28;
     	let link;
     	let mounted;
     	let dispose;
@@ -18025,22 +18043,34 @@ var app = (function () {
     			circle0 = svg_element("circle");
     			circle1 = svg_element("circle");
     			t1 = space();
-    			label0 = element("label");
-    			t2 = text("x: ");
-    			t3 = text(/*x*/ ctx[1]);
-    			t4 = space();
-    			input0 = element("input");
-    			t5 = space();
     			span0 = element("span");
-    			label1 = element("label");
-    			label1.textContent = "Delta x:";
+    			t2 = text("Slope of the secant: ");
+    			t3 = text(t3_value);
+    			t4 = text(" | Slope of the tagent ");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			br = element("br");
     			t7 = space();
     			span1 = element("span");
-    			label2 = element("label");
-    			t8 = text(t8_value);
+    			label0 = element("label");
+    			label0.textContent = "x:";
     			t9 = space();
+    			span2 = element("span");
+    			label1 = element("label");
+    			t10 = text(t10_value);
+    			t11 = space();
+    			input0 = element("input");
+    			t12 = space();
+    			span3 = element("span");
+    			label2 = element("label");
+    			label2.textContent = "Delta x:";
+    			t14 = space();
+    			span4 = element("span");
+    			label3 = element("label");
+    			t15 = text(t15_value);
+    			t16 = space();
     			input1 = element("input");
-    			t10 = space();
+    			t17 = space();
     			svg1 = svg_element("svg");
     			g1 = svg_element("g");
     			line19 = svg_element("line");
@@ -18069,23 +18099,23 @@ var app = (function () {
     			}
 
     			polyline1 = svg_element("polyline");
-    			t11 = space();
-    			label3 = element("label");
-    			label3.textContent = "interval bound 1";
-    			t13 = space();
-    			input2 = element("input");
-    			t14 = space();
+    			t18 = space();
     			label4 = element("label");
-    			label4.textContent = "interval bound 2";
-    			t16 = space();
-    			input3 = element("input");
-    			t17 = space();
-    			label5 = element("label");
-    			t18 = text("Rectangle Width: ");
-    			t19 = text(t19_value);
+    			label4.textContent = "interval bound 1";
     			t20 = space();
-    			input4 = element("input");
+    			input2 = element("input");
     			t21 = space();
+    			label5 = element("label");
+    			label5.textContent = "interval bound 2";
+    			t23 = space();
+    			input3 = element("input");
+    			t24 = space();
+    			label6 = element("label");
+    			t25 = text("Rectangle Width: ");
+    			t26 = text(t26_value);
+    			t27 = space();
+    			input4 = element("input");
+    			t28 = space();
     			link = element("link");
     			attr_dev(line0, "stroke", "black");
     			attr_dev(line0, "fill", "none");
@@ -18094,7 +18124,7 @@ var app = (function () {
     			attr_dev(line0, "x2", /*xMaxBound*/ ctx[15]);
     			attr_dev(line0, "y2", "0");
     			attr_dev(line0, "class", "svelte-xg3565");
-    			add_location(line0, file, 105, 3, 4282);
+    			add_location(line0, file, 91, 3, 3979);
     			attr_dev(line1, "stroke", "black");
     			attr_dev(line1, "fill", "none");
     			attr_dev(line1, "x1", "1");
@@ -18102,7 +18132,7 @@ var app = (function () {
     			attr_dev(line1, "x2", "1");
     			attr_dev(line1, "y2", line1_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line1, "class", "svelte-xg3565");
-    			add_location(line1, file, 106, 3, 4366);
+    			add_location(line1, file, 92, 3, 4063);
     			attr_dev(line2, "stroke", "black");
     			attr_dev(line2, "fill", "none");
     			attr_dev(line2, "x1", "2");
@@ -18110,7 +18140,7 @@ var app = (function () {
     			attr_dev(line2, "x2", "2");
     			attr_dev(line2, "y2", line2_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line2, "class", "svelte-xg3565");
-    			add_location(line2, file, 107, 3, 4479);
+    			add_location(line2, file, 93, 3, 4176);
     			attr_dev(line3, "stroke", "black");
     			attr_dev(line3, "fill", "none");
     			attr_dev(line3, "x1", "3");
@@ -18118,7 +18148,7 @@ var app = (function () {
     			attr_dev(line3, "x2", "3");
     			attr_dev(line3, "y2", line3_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line3, "class", "svelte-xg3565");
-    			add_location(line3, file, 108, 3, 4592);
+    			add_location(line3, file, 94, 3, 4289);
     			attr_dev(line4, "stroke", "black");
     			attr_dev(line4, "fill", "none");
     			attr_dev(line4, "x1", "4");
@@ -18126,7 +18156,7 @@ var app = (function () {
     			attr_dev(line4, "x2", "4");
     			attr_dev(line4, "y2", line4_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line4, "class", "svelte-xg3565");
-    			add_location(line4, file, 109, 3, 4705);
+    			add_location(line4, file, 95, 3, 4402);
     			attr_dev(line5, "stroke", "black");
     			attr_dev(line5, "fill", "none");
     			attr_dev(line5, "x1", "-1");
@@ -18134,7 +18164,7 @@ var app = (function () {
     			attr_dev(line5, "x2", "-1");
     			attr_dev(line5, "y2", line5_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line5, "class", "svelte-xg3565");
-    			add_location(line5, file, 110, 3, 4818);
+    			add_location(line5, file, 96, 3, 4515);
     			attr_dev(line6, "stroke", "black");
     			attr_dev(line6, "fill", "none");
     			attr_dev(line6, "x1", "-2");
@@ -18142,7 +18172,7 @@ var app = (function () {
     			attr_dev(line6, "x2", "-2");
     			attr_dev(line6, "y2", line6_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line6, "class", "svelte-xg3565");
-    			add_location(line6, file, 111, 3, 4931);
+    			add_location(line6, file, 97, 3, 4628);
     			attr_dev(line7, "stroke", "black");
     			attr_dev(line7, "fill", "none");
     			attr_dev(line7, "x1", "-3");
@@ -18150,7 +18180,7 @@ var app = (function () {
     			attr_dev(line7, "x2", "-3");
     			attr_dev(line7, "y2", line7_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line7, "class", "svelte-xg3565");
-    			add_location(line7, file, 112, 3, 5044);
+    			add_location(line7, file, 98, 3, 4741);
     			attr_dev(line8, "stroke", "black");
     			attr_dev(line8, "fill", "none");
     			attr_dev(line8, "x1", "-4");
@@ -18158,7 +18188,7 @@ var app = (function () {
     			attr_dev(line8, "x2", "-4");
     			attr_dev(line8, "y2", line8_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line8, "class", "svelte-xg3565");
-    			add_location(line8, file, 113, 3, 5157);
+    			add_location(line8, file, 99, 3, 4854);
     			attr_dev(line9, "stroke", "black");
     			attr_dev(line9, "fill", "none");
     			attr_dev(line9, "x1", "0");
@@ -18166,7 +18196,7 @@ var app = (function () {
     			attr_dev(line9, "x2", "0");
     			attr_dev(line9, "y2", /*yMaxBound*/ ctx[17]);
     			attr_dev(line9, "class", "svelte-xg3565");
-    			add_location(line9, file, 114, 3, 5270);
+    			add_location(line9, file, 100, 3, 4967);
     			attr_dev(line10, "stroke", "black");
     			attr_dev(line10, "fill", "none");
     			attr_dev(line10, "x1", line10_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18174,7 +18204,7 @@ var app = (function () {
     			attr_dev(line10, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line10, "y2", "1");
     			attr_dev(line10, "class", "svelte-xg3565");
-    			add_location(line10, file, 115, 3, 5354);
+    			add_location(line10, file, 101, 3, 5051);
     			attr_dev(line11, "stroke", "black");
     			attr_dev(line11, "fill", "none");
     			attr_dev(line11, "x1", line11_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18182,7 +18212,7 @@ var app = (function () {
     			attr_dev(line11, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line11, "y2", "2");
     			attr_dev(line11, "class", "svelte-xg3565");
-    			add_location(line11, file, 116, 3, 5466);
+    			add_location(line11, file, 102, 3, 5163);
     			attr_dev(line12, "stroke", "black");
     			attr_dev(line12, "fill", "none");
     			attr_dev(line12, "x1", line12_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18190,7 +18220,7 @@ var app = (function () {
     			attr_dev(line12, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line12, "y2", "3");
     			attr_dev(line12, "class", "svelte-xg3565");
-    			add_location(line12, file, 117, 3, 5578);
+    			add_location(line12, file, 103, 3, 5275);
     			attr_dev(line13, "stroke", "black");
     			attr_dev(line13, "fill", "none");
     			attr_dev(line13, "x1", line13_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18198,7 +18228,7 @@ var app = (function () {
     			attr_dev(line13, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line13, "y2", "4");
     			attr_dev(line13, "class", "svelte-xg3565");
-    			add_location(line13, file, 118, 3, 5690);
+    			add_location(line13, file, 104, 3, 5387);
     			attr_dev(line14, "stroke", "black");
     			attr_dev(line14, "fill", "none");
     			attr_dev(line14, "x1", line14_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18206,7 +18236,7 @@ var app = (function () {
     			attr_dev(line14, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line14, "y2", "-1");
     			attr_dev(line14, "class", "svelte-xg3565");
-    			add_location(line14, file, 119, 3, 5802);
+    			add_location(line14, file, 105, 3, 5499);
     			attr_dev(line15, "stroke", "black");
     			attr_dev(line15, "fill", "none");
     			attr_dev(line15, "x1", line15_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18214,7 +18244,7 @@ var app = (function () {
     			attr_dev(line15, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line15, "y2", "-2");
     			attr_dev(line15, "class", "svelte-xg3565");
-    			add_location(line15, file, 120, 3, 5915);
+    			add_location(line15, file, 106, 3, 5612);
     			attr_dev(line16, "stroke", "black");
     			attr_dev(line16, "fill", "none");
     			attr_dev(line16, "x1", line16_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18222,7 +18252,7 @@ var app = (function () {
     			attr_dev(line16, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line16, "y2", "-3");
     			attr_dev(line16, "class", "svelte-xg3565");
-    			add_location(line16, file, 121, 3, 6028);
+    			add_location(line16, file, 107, 3, 5725);
     			attr_dev(line17, "stroke", "black");
     			attr_dev(line17, "fill", "none");
     			attr_dev(line17, "x1", line17_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18230,12 +18260,12 @@ var app = (function () {
     			attr_dev(line17, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line17, "y2", "-4");
     			attr_dev(line17, "class", "svelte-xg3565");
-    			add_location(line17, file, 122, 3, 6141);
+    			add_location(line17, file, 108, 3, 5838);
     			attr_dev(polyline0, "stroke", "black");
     			attr_dev(polyline0, "fill", "none");
     			attr_dev(polyline0, "points", polyline0_points_value = /*points*/ ctx[11].map(func).join(" "));
     			attr_dev(polyline0, "class", "svelte-xg3565");
-    			add_location(polyline0, file, 125, 3, 6287);
+    			add_location(polyline0, file, 111, 3, 5984);
     			attr_dev(line18, "stroke", "black");
     			attr_dev(line18, "stroke-dasharray", "2,2");
     			attr_dev(line18, "fill", "none");
@@ -18244,52 +18274,62 @@ var app = (function () {
     			attr_dev(line18, "x2", line18_x__value_1 = /*secantLine*/ ctx[10].x2);
     			attr_dev(line18, "y2", line18_y__value_1 = /*secantLine*/ ctx[10].y2);
     			attr_dev(line18, "class", "svelte-xg3565");
-    			add_location(line18, file, 127, 3, 6397);
+    			add_location(line18, file, 113, 3, 6094);
     			attr_dev(circle0, "cx", /*x*/ ctx[1]);
     			attr_dev(circle0, "cy", circle0_cy_value = /*f*/ ctx[14](/*x*/ ctx[1]));
     			attr_dev(circle0, "r", ".075");
     			attr_dev(circle0, "fill", "red");
-    			add_location(circle0, file, 136, 3, 6717);
+    			add_location(circle0, file, 122, 3, 6414);
     			attr_dev(circle1, "cx", circle1_cx_value = /*x*/ ctx[1] + /*deltaX*/ ctx[3]);
     			attr_dev(circle1, "cy", circle1_cy_value = /*f*/ ctx[14](/*x*/ ctx[1] + /*deltaX*/ ctx[3]));
     			attr_dev(circle1, "r", ".075");
     			attr_dev(circle1, "fill", "red");
-    			add_location(circle1, file, 137, 3, 6776);
+    			add_location(circle1, file, 123, 3, 6473);
     			attr_dev(g0, "class", "svelte-xg3565");
-    			add_location(g0, file, 103, 2, 4248);
+    			add_location(g0, file, 89, 2, 3945);
     			attr_dev(svg0, "class", "cartesian svelte-xg3565");
     			attr_dev(svg0, "viewBox", svg0_viewBox_value = "" + (/*xMinBound*/ ctx[16] + " " + /*yMinBound*/ ctx[18] + " " + (/*xMaxBound*/ ctx[15] - /*xMinBound*/ ctx[16]) + " " + (/*yMaxBound*/ ctx[17] - /*yMinBound*/ ctx[18])));
-    			add_location(svg0, file, 102, 1, 4135);
+    			add_location(svg0, file, 88, 1, 3832);
+    			add_location(span0, file, 130, 1, 6689);
+    			add_location(br, file, 133, 1, 6892);
     			attr_dev(label0, "id", "labelX");
     			attr_dev(label0, "for", "x");
     			attr_dev(label0, "class", "svelte-xg3565");
-    			add_location(label0, file, 143, 1, 6937);
+    			add_location(label0, file, 135, 2, 6941);
+    			set_style(span1, "display", "inline-block");
+    			add_location(span1, file, 134, 1, 6900);
+    			attr_dev(label1, "id", "labelDeltaXValue");
+    			attr_dev(label1, "for", "deltaX");
+    			attr_dev(label1, "class", "svelte-xg3565");
+    			add_location(label1, file, 138, 2, 7032);
+    			set_style(span2, "display", "inline-block");
+    			add_location(span2, file, 137, 1, 6991);
     			attr_dev(input0, "id", "x");
     			attr_dev(input0, "type", "range");
     			attr_dev(input0, "step", "0.01");
     			attr_dev(input0, "min", /*xMinBound*/ ctx[16]);
     			attr_dev(input0, "max", /*xMaxBound*/ ctx[15]);
     			attr_dev(input0, "class", "svelte-xg3565");
-    			add_location(input0, file, 144, 1, 6981);
-    			attr_dev(label1, "id", "labelDeltaXSymbol");
-    			attr_dev(label1, "for", "deltaX");
-    			attr_dev(label1, "class", "svelte-xg3565");
-    			add_location(label1, file, 148, 2, 7175);
-    			set_style(span0, "display", "inline-block");
-    			add_location(span0, file, 147, 1, 7134);
-    			attr_dev(label2, "id", "labelDeltaXValue");
+    			add_location(input0, file, 140, 1, 7109);
+    			attr_dev(label2, "id", "labelDeltaXSymbol");
     			attr_dev(label2, "for", "deltaX");
     			attr_dev(label2, "class", "svelte-xg3565");
-    			add_location(label2, file, 151, 2, 7288);
-    			set_style(span1, "display", "inline-block");
-    			add_location(span1, file, 150, 1, 7247);
+    			add_location(label2, file, 144, 2, 7303);
+    			set_style(span3, "display", "inline-block");
+    			add_location(span3, file, 143, 1, 7262);
+    			attr_dev(label3, "id", "labelDeltaXValue");
+    			attr_dev(label3, "for", "deltaX");
+    			attr_dev(label3, "class", "svelte-xg3565");
+    			add_location(label3, file, 147, 2, 7416);
+    			set_style(span4, "display", "inline-block");
+    			add_location(span4, file, 146, 1, 7375);
     			attr_dev(input1, "id", "deltaX");
     			attr_dev(input1, "type", "range");
     			attr_dev(input1, "min", "0.001");
     			attr_dev(input1, "step", "0.01");
     			attr_dev(input1, "max", input1_max_value = Math.log(/*xMaxBound*/ ctx[15] - /*xMinBound*/ ctx[16]).toFixed(2));
     			attr_dev(input1, "class", "svelte-xg3565");
-    			add_location(input1, file, 154, 1, 7373);
+    			add_location(input1, file, 150, 1, 7501);
     			attr_dev(line19, "stroke", "black");
     			attr_dev(line19, "fill", "none");
     			attr_dev(line19, "x1", /*xMinBound*/ ctx[16]);
@@ -18297,7 +18337,7 @@ var app = (function () {
     			attr_dev(line19, "x2", /*xMaxBound*/ ctx[15]);
     			attr_dev(line19, "y2", "0");
     			attr_dev(line19, "class", "svelte-xg3565");
-    			add_location(line19, file, 163, 3, 7684);
+    			add_location(line19, file, 159, 3, 7812);
     			attr_dev(line20, "stroke", "black");
     			attr_dev(line20, "fill", "none");
     			attr_dev(line20, "x1", "1");
@@ -18305,7 +18345,7 @@ var app = (function () {
     			attr_dev(line20, "x2", "1");
     			attr_dev(line20, "y2", line20_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line20, "class", "svelte-xg3565");
-    			add_location(line20, file, 164, 3, 7768);
+    			add_location(line20, file, 160, 3, 7896);
     			attr_dev(line21, "stroke", "black");
     			attr_dev(line21, "fill", "none");
     			attr_dev(line21, "x1", "2");
@@ -18313,7 +18353,7 @@ var app = (function () {
     			attr_dev(line21, "x2", "2");
     			attr_dev(line21, "y2", line21_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line21, "class", "svelte-xg3565");
-    			add_location(line21, file, 165, 3, 7881);
+    			add_location(line21, file, 161, 3, 8009);
     			attr_dev(line22, "stroke", "black");
     			attr_dev(line22, "fill", "none");
     			attr_dev(line22, "x1", "3");
@@ -18321,7 +18361,7 @@ var app = (function () {
     			attr_dev(line22, "x2", "3");
     			attr_dev(line22, "y2", line22_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line22, "class", "svelte-xg3565");
-    			add_location(line22, file, 166, 3, 7994);
+    			add_location(line22, file, 162, 3, 8122);
     			attr_dev(line23, "stroke", "black");
     			attr_dev(line23, "fill", "none");
     			attr_dev(line23, "x1", "4");
@@ -18329,7 +18369,7 @@ var app = (function () {
     			attr_dev(line23, "x2", "4");
     			attr_dev(line23, "y2", line23_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line23, "class", "svelte-xg3565");
-    			add_location(line23, file, 167, 3, 8107);
+    			add_location(line23, file, 163, 3, 8235);
     			attr_dev(line24, "stroke", "black");
     			attr_dev(line24, "fill", "none");
     			attr_dev(line24, "x1", "-1");
@@ -18337,7 +18377,7 @@ var app = (function () {
     			attr_dev(line24, "x2", "-1");
     			attr_dev(line24, "y2", line24_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line24, "class", "svelte-xg3565");
-    			add_location(line24, file, 168, 3, 8220);
+    			add_location(line24, file, 164, 3, 8348);
     			attr_dev(line25, "stroke", "black");
     			attr_dev(line25, "fill", "none");
     			attr_dev(line25, "x1", "-2");
@@ -18345,7 +18385,7 @@ var app = (function () {
     			attr_dev(line25, "x2", "-2");
     			attr_dev(line25, "y2", line25_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line25, "class", "svelte-xg3565");
-    			add_location(line25, file, 169, 3, 8333);
+    			add_location(line25, file, 165, 3, 8461);
     			attr_dev(line26, "stroke", "black");
     			attr_dev(line26, "fill", "none");
     			attr_dev(line26, "x1", "-3");
@@ -18353,7 +18393,7 @@ var app = (function () {
     			attr_dev(line26, "x2", "-3");
     			attr_dev(line26, "y2", line26_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line26, "class", "svelte-xg3565");
-    			add_location(line26, file, 170, 3, 8446);
+    			add_location(line26, file, 166, 3, 8574);
     			attr_dev(line27, "stroke", "black");
     			attr_dev(line27, "fill", "none");
     			attr_dev(line27, "x1", "-4");
@@ -18361,7 +18401,7 @@ var app = (function () {
     			attr_dev(line27, "x2", "-4");
     			attr_dev(line27, "y2", line27_y__value = -GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line27, "class", "svelte-xg3565");
-    			add_location(line27, file, 171, 3, 8559);
+    			add_location(line27, file, 167, 3, 8687);
     			attr_dev(line28, "stroke", "black");
     			attr_dev(line28, "fill", "none");
     			attr_dev(line28, "x1", "0");
@@ -18369,7 +18409,7 @@ var app = (function () {
     			attr_dev(line28, "x2", "0");
     			attr_dev(line28, "y2", /*yMaxBound*/ ctx[17]);
     			attr_dev(line28, "class", "svelte-xg3565");
-    			add_location(line28, file, 172, 3, 8672);
+    			add_location(line28, file, 168, 3, 8800);
     			attr_dev(line29, "stroke", "black");
     			attr_dev(line29, "fill", "none");
     			attr_dev(line29, "x1", line29_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18377,7 +18417,7 @@ var app = (function () {
     			attr_dev(line29, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line29, "y2", "1");
     			attr_dev(line29, "class", "svelte-xg3565");
-    			add_location(line29, file, 173, 3, 8756);
+    			add_location(line29, file, 169, 3, 8884);
     			attr_dev(line30, "stroke", "black");
     			attr_dev(line30, "fill", "none");
     			attr_dev(line30, "x1", line30_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18385,7 +18425,7 @@ var app = (function () {
     			attr_dev(line30, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line30, "y2", "2");
     			attr_dev(line30, "class", "svelte-xg3565");
-    			add_location(line30, file, 174, 3, 8868);
+    			add_location(line30, file, 170, 3, 8996);
     			attr_dev(line31, "stroke", "black");
     			attr_dev(line31, "fill", "none");
     			attr_dev(line31, "x1", line31_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18393,7 +18433,7 @@ var app = (function () {
     			attr_dev(line31, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line31, "y2", "3");
     			attr_dev(line31, "class", "svelte-xg3565");
-    			add_location(line31, file, 175, 3, 8980);
+    			add_location(line31, file, 171, 3, 9108);
     			attr_dev(line32, "stroke", "black");
     			attr_dev(line32, "fill", "none");
     			attr_dev(line32, "x1", line32_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18401,7 +18441,7 @@ var app = (function () {
     			attr_dev(line32, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line32, "y2", "4");
     			attr_dev(line32, "class", "svelte-xg3565");
-    			add_location(line32, file, 176, 3, 9092);
+    			add_location(line32, file, 172, 3, 9220);
     			attr_dev(line33, "stroke", "black");
     			attr_dev(line33, "fill", "none");
     			attr_dev(line33, "x1", line33_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18409,7 +18449,7 @@ var app = (function () {
     			attr_dev(line33, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line33, "y2", "-1");
     			attr_dev(line33, "class", "svelte-xg3565");
-    			add_location(line33, file, 177, 3, 9204);
+    			add_location(line33, file, 173, 3, 9332);
     			attr_dev(line34, "stroke", "black");
     			attr_dev(line34, "fill", "none");
     			attr_dev(line34, "x1", line34_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18417,7 +18457,7 @@ var app = (function () {
     			attr_dev(line34, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line34, "y2", "-2");
     			attr_dev(line34, "class", "svelte-xg3565");
-    			add_location(line34, file, 178, 3, 9317);
+    			add_location(line34, file, 174, 3, 9445);
     			attr_dev(line35, "stroke", "black");
     			attr_dev(line35, "fill", "none");
     			attr_dev(line35, "x1", line35_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18425,7 +18465,7 @@ var app = (function () {
     			attr_dev(line35, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line35, "y2", "-3");
     			attr_dev(line35, "class", "svelte-xg3565");
-    			add_location(line35, file, 179, 3, 9430);
+    			add_location(line35, file, 175, 3, 9558);
     			attr_dev(line36, "stroke", "black");
     			attr_dev(line36, "fill", "none");
     			attr_dev(line36, "x1", line36_x__value = -GRAPH_AXIS_MARK_LENGTH);
@@ -18433,7 +18473,7 @@ var app = (function () {
     			attr_dev(line36, "x2", GRAPH_AXIS_MARK_LENGTH);
     			attr_dev(line36, "y2", "-4");
     			attr_dev(line36, "class", "svelte-xg3565");
-    			add_location(line36, file, 180, 3, 9543);
+    			add_location(line36, file, 176, 3, 9671);
     			attr_dev(line37, "stroke", "black");
     			attr_dev(line37, "stroke-dasharray", "2,2");
     			attr_dev(line37, "fill", "none");
@@ -18442,7 +18482,7 @@ var app = (function () {
     			attr_dev(line37, "x2", /*integralLowerBound*/ ctx[6]);
     			attr_dev(line37, "y2", /*yMaxBound*/ ctx[17]);
     			attr_dev(line37, "class", "svelte-xg3565");
-    			add_location(line37, file, 183, 3, 9691);
+    			add_location(line37, file, 179, 3, 9819);
     			attr_dev(line38, "stroke", "black");
     			attr_dev(line38, "stroke-dasharray", "2,2");
     			attr_dev(line38, "fill", "none");
@@ -18451,54 +18491,54 @@ var app = (function () {
     			attr_dev(line38, "x2", /*integralUpperBound*/ ctx[7]);
     			attr_dev(line38, "y2", /*yMaxBound*/ ctx[17]);
     			attr_dev(line38, "class", "svelte-xg3565");
-    			add_location(line38, file, 184, 3, 9832);
+    			add_location(line38, file, 180, 3, 9960);
     			attr_dev(polyline1, "stroke", "black");
     			attr_dev(polyline1, "fill", "none");
     			attr_dev(polyline1, "points", polyline1_points_value = /*points*/ ctx[11].map(func_1).join(" "));
     			attr_dev(polyline1, "class", "svelte-xg3565");
-    			add_location(polyline1, file, 198, 3, 10283);
+    			add_location(polyline1, file, 194, 3, 10411);
     			attr_dev(g1, "class", "svelte-xg3565");
-    			add_location(g1, file, 161, 2, 7650);
+    			add_location(g1, file, 157, 2, 7778);
     			attr_dev(svg1, "class", "cartesian svelte-xg3565");
     			attr_dev(svg1, "viewBox", svg1_viewBox_value = "" + (/*xMinBound*/ ctx[16] + " " + /*yMinBound*/ ctx[18] + " " + (/*xMaxBound*/ ctx[15] - /*xMinBound*/ ctx[16]) + " " + (/*yMaxBound*/ ctx[17] - /*yMinBound*/ ctx[18])));
-    			add_location(svg1, file, 160, 1, 7537);
-    			attr_dev(label3, "for", "range1");
-    			attr_dev(label3, "class", "svelte-xg3565");
-    			add_location(label3, file, 202, 1, 10409);
+    			add_location(svg1, file, 156, 1, 7665);
+    			attr_dev(label4, "for", "range1");
+    			attr_dev(label4, "class", "svelte-xg3565");
+    			add_location(label4, file, 198, 1, 10537);
     			attr_dev(input2, "class", "bound-range1 svelte-xg3565");
     			attr_dev(input2, "type", "range");
     			attr_dev(input2, "min", /*xMinBound*/ ctx[16]);
     			attr_dev(input2, "max", /*xMaxBound*/ ctx[15]);
     			attr_dev(input2, "step", ".01");
-    			add_location(input2, file, 203, 1, 10456);
-    			attr_dev(label4, "for", "bound-range2");
-    			attr_dev(label4, "class", "svelte-xg3565");
-    			add_location(label4, file, 204, 1, 10571);
+    			add_location(input2, file, 199, 1, 10584);
+    			attr_dev(label5, "for", "bound-range2");
+    			attr_dev(label5, "class", "svelte-xg3565");
+    			add_location(label5, file, 200, 1, 10699);
     			attr_dev(input3, "class", "bound-range2 svelte-xg3565");
     			attr_dev(input3, "type", "range");
     			attr_dev(input3, "min", /*xMinBound*/ ctx[16]);
     			attr_dev(input3, "max", /*xMaxBound*/ ctx[15]);
     			attr_dev(input3, "step", ".01");
-    			add_location(input3, file, 205, 1, 10624);
-    			attr_dev(label5, "for", "rectangle-width");
-    			attr_dev(label5, "class", "svelte-xg3565");
-    			add_location(label5, file, 207, 1, 10741);
+    			add_location(input3, file, 201, 1, 10752);
+    			attr_dev(label6, "for", "rectangle-width");
+    			attr_dev(label6, "class", "svelte-xg3565");
+    			add_location(label6, file, 203, 1, 10869);
     			attr_dev(input4, "id", "rectangle-width");
     			attr_dev(input4, "type", "range");
     			attr_dev(input4, "min", "0.01");
     			attr_dev(input4, "step", "0.01");
     			attr_dev(input4, "max", input4_max_value = Math.log(/*xMaxBound*/ ctx[15] - /*xMinBound*/ ctx[16]).toFixed(2));
     			attr_dev(input4, "class", "svelte-xg3565");
-    			add_location(input4, file, 208, 1, 10815);
+    			add_location(input4, file, 204, 1, 10943);
     			attr_dev(div0, "class", "container svelte-xg3565");
-    			add_location(div0, file, 96, 0, 3889);
+    			add_location(div0, file, 82, 0, 3586);
     			attr_dev(div1, "class", "outer svelte-xg3565");
-    			add_location(div1, file, 95, 0, 3868);
+    			add_location(div1, file, 81, 0, 3565);
     			attr_dev(link, "rel", "stylesheet");
     			attr_dev(link, "href", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css");
     			attr_dev(link, "integrity", "sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X");
     			attr_dev(link, "crossorigin", "anonymous");
-    			add_location(link, file, 211, 0, 10980);
+    			add_location(link, file, 207, 0, 11108);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -18537,23 +18577,34 @@ var app = (function () {
     			append_dev(g0, circle0);
     			append_dev(g0, circle1);
     			append_dev(div0, t1);
-    			append_dev(div0, label0);
-    			append_dev(label0, t2);
-    			append_dev(label0, t3);
-    			append_dev(div0, t4);
-    			append_dev(div0, input0);
-    			set_input_value(input0, /*sliderX*/ ctx[0]);
-    			append_dev(div0, t5);
     			append_dev(div0, span0);
-    			append_dev(span0, label1);
+    			append_dev(span0, t2);
+    			append_dev(span0, t3);
+    			append_dev(span0, t4);
+    			append_dev(span0, t5);
+    			append_dev(div0, t6);
+    			append_dev(div0, br);
     			append_dev(div0, t7);
     			append_dev(div0, span1);
-    			append_dev(span1, label2);
-    			append_dev(label2, t8);
+    			append_dev(span1, label0);
     			append_dev(div0, t9);
+    			append_dev(div0, span2);
+    			append_dev(span2, label1);
+    			append_dev(label1, t10);
+    			append_dev(div0, t11);
+    			append_dev(div0, input0);
+    			set_input_value(input0, /*sliderX*/ ctx[0]);
+    			append_dev(div0, t12);
+    			append_dev(div0, span3);
+    			append_dev(span3, label2);
+    			append_dev(div0, t14);
+    			append_dev(div0, span4);
+    			append_dev(span4, label3);
+    			append_dev(label3, t15);
+    			append_dev(div0, t16);
     			append_dev(div0, input1);
     			set_input_value(input1, /*sliderDeltaX*/ ctx[2]);
-    			append_dev(div0, t10);
+    			append_dev(div0, t17);
     			append_dev(div0, svg1);
     			append_dev(svg1, g1);
     			append_dev(g1, line19);
@@ -18582,24 +18633,24 @@ var app = (function () {
     			}
 
     			append_dev(g1, polyline1);
-    			append_dev(div0, t11);
-    			append_dev(div0, label3);
-    			append_dev(div0, t13);
+    			append_dev(div0, t18);
+    			append_dev(div0, label4);
+    			append_dev(div0, t20);
     			append_dev(div0, input2);
     			set_input_value(input2, /*integralBound1*/ ctx[4]);
-    			append_dev(div0, t14);
-    			append_dev(div0, label4);
-    			append_dev(div0, t16);
+    			append_dev(div0, t21);
+    			append_dev(div0, label5);
+    			append_dev(div0, t23);
     			append_dev(div0, input3);
     			set_input_value(input3, /*integralBound2*/ ctx[5]);
-    			append_dev(div0, t17);
-    			append_dev(div0, label5);
-    			append_dev(label5, t18);
-    			append_dev(label5, t19);
-    			append_dev(div0, t20);
+    			append_dev(div0, t24);
+    			append_dev(div0, label6);
+    			append_dev(label6, t25);
+    			append_dev(label6, t26);
+    			append_dev(div0, t27);
     			append_dev(div0, input4);
     			set_input_value(input4, /*sliderRectangleWidth*/ ctx[8]);
-    			insert_dev(target, t21, anchor);
+    			insert_dev(target, t28, anchor);
     			insert_dev(target, link, anchor);
 
     			if (!mounted) {
@@ -18680,13 +18731,15 @@ var app = (function () {
     				attr_dev(circle1, "cy", circle1_cy_value);
     			}
 
-    			if (dirty[0] & /*x*/ 2) set_data_dev(t3, /*x*/ ctx[1]);
+    			if (dirty[0] & /*x, f, deltaX*/ 16394 && t3_value !== (t3_value = slope(/*x*/ ctx[1], /*f*/ ctx[14](/*x*/ ctx[1]), /*x*/ ctx[1] + /*deltaX*/ ctx[3], /*f*/ ctx[14](/*x*/ ctx[1] + /*deltaX*/ ctx[3])).toFixed(2) + "")) set_data_dev(t3, t3_value);
+    			if (dirty[0] & /*x, f*/ 16386 && t5_value !== (t5_value = slope(/*x*/ ctx[1], /*f*/ ctx[14](/*x*/ ctx[1]), /*x*/ ctx[1] + DELTX_X_APPROACHES_0, /*f*/ ctx[14](/*x*/ ctx[1] + DELTX_X_APPROACHES_0)).toFixed(2) + "")) set_data_dev(t5, t5_value);
+    			if (dirty[0] & /*x*/ 2 && t10_value !== (t10_value = /*x*/ ctx[1].toFixed(2) + "")) set_data_dev(t10, t10_value);
 
     			if (dirty[0] & /*sliderX*/ 1) {
     				set_input_value(input0, /*sliderX*/ ctx[0]);
     			}
 
-    			if (dirty[0] & /*deltaX*/ 8 && t8_value !== (t8_value = /*deltaX*/ ctx[3].toFixed(2) + "")) set_data_dev(t8, t8_value);
+    			if (dirty[0] & /*deltaX*/ 8 && t15_value !== (t15_value = /*deltaX*/ ctx[3].toFixed(2) + "")) set_data_dev(t15, t15_value);
 
     			if (dirty[0] & /*sliderDeltaX*/ 4) {
     				set_input_value(input1, /*sliderDeltaX*/ ctx[2]);
@@ -18744,7 +18797,7 @@ var app = (function () {
     				set_input_value(input3, /*integralBound2*/ ctx[5]);
     			}
 
-    			if (dirty[0] & /*dx*/ 512 && t19_value !== (t19_value = /*dx*/ ctx[9].toFixed(3) + "")) set_data_dev(t19, t19_value);
+    			if (dirty[0] & /*dx*/ 512 && t26_value !== (t26_value = /*dx*/ ctx[9].toFixed(3) + "")) set_data_dev(t26, t26_value);
 
     			if (dirty[0] & /*sliderRectangleWidth*/ 256) {
     				set_input_value(input4, /*sliderRectangleWidth*/ ctx[8]);
@@ -18756,7 +18809,7 @@ var app = (function () {
     			if (detaching) detach_dev(div1);
     			destroy_each(each_blocks_1, detaching);
     			destroy_each(each_blocks, detaching);
-    			if (detaching) detach_dev(t21);
+    			if (detaching) detach_dev(t28);
     			if (detaching) detach_dev(link);
     			mounted = false;
     			run_all(dispose);
@@ -18801,24 +18854,6 @@ var app = (function () {
     	let numberOfPoints = 100;
     	let secantLine;
     	let tangentLine;
-
-    	function leftmostY(x1, y1, x2, y2) {
-    		const lineFunction = function (x) {
-    			const m = (y2 - y1) / (x2 - x1);
-    			return m * (x - x1) + y1;
-    		};
-
-    		return lineFunction(xMinBound);
-    	}
-
-    	function rightmostY(x1, y1, x2, y2) {
-    		const lineFunction = function (x) {
-    			const m = (y2 - y1) / (x2 - x1);
-    			return m * (x - x1) + y1;
-    		};
-
-    		return lineFunction(xMaxBound);
-    	}
 
     	// -10 -> 5
     	// offset => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
@@ -18910,8 +18945,9 @@ var app = (function () {
     	}
 
     	$$self.$capture_state = () => ({
+    		pointSlope,
     		range,
-    		yAt,
+    		slope,
     		katex: katex$1,
     		each,
     		onMount,
@@ -18936,8 +18972,6 @@ var app = (function () {
     		numberOfPoints,
     		secantLine,
     		tangentLine,
-    		leftmostY,
-    		rightmostY,
     		points,
     		numberRectangles,
     		riemannRectangles,
@@ -18998,18 +19032,18 @@ var app = (function () {
     		if ($$self.$$.dirty[0] & /*x, f, deltaX*/ 16394) {
     			 $$invalidate(10, secantLine = {
     				x1: xMinBound,
-    				y1: yAt(xMinBound, x, f(x), x + deltaX, f(x + deltaX)),
+    				y1: pointSlope(xMinBound, slope(x, f(x), x + deltaX, f(x + deltaX)), x, f(x)),
     				x2: xMaxBound,
-    				y2: yAt(xMaxBound, x, f(x), x + deltaX, f(x + deltaX))
+    				y2: pointSlope(xMaxBound, slope(x, f(x), x + deltaX, f(x + deltaX)), x, f(x))
     			});
     		}
 
     		if ($$self.$$.dirty[0] & /*x, f*/ 16386) {
     			 tangentLine = {
     				x1: xMinBound,
-    				y1: yAt(xMinBound, x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)),
+    				y1: pointSlope(xMinBound, slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)), x, f(x)),
     				x2: xMaxBound,
-    				y2: yAt(xMaxBound, x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0))
+    				y2: pointSlope(xMaxBound, slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)), x, f(x))
     			};
     		}
 
