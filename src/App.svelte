@@ -179,7 +179,7 @@ let selectedIndex = 0;
 	<span style="display: inline-block;">
 		<label id="labelDeltaXValue" for="deltaX">{deltaX.toFixed(2)}</label>
 	</span>
-
+	
 	<input id="deltaX" type="range" min="0.001" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX}>
 	<span style="display: inline-block;">
 		<label id="labelX" for="x">x:</label>
