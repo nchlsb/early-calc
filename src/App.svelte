@@ -172,6 +172,15 @@ let selectedIndex = 0;
 		Slope of the secant: {slope(x, f(x), x + deltaX, f(x + deltaX)).toFixed(2)} | Slope of the tagent {slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)).toFixed(2)}
 	</span>
 	<br/>
+	<!-- todo - is there a better way to in-line this?-->
+	<span style="display: inline-block;">
+		<label id="labelDeltaXSymbol" for="deltaX">Delta x:</label>
+	</span>
+	<span style="display: inline-block;">
+		<label id="labelDeltaXValue" for="deltaX">{deltaX.toFixed(2)}</label>
+	</span>
+
+	<input id="deltaX" type="range" min="0.001" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX}>
 	<span style="display: inline-block;">
 		<label id="labelX" for="x">x:</label>
 	</span>
@@ -180,15 +189,7 @@ let selectedIndex = 0;
 	</span>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
 
-	<!-- todo - is there a better way to in-line this?-->
-	<span style="display: inline-block;">
-		<label id="labelDeltaXSymbol" for="deltaX">Delta x:</label>
-	</span>
-	<span style="display: inline-block;">
-		<label id="labelDeltaXValue" for="deltaX">{deltaX.toFixed(2)}</label>
-	</span>
 	
-	<input id="deltaX" type="range" min="0.001" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX}>
 
 
 
