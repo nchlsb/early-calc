@@ -1,3 +1,8 @@
+export type Point = {
+    x: number
+    y: number
+}
+
 export function sumBy<T>(array: T[], getNumber: (a: T) => number): number {
     let sum = 0;
     for (let a of array) {
@@ -79,6 +84,11 @@ export function nothing<T>(): Maybe<T> {
 
 export function pointSlope(x: number, m: number, x0: number, y0: number,): number {
     return m * (x - x0) + y0;
+}
+
+export function twoPoints(point1: Point, point2: Point): (x: number) => number {
+    const m = (point2.y - point1.y) / (point2.x - point1.x);
+    return (x) => m * (x - point1.x) + point1.y;
 }
 
 export function slope( x1: number, y1: number, x2: number, y2: number): number {
