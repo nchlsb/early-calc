@@ -1,13 +1,8 @@
 <script lang="ts">
-	import {pointSlope, range, slope} from "./helpers";
+	import type { Point } from "./helpers";
+	import { pointSlope, range, slope, twoPoints } from "./helpers";
 	import * as katex from "katex";
-import {onMount } from 'svelte/internal';
-	
-
-	type Point = {
-		x: number
-		y: number
-	}
+	import { onMount } from 'svelte/internal';	
 
 	type Rectangle = {
 		lowerLeftCorner: Point,
@@ -35,6 +30,12 @@ import {onMount } from 'svelte/internal';
 	let deltaX: number;
 	$: deltaX = Math.exp(sliderDeltaX) - 1;
 
+	let secantPoint1: Point
+	$: secantPoint1 = {x: x, y: f(x)}
+
+	let secantPoint2: Point
+	$: secantPoint2 = {x: x + deltaX, y: f(x + deltaX)}
+
 	let integralBound1 = -DEFAULT_BOUND_MAGNITUDE
 	let integralBound2 = DEFAULT_BOUND_MAGNITUDE
 	
@@ -53,10 +54,13 @@ import {onMount } from 'svelte/internal';
 
 	let numberOfPoints: number = 100;
 
-	let secantLine: {x1: number, y1: number, x2: number, y2: number}
-	$: secantLine = {
-		x1: xMinBound, y1: pointSlope(xMinBound, slope(x, f(x), x + deltaX, f(x + deltaX)), x, f(x)),
-		x2: xMaxBound, y2: pointSlope(xMaxBound, slope(x, f(x), x + deltaX, f(x + deltaX)), x, f(x))
+	let secant: (x: number) => number
+	$: secant = twoPoints(secantPoint1, secantPoint2)
+
+	let displayedSecantLine: {x1: number, y1: number, x2: number, y2: number}
+	$: displayedSecantLine = {
+		x1: xMinBound, y1: secant(xMinBound),
+		x2: xMaxBound, y2: secant(xMaxBound)
 	}
 
 	let tangentLine: {x1: number, y1: number, x2: number, y2: number}
@@ -113,7 +117,30 @@ import {onMount } from 'svelte/internal';
 
 		// input for delta x
 		katex.render("\\Delta x:", document.getElementById("labelDeltaXSymbol"), {output: 'html'});
+	
+		renderEquation()
 	});
+
+	function renderEquation(): void {
+		katex.render(`x = ${x}`, document.getElementById('xEquals'))
+		katex.render(`\\Delta x = ${deltaX}`, document.getElementById('deltaXEquals'))
+
+
+		katex.render('m = \\lim_{\\Delta x \\rightarrow 0} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x}',
+			document.getElementById('differenceEquation1'), {output: 'html'})
+		katex.render(`m = \\frac{f(x + ${g(deltaX)}) - f(x)}{${g(deltaX)}}`,
+			document.getElementById('differenceEquation2'), {output: 'html'})
+		katex.render(`m = \\frac{f(${g(x)} + ${g(deltaX)}) - f(${g(x)})}{${g(deltaX)}}`,
+			document.getElementById('differenceEquation3'), {output: 'html'})
+		katex.render(`m = \\frac{f(${g(x + deltaX)}) - f(${g(x)})}{${g(deltaX)}}`,
+			document.getElementById('differenceEquation4'), {output: 'html'})
+		katex.render(`m = ${g(f(x + deltaX) - f(x) / deltaX)}`,
+			document.getElementById('differenceEquation5'), {output: 'html'})
+	}
+
+	function g(n: number): string {
+		return n.toFixed(2)
+	}
 
 
 let selectedIndex = 0;
@@ -152,8 +179,8 @@ let selectedIndex = 0;
 			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
 
 			<line stroke="black" stroke-dasharray="2,2" fill="none"
-				x1={secantLine.x1} y1={secantLine.y1}
-				x2={secantLine.x2} y2={secantLine.y2}
+				x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
+				x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
 			/>
 			<!-- <line stroke="grey" stroke-dasharray="2,2" fill="none"
 				x1={tangentLine.x1} y1={tangentLine.y1}
@@ -167,29 +194,36 @@ let selectedIndex = 0;
 		</g>
 	</svg>
 
-	<!-- todo - is there a better way to in-line this?-->
+
 	<span>
 		Slope of the secant: {slope(x, f(x), x + deltaX, f(x + deltaX)).toFixed(2)} | Slope of the tagent {slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)).toFixed(2)}
 	</span>
 	<br/>
-	<!-- todo - is there a better way to in-line this?-->
+
 	<span style="display: inline-block;">
 		<label id="labelDeltaXSymbol" for="deltaX">Delta x:</label>
 	</span>
 	<span style="display: inline-block;">
 		<label id="labelDeltaXValue" for="deltaX">{deltaX.toFixed(2)}</label>
 	</span>
-	
-	<input id="deltaX" type="range" min="0.001" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX}>
+
+	<input id="deltaX" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX} on:input={renderEquation}>
 	<span style="display: inline-block;">
 		<label id="labelX" for="x">x:</label>
 	</span>
 	<span style="display: inline-block;">
 		<label id="labelDeltaXValue" for="deltaX">{x.toFixed(2)}</label>
 	</span>
-	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX}>
+	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX} on:input={renderEquation}>
 
-	
+
+	<p id="differenceEquation1"></p>
+	<p id="differenceEquation2"></p>
+	<p id="differenceEquation3"></p>
+	<p id="differenceEquation4"></p>
+	<p id="differenceEquation5"></p>
+	<p id="xEquals"></p>
+	<p id="deltaXEquals"></p>
 
 
 
