@@ -3,6 +3,8 @@ export type Point = {
     y: number
 }
 
+export type Context = "Derivative" | "Integral"
+
 export function sumBy<T>(array: T[], getNumber: (a: T) => number): number {
     let sum = 0;
     for (let a of array) {
