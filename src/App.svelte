@@ -10,7 +10,7 @@
 		height: number
 	}
 
-	// variables of graph 
+	// ********************* graph *********************
 	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
 	const GRAPH_AXIS_MARK_LENGTH = 0.08;
 
@@ -20,16 +20,21 @@
 	const yMaxBound = DEFAULT_BOUND_MAGNITUDE
 	const yMinBound = -DEFAULT_BOUND_MAGNITUDE
 
-	const DELTX_X_APPROACHES_0 = 0.000000001;
+	// ********************* function *********************
 
-	let sliderX = 0;
-	let x: number;
-	$: x = sliderX;
+	let f: (x: number) => number
+	$: f = functions[selectedFunctionIndex].implementation
 
-	// let sliderDeltaX = Math.log((xMaxBound - xMinBound) / 2);
-	// let dx: number;
-	// $: dx = Math.exp(sliderDeltaX) - 1;
+	let numberOfPoints: number = 100;
 
+	let points: Point[]
+	$: points = [...range(numberOfPoints).map(n => {
+		const x = xMinBound + (n * ((xMaxBound - xMinBound) / numberOfPoints))
+		return {x: x, y: f(x)}
+	}), {x: xMaxBound, y: f(xMaxBound)}];
+
+	// ********************* derivatives *********************
+	const DELTX_X_APPROACHES_0 = 0.0000000000001;
 
 	let sliderDeltaX = Math.log((xMaxBound - xMinBound) / 2);
 	let deltaX: number;
@@ -40,22 +45,6 @@
 
 	let secantPoint2: Point
 	$: secantPoint2 = {x: x + deltaX, y: f(x + deltaX)}
-
-	let integralBound1 = -DEFAULT_BOUND_MAGNITUDE
-	let integralBound2 = DEFAULT_BOUND_MAGNITUDE
-	
-	let integralLowerBound: number;
-	$: integralLowerBound = Math.min(integralBound1, integralBound2);
-
-	let integralUpperBound: number;
-	$: integralUpperBound = Math.max(integralBound1, integralBound2);
-	
-	
-
-	let f: (x: number) => number
-	$: f = functions[selectedFunctionIndex].implementation
-
-	let numberOfPoints: number = 100;
 
 	let secant: (x: number) => number
 	$: secant = twoPoints(secantPoint1, secantPoint2)
@@ -72,19 +61,16 @@
 		x2: xMaxBound, y2: pointSlope(xMaxBound, slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)), x, f(x))
 	}
 
-	let context: Context
-	$: context = "Derivative";
+	// ********************* integrals *********************
 
-	// -10 -> 5
-	// offset => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-	// lowerBound + offset
-	// -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5
+	let integralBound1 = -DEFAULT_BOUND_MAGNITUDE
+	let integralBound2 = DEFAULT_BOUND_MAGNITUDE
+	
+	let integralLowerBound: number;
+	$: integralLowerBound = Math.min(integralBound1, integralBound2);
 
-	let points: Point[]
-	$: points = [...range(numberOfPoints).map(n => {
-		const x = xMinBound + (n * ((xMaxBound - xMinBound) / numberOfPoints))
-		return {x: x, y: f(x)}
-	}), {x: xMaxBound, y: f(xMaxBound)}];
+	let integralUpperBound: number;
+	$: integralUpperBound = Math.max(integralBound1, integralBound2);
 
 	let numberRectangles: number;
 	$: numberRectangles = (integralUpperBound - integralLowerBound) / deltaX;
@@ -101,6 +87,13 @@
 			lowerLeftCorner: {x: x, y: (y > 0) ? 0 : y}
 		};
 	});
+	
+	// ********************* controls *********************
+
+	let context: Context
+	$: context = "Derivative";
+
+	let selectedFunctionIndex = 0;
 
 	const functions = [
 		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
@@ -110,6 +103,12 @@
 		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
 		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
 	];
+
+	let sliderX = 0;
+	let x: number;
+	$: x = sliderX;
+	
+	// ********************* equation rendering *********************
 
 	onMount(() => {
 
@@ -147,9 +146,6 @@
 	function g(n: number): string {
 		return n.toFixed(2)
 	}
-
-
-let selectedFunctionIndex = 0;
 
 </script>
 <div class="outer">
@@ -243,9 +239,6 @@ let selectedFunctionIndex = 0;
 
 	{#if context === 'Derivative'}
 	
-
-	
-
 	<span style="display: inline-block;">
 		<label id="labelX" for="x">x:</label>
 	</span>
