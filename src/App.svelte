@@ -63,6 +63,10 @@
 
 	// ********************* integrals *********************
 
+	let sliderRectangleWidth = Math.log((xMaxBound - xMinBound) / 2);
+	let rectangleWidth: number;
+	$: rectangleWidth = Math.exp(sliderDeltaX) - 1;
+
 	let integralBound1 = -DEFAULT_BOUND_MAGNITUDE
 	let integralBound2 = DEFAULT_BOUND_MAGNITUDE
 	
@@ -73,7 +77,7 @@
 	$: integralUpperBound = Math.max(integralBound1, integralBound2);
 
 	let numberRectangles: number;
-	$: numberRectangles = (integralUpperBound - integralLowerBound) / deltaX;
+	$: numberRectangles = (integralUpperBound - integralLowerBound) / rectangleWidth;
 
 	let riemannRectangles: Rectangle[]
 	$: riemannRectangles = range(numberRectangles).map(n => {
@@ -83,7 +87,7 @@
 		// SVG can't process negative height 
 		return {
 			height: Math.abs(y),
-			width: deltaX,
+			width: rectangleWidth,
 			lowerLeftCorner: {x: x, y: (y > 0) ? 0 : y}
 		};
 	});
@@ -164,10 +168,6 @@
 	<!-- derivatives -->
 	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
 		<g>
-			
-
-			
-			
 			{#if context === 'Derivative'}
 
 			<line stroke="black" stroke-dasharray="2,2" fill="none"
@@ -229,6 +229,7 @@
 	</span>
 	<br/>
 
+	{#if context === 'Derivative'}
 	<span style="display: inline-block;">
 		<label id="labelDeltaXSymbol" for="deltaX">Delta x:</label>
 	</span>
@@ -236,8 +237,6 @@
 		<label id="labelDeltaXValue" for="deltaX">{deltaX.toFixed(2)}</label>
 	</span>
 	<input id="deltaX" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX} on:input={renderEquation}>
-
-	{#if context === 'Derivative'}
 	
 	<span style="display: inline-block;">
 		<label id="labelX" for="x">x:</label>
@@ -248,6 +247,10 @@
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX} on:input={renderEquation}>
 
 	{:else}
+
+
+	<label for="RectangleWidthValue">Rectangle Width</label>
+	<input id="RectangleWidthValue" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={rectangleWidth}>
 
 	<label for="range1">interval bound 1</label>
 	<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
