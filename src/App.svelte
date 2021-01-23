@@ -55,10 +55,7 @@
 		x2: xMaxBound, y2: secant(xMaxBound)
 	}
 
-	let tangentLine: {x1: number, y1: number, x2: number, y2: number}
-	$: tangentLine = {
-		x1: xMinBound, y1: pointSlope(xMinBound, slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)), x, f(x)),
-		x2: xMaxBound, y2: pointSlope(xMaxBound, slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)), x, f(x))
+
 	}
 
 	// ********************* integrals *********************
