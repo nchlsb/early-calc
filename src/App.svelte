@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Point, Context } from "./helpers";
-	import { pointSlope, range, slope, twoPoints } from "./helpers";
+	import { range, slope, twoPoints } from "./helpers";
 	import * as katex from "katex";
 	import { onMount } from 'svelte/internal';	
 
@@ -55,8 +55,19 @@
 		x2: xMaxBound, y2: secant(xMaxBound)
 	}
 
+	let tangentPoint1: Point
+	$: tangentPoint1 = {x: x, y: f(x)}
 
+	let tangentPoint2: Point
+	$: tangentPoint2 = {x: x + DELTX_X_APPROACHES_0, y: f(x + DELTX_X_APPROACHES_0)}
 
+	let tangent: (x: number) => number
+	$: tangent = twoPoints(tangentPoint1, tangentPoint2)
+
+	let displayedTangentLine: {x1: number, y1: number, x2: number, y2: number}
+	$: displayedTangentLine = {
+		x1: xMinBound, y1: tangent(xMinBound),
+		x2: xMaxBound, y2: tangent(xMaxBound)
 	}
 
 	// ********************* integrals *********************
@@ -173,8 +184,8 @@
 				x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
 			/>
 			<!-- <line stroke="grey" stroke-dasharray="2,2" fill="none"
-				x1={tangentLine.x1} y1={tangentLine.y1}
-				x2={tangentLine.x2} y2={tangentLine.y2}
+				x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
+				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
 			/> -->
 
 			<circle cx={x} cy={f(x)} r=".075" fill="red"></circle>
