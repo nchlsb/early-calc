@@ -89,7 +89,7 @@ export function pointSlope(x: number, m: number, x0: number, y0: number,): numbe
 }
 
 export function twoPoints(point1: Point, point2: Point): (x: number) => number {
-    const m = (point2.y - point1.y) / (point2.x - point1.x);
+    const m = slope(point1, point2);
     return (x) => m * (x - point1.x) + point1.y;
 }
 
