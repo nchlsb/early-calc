@@ -93,8 +93,12 @@ export function twoPoints(point1: Point, point2: Point): (x: number) => number {
     return (x) => m * (x - point1.x) + point1.y;
 }
 
-export function slope( x1: number, y1: number, x2: number, y2: number): number {
-    return (y2 - y1) / (x2 - x1);
+export function slope( point1: Point, point2: Point): number {
+    return (point2.y - point1.y) / (point2.x - point1.x);
+}
+
+export function point(x, y): Point {
+    return {x: x, y: y}
 }
 
 // export function slope( x1: number, y1: number, x2: number, y2: number): Maybe<number>{
