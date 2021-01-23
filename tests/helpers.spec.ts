@@ -1,4 +1,4 @@
-import { pointSlope, range } from '../src/helpers';
+import { point, range, slope, twoPoints } from '../src/helpers';
 import { expect } from 'chai';
 import 'mocha';
 
