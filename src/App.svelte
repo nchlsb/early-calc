@@ -222,7 +222,7 @@
 
 
 	<span>
-		Slope of the secant: {slope(x, f(x), x + deltaX, f(x + deltaX)).toFixed(2)} | Slope of the tagent {slope(x, f(x), x + DELTX_X_APPROACHES_0, f(x + DELTX_X_APPROACHES_0)).toFixed(2)}
+		Slope of the secant: {slope(secantPoint1, secantPoint2)} | Slope of the tagent {slope(tangentPoint1, tangentPoint2).toFixed(2)}
 	</span>
 	<br/>
 
