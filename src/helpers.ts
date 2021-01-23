@@ -84,7 +84,7 @@ export function nothing<T>(): Maybe<T> {
     return {kind: 'Nothing'}
 }
 
-export function twoPoints(point1: Point, point2: Point): (x: number) => number {
+export function twoPointForm(point1: Point, point2: Point): (x: number) => number {
     const m = slope(point1, point2);
     return (x) => m * (x - point1.x) + point1.y;
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Point, Context } from "./helpers";
-	import { range, slope, twoPoints } from "./helpers";
+	import { range, slope, twoPointForm } from "./helpers";
 	import * as katex from "katex";
 	import { onMount } from 'svelte/internal';	
 
@@ -47,7 +47,7 @@
 	$: secantPoint2 = {x: x + deltaX, y: f(x + deltaX)}
 
 	let secant: (x: number) => number
-	$: secant = twoPoints(secantPoint1, secantPoint2)
+	$: secant = twoPointForm(secantPoint1, secantPoint2)
 
 	let displayedSecantLine: {x1: number, y1: number, x2: number, y2: number}
 	$: displayedSecantLine = {
@@ -62,7 +62,7 @@
 	$: tangentPoint2 = {x: x + DELTX_X_APPROACHES_0, y: f(x + DELTX_X_APPROACHES_0)}
 
 	let tangent: (x: number) => number
-	$: tangent = twoPoints(tangentPoint1, tangentPoint2)
+	$: tangent = twoPointForm(tangentPoint1, tangentPoint2)
 
 	let displayedTangentLine: {x1: number, y1: number, x2: number, y2: number}
 	$: displayedTangentLine = {
