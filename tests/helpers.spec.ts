@@ -1,4 +1,4 @@
-import { point, range, slope, twoPoints } from '../src/helpers';
+import { point, range, slope, twoPointForm } from '../src/helpers';
 import { expect } from 'chai';
 import 'mocha';
 
@@ -27,17 +27,30 @@ describe("Range", () => {
 
 });
 
-describe("pointSlope", () => {
-  it("Should work for a postive", () => {
-    expect(pointSlope(100, 1, 1, 1)).to.equal(100);
+describe("slope", () => {
+  it("Should work for postive", () => {
+    expect(slope(point(0, 0), point(1, 1,))).to.equal(1);
   });
 
-  it("Should work for a negative slope", () => {
-    expect(pointSlope(100, -1, 1, -1)).to.equal(-100);
+  it("Should work for negative", () => {
+    expect(slope(point(0, 0), point(1, -1,))).to.equal(-1);
   });
 
+  it("Should work for zero", () => {
+    expect(slope(point(0, 0), point(1, 0,))).to.equal(0);
+  });
+});
 
-  it("Should work for a slope of 0", () => {
-    expect(pointSlope(100, 0, 1, 1)).to.equal(1);
+describe("slope", () => {
+  it("Should work for postive", () => {
+    expect(slope(point(0, 0), point(1, 1,))).to.equal(1);
+  });
+
+  it("Should work for negative", () => {
+    expect(slope(point(0, 0), point(1, -1,))).to.equal(-1);
+  });
+
+  it("Should work for zero", () => {
+    expect(slope(point(0, 0), point(1, 0,))).to.equal(0);
   });
 });

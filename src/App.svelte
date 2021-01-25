@@ -129,12 +129,6 @@
 		for (let f of functions) {
 			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'html'});
 		}
-
-		// input for location of tangent line
-		katex.render("x:", document.getElementById("labelX"), {output: 'html'});
-
-		// input for delta x
-		katex.render("\\Delta x:", document.getElementById("labelDeltaXSymbol"), {output: 'html'});
 	
 		renderEquation()
 	});
@@ -178,7 +172,7 @@
 	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
 		<g>
 			{#if context === 'Derivative'}
-
+			
 			<line stroke="black" stroke-dasharray="2,2" fill="none"
 				x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
 				x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
@@ -233,26 +227,16 @@
 	</svg>
 
 
-	<span>
-		Slope of the secant: {slope(secantPoint1, secantPoint2)} | Slope of the tagent {slope(tangentPoint1, tangentPoint2).toFixed(2)}
+	<span id = "SecantVsTangent">
+		Slope of the secant: {slope(secantPoint1, secantPoint2).toFixed(2)} | Slope of the tagent {slope(tangentPoint1, tangentPoint2).toFixed(2)}
 	</span>
 	<br/>
 
 	{#if context === 'Derivative'}
-	<span style="display: inline-block;">
-		<label id="labelDeltaXSymbol" for="deltaX">Delta x:</label>
-	</span>
-	<span style="display: inline-block;">
-		<label id="labelDeltaXValue" for="deltaX">{deltaX.toFixed(2)}</label>
-	</span>
+	<label for="deltaX">Δx: {deltaX.toFixed(2)}</label>
 	<input id="deltaX" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX} on:input={renderEquation}>
 	
-	<span style="display: inline-block;">
-		<label id="labelX" for="x">x:</label>
-	</span>
-	<span style="display: inline-block;">
-		<label id="labelDeltaXValue" for="deltaX">{x.toFixed(2)}</label>
-	</span>
+	<label id="labelDeltaXValue" for="deltaX">x: {x.toFixed(2)}</label>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX} on:input={renderEquation}>
 
 	{:else}
@@ -327,5 +311,10 @@
 
 	label {
 		width: max-content;
+		font-size: 20px;
+	}
+
+	#SecantVsTangent {
+		font-size: 30px;
 	}
 </style>

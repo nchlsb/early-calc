@@ -102,3 +102,22 @@ export function point(x, y): Point {
 //     {kind: "Just", value: (y2 - y1) / (x2 - x1) } : 
 //     {kind : 'Nothing'};
 // }
+
+/*
+Then make a second function divideBoth that takes an a1, a2, and a b, and returns a Pair of 
+[a1 / b, a2 / b]
+*/
+
+// function divide(a: number, b: number): Maybe<number> {
+//     return (b !== 0) ? just(a / b): nothing(); 
+// }
+
+// type Psair<A, B> = {first: A, second: B}
+
+// function pair<A, B>(a: A, b: B): Pair<A,B>{
+//     return {first: a, second: b};
+// }
+
+// function divideBoth(a1: number, a2: number, b: number): Maybe<Pair<number, number>> {
+//     return just(pair(divide(a1, b), divide(a2, b)));
+// }
