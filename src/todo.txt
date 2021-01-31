@@ -29,3 +29,8 @@ Done list (for next push)
 				trapezoid
 				both above and below to compare 
 		7. ( )Custom user equations
+
+https://svelte.dev/tutorial/custom-css-transitions
+
+https://svelte.dev/tutorial/spring
+https://svelte.dev/tutorial/actions
