@@ -164,12 +164,18 @@
 	<p>
 		<button class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
 		<button class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
+		{#if context === 'Integral'}
+		|
+		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
+		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
+		<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>
+		{/if}
 	</p>
 
 	{#each functions as f, functionIndex}
 		<button class={functionIndex === selectedFunctionIndex ? 'highlighted' : ''} on:click={_ => selectedFunctionIndex = functionIndex}><span id={f.id}>{f.representation}</span></button>
 	{/each}
-
+	
 	
 	<!-- derivatives -->
 	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
@@ -252,11 +258,7 @@
 	<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
 	<label for="bound-range2">interval bound 2</label>
 	<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
-	<p>
-		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
-		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
-		<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>
-	</p>
+	
 	{/if}
 	<!-- <p id="differenceEquation1"></p>
 	<p id="differenceEquation2"></p>
