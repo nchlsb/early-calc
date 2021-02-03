@@ -5,6 +5,15 @@ export type Point = {
 
 export type Context = "Derivative" | "Integral"
 
+export type RectangleStrategy = 'Left' | 'Midpoint' | 'Right'
+
+export type Rectangle = {
+    lowerLeftCorner: Point,
+    width: number,
+    height: number
+}
+
+
 export function sumBy<T>(array: T[], getNumber: (a: T) => number): number {
     let sum = 0;
     for (let a of array) {
@@ -121,3 +130,28 @@ Then make a second function divideBoth that takes an a1, a2, and a b, and return
 // function divideBoth(a1: number, a2: number, b: number): Maybe<Pair<number, number>> {
 //     return just(pair(divide(a1, b), divide(a2, b)));
 // }
+
+
+function visitMaybe<A, B>(maybe: Maybe<A>, visitor: {whenJust: (a: A) => B, whenNothing: B}): B {
+    switch (maybe.kind) {
+        case 'Just':
+            return visitor.whenJust(maybe.value)
+
+        case 'Nothing':
+            return visitor.whenNothing
+    }
+}
+
+export function visitStrategy<T>(
+    rectangleStrategy: RectangleStrategy,
+    visitor: {whenLeft: T, whenMidpoint: T,	whenRight: T}
+): T {
+    switch (rectangleStrategy) {
+        case 'Left':
+            return visitor.whenLeft
+        case 'Midpoint':
+            return visitor.whenMidpoint
+        case 'Right':
+            return visitor.whenRight // visitor pattern
+    }
+}

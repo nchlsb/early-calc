@@ -1,14 +1,8 @@
 <script lang="ts">
-	import type { Point, Context } from "./helpers";
-	import { range, slope, twoPointForm } from "./helpers";
+	import type { Point, Context, RectangleStrategy, Rectangle } from "./helpers";
+	import { range, slope, twoPointForm, visitStrategy} from "./helpers";
 	import * as katex from "katex";
 	import { onMount } from 'svelte/internal';	
-
-	type Rectangle = {
-		lowerLeftCorner: Point,
-		width: number,
-		height: number
-	}
 
 	// ********************* graph *********************
 	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
@@ -72,6 +66,9 @@
 
 	// ********************* integrals *********************
 
+	let rectangleStrategy: RectangleStrategy
+	$: rectangleStrategy = 'Left'
+
 	let sliderRectangleWidth = Math.log((xMaxBound - xMinBound) / 2);
 	let rectangleWidth: number;
 	$: rectangleWidth = Math.exp(sliderDeltaX) - 1;
@@ -91,7 +88,12 @@
 	let riemannRectangles: Rectangle[]
 	$: riemannRectangles = range(numberRectangles).map(n => {
 		const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / numberRectangles);
-		const y = f(x);
+
+		const y = f(x + visitStrategy(rectangleStrategy, {
+			whenLeft: 0,
+			whenMidpoint: (rectangleWidth / 2),
+			whenRight: rectangleWidth
+		}))
 
 		// SVG can't process negative height 
 		return {
@@ -100,6 +102,7 @@
 			lowerLeftCorner: {x: x, y: (y > 0) ? 0 : y}
 		};
 	});
+	
 	
 	// ********************* controls *********************
 
@@ -249,6 +252,11 @@
 	<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
 	<label for="bound-range2">interval bound 2</label>
 	<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
+	<p>
+		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
+		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
+		<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>
+	</p>
 	{/if}
 	<!-- <p id="differenceEquation1"></p>
 	<p id="differenceEquation2"></p>
