@@ -132,7 +132,7 @@ Then make a second function divideBoth that takes an a1, a2, and a b, and return
 // }
 
 
-function visitMaybe<A, B>(maybe: Maybe<A>, visitor: {whenJust: (a: A) => B, whenNothing: B}): B {
+export function visitMaybe<A, B>(maybe: Maybe<A>, visitor: {whenJust: (a: A) => B, whenNothing: B}): B {
     switch (maybe.kind) {
         case 'Just':
             return visitor.whenJust(maybe.value)

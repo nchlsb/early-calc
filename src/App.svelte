@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Point, Context, RectangleStrategy, Rectangle } from "./helpers";
-	import { range, slope, twoPointForm, visitStrategy} from "./helpers";
+	import { range, slope, twoPointForm, visitStrategy, sumBy} from "./helpers";
 	import * as katex from "katex";
 	import { onMount } from 'svelte/internal';	
 
@@ -230,9 +230,14 @@
 	</svg>
 
 
-	<span id = "SecantVsTangent">
-		Slope of the secant: {slope(secantPoint1, secantPoint2).toFixed(2)} | Slope of the tagent {slope(tangentPoint1, tangentPoint2).toFixed(2)}
-	</span>
+	<p id = "SecantVsTangent">
+		{#if context === 'Derivative'}
+			Slope of secant: {slope(secantPoint1, secantPoint2).toFixed(2)} | Slope of tagent {slope(tangentPoint1, tangentPoint2).toFixed(2)}
+		{:else}
+			Area under rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
+			| Area under curve: ...
+		{/if}
+	</p>
 	<br/>
 
 	{#if context === 'Derivative'}
