@@ -28,7 +28,7 @@
 	}), {x: xMaxBound, y: f(xMaxBound)}];
 
 	// ********************* derivatives *********************
-	const DELTA_X_APPROACHES_0 = 0.000001;
+	const DELTA_X_APPROACHES_0 = 0.00001;
 
 	let sliderDeltaX = Math.log((xMaxBound - xMinBound) / 2);
 	let deltaX: number;
