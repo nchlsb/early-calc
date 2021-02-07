@@ -28,7 +28,7 @@
 	}), {x: xMaxBound, y: f(xMaxBound)}];
 
 	// ********************* derivatives *********************
-	const DELTX_X_APPROACHES_0 = 0.0000000000001;
+	const DELTA_X_APPROACHES_0 = 0.000001;
 
 	let sliderDeltaX = Math.log((xMaxBound - xMinBound) / 2);
 	let deltaX: number;
@@ -53,7 +53,7 @@
 	$: tangentPoint1 = {x: x, y: f(x)}
 
 	let tangentPoint2: Point
-	$: tangentPoint2 = {x: x + DELTX_X_APPROACHES_0, y: f(x + DELTX_X_APPROACHES_0)}
+	$: tangentPoint2 = {x: x + DELTA_X_APPROACHES_0, y: f(x + DELTA_X_APPROACHES_0)}
 
 	let tangent: (x: number) => number
 	$: tangent = twoPointForm(tangentPoint1, tangentPoint2)
@@ -103,6 +103,17 @@
 		};
 	});
 	
+	let actualSum: number
+	$: actualSum = (() => {
+		let sum = 0
+	
+		for(let n = 0; n < ((integralUpperBound - integralLowerBound) / DELTA_X_APPROACHES_0); n++) {
+			const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / ((integralUpperBound - integralLowerBound) / DELTA_X_APPROACHES_0));
+			sum += Math.abs(f(x))
+		}
+	
+		return sum
+	})()
 	
 	// ********************* controls *********************
 
@@ -234,8 +245,8 @@
 		{#if context === 'Derivative'}
 			Slope of secant: {slope(secantPoint1, secantPoint2).toFixed(2)} | Slope of tagent {slope(tangentPoint1, tangentPoint2).toFixed(2)}
 		{:else}
-			Area under rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
-			| Area under curve: ...
+			Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
+			| Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
 		{/if}
 	</p>
 	<br/>
