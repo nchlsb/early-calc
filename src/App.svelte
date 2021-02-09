@@ -249,7 +249,6 @@
 			| Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
 		{/if}
 	</p>
-	<br/>
 
 	{#if context === 'Derivative'}
 	<label for="deltaX">Δx: {deltaX.toFixed(2)}</label>
