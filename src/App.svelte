@@ -260,12 +260,12 @@
 	{:else}
 
 
-	<label for="RectangleWidthValue">Rectangle Width</label>
+	<label for="RectangleWidthValue">Rectangle Width: {rectangleWidth}</label>
 	<input id="RectangleWidthValue" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={rectangleWidth}>
 
-	<label for="range1">interval bound 1</label>
+	<label for="range1">interval bound 1: {integralBound1}</label>
 	<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
-	<label for="bound-range2">interval bound 2</label>
+	<label for="bound-range2">interval bound 2: {integralBound2}</label>
 	<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
 	
 	<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
