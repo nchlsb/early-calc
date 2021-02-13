@@ -1,18 +1,4 @@
-Done list (for next push)
 
-		- (X)Change the consts at the bottom 
-		- (X)Add automatically-updating LaTeX equations
-		- (x)2-3 example functions in drop down
-			- sine
-			- linear
-			- const
-			- quadratic
-			- y = (x - 1)(x)(x + 1)
-			- y = e^x
-		- (x)Bounderies should be aligned on the axes or use scroll to zoom
-
-		- (x)Desktop and mobile friendliness
-		- (x) make curve smoother
 
 	Todo list
 		5. ( )Negative areas and colors
@@ -34,3 +20,5 @@ https://svelte.dev/tutorial/custom-css-transitions
 
 https://svelte.dev/tutorial/spring
 https://svelte.dev/tutorial/actions
+
+- make secant points not go off screen
