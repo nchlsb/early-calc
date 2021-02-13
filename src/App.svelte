@@ -29,8 +29,10 @@
 
 	// ********************* derivatives *********************
 	const DELTA_X_APPROACHES_0 = 0.00001;
+	// The number such that the max deltaX is 1
+	const MAX_SLIDER_DELTA_X = Math.LN2;
 
-	let sliderDeltaX = Math.log((xMaxBound - xMinBound) / 2);
+	let sliderDeltaX = MAX_SLIDER_DELTA_X;
 	let deltaX: number;
 	$: deltaX = Math.exp(sliderDeltaX) - 1;
 
@@ -71,7 +73,7 @@
 
 	let sliderRectangleWidth = Math.log((xMaxBound - xMinBound) / 2);
 	let rectangleWidth: number;
-	$: rectangleWidth = Math.exp(sliderDeltaX) - 1;
+	$: rectangleWidth = Math.exp(sliderRectangleWidth) - 1;
 
 	let integralBound1 = -DEFAULT_BOUND_MAGNITUDE
 	let integralBound2 = DEFAULT_BOUND_MAGNITUDE
@@ -252,7 +254,7 @@
 
 	{#if context === 'Derivative'}
 	<label for="deltaX">Δx: {deltaX.toFixed(2)}</label>
-	<input id="deltaX" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={sliderDeltaX} on:input={renderEquation}>
+	<input id="deltaX" type="range" min="0.01" step="0.001" max={MAX_SLIDER_DELTA_X}  bind:value={sliderDeltaX} on:input={renderEquation}>
 	
 	<label id="labelDeltaXValue" for="deltaX">x: {x.toFixed(2)}</label>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX} on:input={renderEquation}>
