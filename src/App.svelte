@@ -42,6 +42,9 @@
 	let secantPoint2: Point
 	$: secantPoint2 = {x: x + deltaX, y: f(x + deltaX)}
 
+	// let secantSlopeTextDisplayPoint: Point
+	// $: secantSlopeTextDisplayPoint = {x: x + deltaX + 0.5, y: f(x + deltaX) + 0.5}
+
 	let secant: (x: number) => number
 	$: secant = twoPointForm(secantPoint1, secantPoint2)
 
@@ -193,15 +196,16 @@
 				x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
 				x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
 			/>
-			<!-- <line stroke="grey" stroke-dasharray="2,2" fill="none"
+			<line stroke="grey" stroke-dasharray="2,2" fill="none"
 				x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
 				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
-			/> -->
+			/>
 
 			<circle cx={x} cy={f(x)} r=".075" fill="red"></circle>
 			<circle cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
-
-			<!-- <text x={x} y={-f(x)} font-size=".4">Delt X</text> -->
+			
+			<!-- why does the y value need to be negative?-->
+			<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
 			{:else}
 			<!-- bounds of intergral -->
 			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
