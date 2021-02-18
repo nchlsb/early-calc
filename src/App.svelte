@@ -61,6 +61,12 @@
 	let tangent: (x: number) => number
 	$: tangent = twoPointForm(tangentPoint1, tangentPoint2)
 
+	let slopeTangent: number
+	
+	$: slopeTangent = slope(tangentPoint1, tangentPoint2)
+	let slopeSecant: number
+	$: slopeSecant = (secantPoint1.x != secantPoint2.x) ? slope(secantPoint1, secantPoint2) : slopeTangent
+
 	let displayedTangentLine: {x1: number, y1: number, x2: number, y2: number}
 	$: displayedTangentLine = {
 		x1: xMinBound, y1: tangent(xMinBound),
@@ -247,7 +253,7 @@
 
 	<p id = "SecantVsTangent">
 		{#if context === 'Derivative'}
-			Slope of secant: {slope(secantPoint1, secantPoint2).toFixed(2)} | Slope of tagent {slope(tangentPoint1, tangentPoint2).toFixed(2)}
+			Slope of secant: {slopeTangent.toFixed(2)} | Slope of tagent {slopeSecant.toFixed(2)}
 		{:else}
 			Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
 			| Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
@@ -258,7 +264,7 @@
 	<label for="deltaX">Δx: {deltaX.toFixed(2)}</label>
 	<input id="deltaX" type="range" min="-1" step="0.001" max="1"  bind:value={sliderDeltaX} on:input={renderEquation}>
 	
-	<label id="labelDeltaXValue" for="deltaX">x: {x.toFixed(2)}</label>
+	<label id="labelDeltaXValue" for="deltaX">x: {x.toFixed(2).replace('-0', '0')}</label>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX} on:input={renderEquation}>
 
 	{:else}
