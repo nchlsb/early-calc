@@ -2,7 +2,8 @@
 	import type { Point, Context, RectangleStrategy, Rectangle } from "./helpers";
 	import { range, slope, twoPointForm, visitStrategy, sumBy} from "./helpers";
 	import * as katex from "katex";
-	import { onMount } from 'svelte/internal';	
+	import { onMount } from 'svelte/internal';
+	import Tooltip from './Tooltip.svelte';	
 
 	// ********************* graph *********************
 	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
@@ -180,7 +181,6 @@
 </script>
 <div class="outer">
 <div class="container">
-
 	<p>
 		<button class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
 		<button class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
@@ -204,7 +204,7 @@
 				x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
 				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
 			/>
-
+			
 			<circle cx={x} cy={f(x)} r=".075" fill="red"></circle>
 			<circle cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
 			
@@ -261,7 +261,10 @@
 	</p>
 
 	{#if context === 'Derivative'}
-	<label for="deltaX">Δx: {deltaX.toFixed(2)}</label>
+	
+	<Tooltip title="Δx (&quot;delta x&quot;) is the space between the two values on the graph">
+		<label for="deltaX">Δx: {deltaX.toFixed(2)}</label>
+	</Tooltip>
 	<input id="deltaX" type="range" min="-1" step="0.001" max="1"  bind:value={sliderDeltaX} on:input={renderEquation}>
 	
 	<label id="labelDeltaXValue" for="deltaX">x: {x.toFixed(2).replace('-0', '0')}</label>
