@@ -4,6 +4,7 @@
 	import * as katex from "katex";
 	import { onMount } from 'svelte/internal';
 	import Tooltip from './Tooltip.svelte';	
+	import { tooltip as tooltipv1 } from './tooltip.v1';
 
 	// ********************* graph *********************
 	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
@@ -182,15 +183,19 @@
 <div class="outer">
 <div class="container">
 	<p>
-		<button class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
-		<button class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
+		<Tooltip title = "todo - add text">
+			<button class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
+		</Tooltip>
+		<Tooltip title = "todo - add text">
+			<button class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
+		</Tooltip>
 	</p>
 
 	{#each functions as f, functionIndex}
 		<button class={functionIndex === selectedFunctionIndex ? 'highlighted' : ''} on:click={_ => selectedFunctionIndex = functionIndex}><span id={f.id}>{f.representation}</span></button>
 	{/each}
 	
-	
+
 	<!-- derivatives -->
 	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
 		<g>
@@ -205,9 +210,10 @@
 				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
 			/>
 			
-			<circle cx={x} cy={f(x)} r=".075" fill="red"></circle>
+			<circle use:tooltipv1={"test"} cx={x} cy={f(x)} r=".075" fill="red">
+			</circle>
 			<circle cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
-			
+	
 			<!-- why does the y value need to be negative?-->
 			<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
 			{:else}
@@ -262,12 +268,11 @@
 
 	{#if context === 'Derivative'}
 	
-	<Tooltip title="Δx (&quot;delta x&quot;) is the space between the two values on the graph">
-		<label for="deltaX">Δx: {deltaX.toFixed(2)}</label>
-	</Tooltip>
+
+	<label for="deltaX" use:tooltipv1={`Δx ("delta x") is the space between the two values on the graph`}>Δx: {deltaX.toFixed(2).replace('-0', '0')}</label>
 	<input id="deltaX" type="range" min="-1" step="0.001" max="1"  bind:value={sliderDeltaX} on:input={renderEquation}>
 	
-	<label id="labelDeltaXValue" for="deltaX">x: {x.toFixed(2).replace('-0', '0')}</label>
+	<label for="deltaX" use:tooltipv1={"x the name for this function's input, but you could call it something else like f(a) or f(input)"}>x: {x.toFixed(2).replace('-0', '0')}</label>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX} on:input={renderEquation}>
 
 	{:else}

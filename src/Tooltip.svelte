@@ -18,15 +18,15 @@
 	}
 </script>
 
-<div
+<span
 	on:mouseover={mouseOver}
   on:mouseleave={mouseLeave}
 	on:mousemove={mouseMove}>
 	<slot />
-</div>
+</span>
 
 {#if isHovered}
-	<div style="top: {y}px; left: {x}px;" class="tooltip">{title}</div>
+	<span style="top: {y}px; left: {x}px;" class="tooltip">{title}</span>
 {/if}
 
 <style>

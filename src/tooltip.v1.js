@@ -1,4 +1,4 @@
-export function tooltip(element) {
+export function tooltip(element, params) {
 	let div;
 	let title;
 	function mouseOver(event) {
@@ -8,7 +8,7 @@ export function tooltip(element) {
 		element.removeAttribute('title');
 		
 		div = document.createElement('div');
-		div.textContent = title;
+		div.textContent = params//title;
 		div.style = `
 			border: 1px solid #ddd;
 			box-shadow: 1px 1px 1px #ddd;
