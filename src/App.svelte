@@ -3,8 +3,7 @@
 	import { range, slope, twoPointForm, visitStrategy, sumBy} from "./helpers";
 	import * as katex from "katex";
 	import { onMount } from 'svelte/internal';
-	import Tooltip from './Tooltip.svelte';	
-	import { tooltip as tooltipv1 } from './tooltip.v1';
+	import { tooltip } from './tooltip';
 
 	// ********************* graph *********************
 	const DEFAULT_BOUND_MAGNITUDE = Math.ceil(Math.PI);
@@ -32,10 +31,8 @@
 	// ********************* derivatives *********************
 	const DELTA_X_APPROACHES_0 = 0.00001;
 
-	let sliderDeltaX = 1;
-	let deltaX: number;
+	let deltaX = 1
 	
-	$: deltaX = sliderDeltaX;//Math.exp(sliderDeltaX) - 1;
 	let secantPoint1: Point
 	$: secantPoint1 = {x: x, y: f(x)}
 
@@ -64,8 +61,8 @@
 	$: tangent = twoPointForm(tangentPoint1, tangentPoint2)
 
 	let slopeTangent: number
-	
 	$: slopeTangent = slope(tangentPoint1, tangentPoint2)
+	
 	let slopeSecant: number
 	$: slopeSecant = (secantPoint1.x != secantPoint2.x) ? slope(secantPoint1, secantPoint2) : slopeTangent
 
@@ -142,9 +139,7 @@
 		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
 	];
 
-	let sliderX = 0;
-	let x: number;
-	$: x = sliderX;
+	let x = 0;
 	
 	// ********************* equation rendering *********************
 
@@ -183,12 +178,8 @@
 <div class="outer">
 <div class="container">
 	<p>
-		<Tooltip title = "todo - add text">
-			<button class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
-		</Tooltip>
-		<Tooltip title = "todo - add text">
-			<button class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
-		</Tooltip>
+		<button use:tooltip data-title="How quickly does a curve change?"  class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
+		<button use:tooltip data-title="What is the area under a curve?" class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
 	</p>
 
 	{#each functions as f, functionIndex}
@@ -201,18 +192,17 @@
 		<g>
 			{#if context === 'Derivative'}
 			
-			<line stroke="black" stroke-dasharray="2,2" fill="none"
+			<line stroke="red" stroke-dasharray="4,4" fill="none"
 				x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
 				x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
 			/>
-			<line stroke="grey" stroke-dasharray="2,2" fill="none"
+			<line stroke="grey" stroke-dasharray="4,4" fill="none"
 				x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
 				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
 			/>
 			
-			<circle use:tooltipv1={"test"} cx={x} cy={f(x)} r=".075" fill="red">
-			</circle>
-			<circle cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
+			<circle use:tooltip data-title={`(${x}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
+			<circle use:tooltip data-title={`(${x + deltaX}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
 	
 			<!-- why does the y value need to be negative?-->
 			<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
@@ -259,7 +249,13 @@
 
 	<p id = "SecantVsTangent">
 		{#if context === 'Derivative'}
-			Slope of secant: {slopeTangent.toFixed(2)} | Slope of tagent {slopeSecant.toFixed(2)}
+			<span use:tooltip data-title="Slope of the line between the points you control">
+				Slope of secant: {slopeTangent.toFixed(2)}
+			</span> 
+			| 
+			<span use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
+				Slope of tagent {slopeSecant.toFixed(2)}
+			</span>
 		{:else}
 			Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
 			| Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
@@ -269,11 +265,11 @@
 	{#if context === 'Derivative'}
 	
 
-	<label for="deltaX" use:tooltipv1={`Δx ("delta x") is the space between the two values on the graph`}>Δx: {deltaX.toFixed(2).replace('-0', '0')}</label>
-	<input id="deltaX" type="range" min="-1" step="0.001" max="1"  bind:value={sliderDeltaX} on:input={renderEquation}>
+	<label use:tooltip data-title="the distance between your input and the second point" for="deltaX" >Δx: {deltaX.toFixed(2).replace('-0', '0')}</label>
+	<input id="deltaX" type="range" min="-1" step="0.001" max="1"  bind:value={deltaX} on:input={renderEquation}>
 	
-	<label for="deltaX" use:tooltipv1={"x the name for this function's input, but you could call it something else like f(a) or f(input)"}>x: {x.toFixed(2).replace('-0', '0')}</label>
-	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={sliderX} on:input={renderEquation}>
+	<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2).replace('-0', '0')}</label>
+	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderEquation}>
 
 	{:else}
 
@@ -309,7 +305,7 @@
 
 	.riemann-rectangle {
 		fill: gray;
-		stroke: black;
+		stroke: gray;
 		stroke-width: 1;
 	}
 
