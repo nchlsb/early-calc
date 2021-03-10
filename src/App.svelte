@@ -201,7 +201,7 @@
 				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
 			/>
 			
-			<circle use:tooltip data-title={`(${x}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
+			<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
 			<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
 	
 			<!-- why does the y value need to be negative?-->
