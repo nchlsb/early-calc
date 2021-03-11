@@ -196,10 +196,12 @@
 				x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
 				x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
 			/>
+			{#if deltaX !== 0}
 			<line stroke="grey" stroke-dasharray="4,4" fill="none"
 				x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
 				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
 			/>
+			{/if}
 			
 			<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
 			<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
@@ -265,10 +267,10 @@
 	{#if context === 'Derivative'}
 	
 
-	<label use:tooltip data-title="the distance between your input and the second point" for="deltaX" >Δx: {deltaX.toFixed(2).replace('-0', '0')}</label>
+	<label use:tooltip data-title="the distance between your input and the second point" for="deltaX" >Δx: {deltaX.toFixed(2).replace('-0.00', '0.00')}</label>
 	<input id="deltaX" type="range" min="-1" step="0.001" max="1"  bind:value={deltaX} on:input={renderEquation}>
 	
-	<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2).replace('-0', '0')}</label>
+	<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2).replace('-0.00', '0.00')}</label>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderEquation}>
 
 	{:else}
