@@ -191,38 +191,37 @@
 	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
 		<g>
 			{#if context === 'Derivative'}
-			
-			<line stroke="red" stroke-dasharray="4,4" fill="none"
-				x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
-				x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
-			/>
-			{#if deltaX !== 0}
-			<line stroke="grey" stroke-dasharray="4,4" fill="none"
-				x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
-				x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
-			/>
-			{/if}
-			
-			<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
-			<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
-	
-			<!-- why does the y value need to be negative?-->
-			<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
+				
+				<line stroke="red" stroke-dasharray="4,4" fill="none"
+					x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
+					x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
+				/>
+				<!-- {#if deltaX !== 0 && deltaX !== -0} -->
+				<line stroke="grey" stroke-dasharray="4,4" fill="none"
+					x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
+					x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
+				/>
+				<!-- {/if} -->
+				
+				<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
+				<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
+		
+				<!-- why does the y value need to be negative?-->
+				<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
 			{:else}
-			<!-- bounds of intergral -->
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
-			<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
-			{#each riemannRectangles as rectangle}
-			<rect
-				class="riemann-rectangle"
-				x={rectangle.lowerLeftCorner.x}
-				y={rectangle.lowerLeftCorner.y}
-				width={rectangle.width}
-				height={rectangle.height}
-			/>
+				<!-- bounds of intergral -->
+				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
+				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
+				{#each riemannRectangles as rectangle}
+					<rect
+						class="riemann-rectangle"
+						x={rectangle.lowerLeftCorner.x}
+						y={rectangle.lowerLeftCorner.y}
+						width={rectangle.width}
+						height={rectangle.height}
+					/>
 			{/each}
 			
-
 			{/if}
 			<!-- x and y axis -->
 			<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
