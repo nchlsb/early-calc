@@ -28,29 +28,37 @@ describe("Range", () => {
 });
 
 describe("slope", () => {
-  it("Should work for postive", () => {
-    expect(slope(point(0, 0), point(1, 1,))).to.equal(1);
+  it("Should work for a postive slope", () => {
+    expect(slope(point(0, 0), point(1, 1))).to.equal(1);
   });
 
-  it("Should work for negative", () => {
-    expect(slope(point(0, 0), point(1, -1,))).to.equal(-1);
+  it("Should work for a negative negative", () => {
+    expect(slope(point(0, 0), point(1, -1))).to.equal(-1);
   });
 
-  it("Should work for zero", () => {
-    expect(slope(point(0, 0), point(1, 0,))).to.equal(0);
+  it("Should work for a slope of zero", () => {
+    expect(slope(point(0, 0), point(1, 0))).to.equal(0);
+  });
+
+  it("Should not work for (return NaN) if it takes the same point twice", () => {
+    expect(isNaN(slope(point(1, 1), point(1, 1)))).to.equal(true);
+  });
+
+  it("Should not work for (return Infinity) if it takes the two points witht the same x value but differnt y value.", () => {
+    expect(isFinite(slope(point(1, 1), point(1, 1)))).to.equal(false);
   });
 });
 
-describe("slope", () => {
-  it("Should work for postive", () => {
-    expect(slope(point(0, 0), point(1, 1,))).to.equal(1);
-  });
+// describe("slope", () => {
+//   it("Should work for postive", () => {
+//     expect(slope(point(0, 0), point(1, 1,))).to.equal(1);
+//   });
 
-  it("Should work for negative", () => {
-    expect(slope(point(0, 0), point(1, -1,))).to.equal(-1);
-  });
+//   it("Should work for negative", () => {
+//     expect(slope(point(0, 0), point(1, -1,))).to.equal(-1);
+//   });
 
-  it("Should work for zero", () => {
-    expect(slope(point(0, 0), point(1, 0,))).to.equal(0);
-  });
-});
+//   it("Should work for zero", () => {
+//     expect(slope(point(0, 0), point(1, 0,))).to.equal(0);
+//   });
+// });

@@ -37,7 +37,7 @@
 	$: secantPoint1 = {x: x, y: f(x)}
 
 	let secantPoint2: Point
-	$: secantPoint2 = {x: x + deltaX, y: f(x + deltaX)}
+	$: secantPoint2 = (deltaX !== 0) ? {x: x + deltaX, y: f(x + deltaX)} : tangentPoint2
 
 	// let secantSlopeTextDisplayPoint: Point
 	// $: secantSlopeTextDisplayPoint = {x: x + deltaX + 0.5, y: f(x + deltaX) + 0.5}
@@ -64,7 +64,7 @@
 	$: slopeTangent = slope(tangentPoint1, tangentPoint2)
 	
 	let slopeSecant: number
-	$: slopeSecant = (secantPoint1.x != secantPoint2.x) ? slope(secantPoint1, secantPoint2) : slopeTangent
+	$: slopeSecant = (deltaX !== 0) ? slope(secantPoint1, secantPoint2) : slopeTangent
 
 	let displayedTangentLine: {x1: number, y1: number, x2: number, y2: number}
 	$: displayedTangentLine = {
