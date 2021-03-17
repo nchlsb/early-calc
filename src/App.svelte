@@ -250,16 +250,21 @@
 
 	<p id = "SecantVsTangent">
 		{#if context === 'Derivative'}
-		<span id="SlopeOfSecant" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
-			Slope of secant: {slopeSecant.toFixed(2)}
-		</span>
-		|
-		<span use:tooltip data-title="Slope of the line between the points you control">
-			Slope of tagent: {slopeTangent.toFixed(2)}
-		</span> 
+			<span id="SlopeOfSecant" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
+				Slope of secant: {slopeSecant.toFixed(2)}
+			</span>
+			|
+			<span use:tooltip data-title="Slope of the line between the points you control">
+				Slope of tagent: {slopeTangent.toFixed(2)}
+			</span> 
 		{:else}
-			Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
-			| Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
+			<span id="AreaOfRectangles" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
+				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
+			</span>
+			|
+			<span use:tooltip data-title="Slope of the line between the points you control">
+				Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
+			</span> 
 		{/if}
 	</p>
 
@@ -305,7 +310,7 @@
 	}
 
 	.riemann-rectangle {
-		fill: gray;
+		fill: crimson;
 		stroke: black;
 		stroke-width: 1;
 	}
@@ -356,8 +361,8 @@
 		font-size: 30px;
 	}
 
-	#SlopeOfSecant {
-		color: red
+	#SlopeOfSecant, #AreaOfRectangles {
+		color: crimson
 	}
 
 </style>
