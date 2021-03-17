@@ -271,10 +271,12 @@
 	{#if context === 'Derivative'}
 	
 
-	<label use:tooltip data-title="the distance between your input and the second point" for="deltaX" >Δx: {deltaX.toFixed(2).replace('-0.00', '0.00')}</label>
+	<label use:tooltip data-title="the distance between your input and the second point" for="deltaX" >
+		Δx: {deltaX.toFixed(2).replace('0.00', 'Limit as Δx -> 0')}
+	</label>
 	<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX} on:input={renderEquation}>
 	
-	<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2).replace('-0.00', '0.00')}</label>
+	<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
 	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderEquation}>
 
 	{:else}
