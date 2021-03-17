@@ -253,7 +253,7 @@
 		<span id="SlopeOfSecant" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
 			Slope of secant: {slopeSecant.toFixed(2)}
 		</span>
-			| 
+		|
 		<span use:tooltip data-title="Slope of the line between the points you control">
 			Slope of tagent: {slopeTangent.toFixed(2)}
 		</span> 
