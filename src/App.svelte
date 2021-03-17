@@ -132,8 +132,8 @@
 
 	const functions = [
 		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
-		{id: 'const', implementation: (x: number) => 1, representation: 'f(x) = 1'},
-		{id: 'linear', implementation: (x: number) => x, representation: 'f(x) = x'},
+		// {id: 'const', implementation: (x: number) => 1, representation: 'f(x) = 1'},
+		// {id: 'linear', implementation: (x: number) => x, representation: 'f(x) = x'},
 		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2'},
 		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
 		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
@@ -197,11 +197,11 @@
 					x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
 				/>
 
-				<line stroke="grey" stroke-dasharray="4,4" fill="none"
+				<!-- <line stroke="grey" stroke-dasharray="4,4" fill="none"
 					x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
 					x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
 					visibility={(deltaX !== 0) ? "visible" : "hidden"}
-				/>
+				/> -->
 
 				<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
 				<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
@@ -306,7 +306,7 @@
 
 	.riemann-rectangle {
 		fill: gray;
-		stroke: gray;
+		stroke: black;
 		stroke-width: 1;
 	}
 
