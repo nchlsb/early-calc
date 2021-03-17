@@ -214,7 +214,7 @@
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
 				{#each riemannRectangles as rectangle}
 					<rect
-						class="riemann-rectangle"
+						class={(rectangleWidth > 0.1) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
 						x={rectangle.lowerLeftCorner.x}
 						y={rectangle.lowerLeftCorner.y}
 						width={rectangle.width}
@@ -258,42 +258,36 @@
 				Slope of tagent: {slopeTangent.toFixed(2)}
 			</span> 
 		{:else}
-			<span id="AreaOfRectangles" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
+			<span id="AreaOfRectangles">
 				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
 			</span>
 			|
-			<span use:tooltip data-title="Slope of the line between the points you control">
+			<span>
 				Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
 			</span> 
 		{/if}
 	</p>
 
 	{#if context === 'Derivative'}
-	
-
-	<label use:tooltip data-title="the distance between your input and the second point" for="deltaX" >
-		Δx: {deltaX.toFixed(2).replace('0.00', 'Limit as Δx -> 0')}
-	</label>
-	<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX} on:input={renderEquation}>
-	
-	<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
-	<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderEquation}>
-
+		<label use:tooltip data-title="the distance between your input and the second point" for="deltaX" >
+			Δx: {deltaX.toFixed(2).replace('0.00', 'Limit as Δx -> 0')}
+		</label>
+		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX} on:input={renderEquation}>
+		
+		<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
+		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderEquation}>
 	{:else}
+		<label for="RectangleWidthValue">Rectangle Width: {(rectangleWidth > 0.01) ? rectangleWidth : 'Limit as Δx -> 0' }</label>
+		<input id="RectangleWidthValue" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={rectangleWidth}>
 
-
-	<label for="RectangleWidthValue">Rectangle Width: {rectangleWidth}</label>
-	<input id="RectangleWidthValue" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={rectangleWidth}>
-
-	<label for="range1">interval bound 1: {integralBound1}</label>
-	<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
-	<label for="bound-range2">interval bound 2: {integralBound2}</label>
-	<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
-	
-	<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
-	<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
-	<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>
-	
+		<label for="range1">interval bound 1: {integralBound1}</label>
+		<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
+		<label for="bound-range2">interval bound 2: {integralBound2}</label>
+		<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
+		
+		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
+		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
+		<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>	
 	{/if}
 	<!-- <p id="differenceEquation1"></p>
 	<p id="differenceEquation2"></p>
@@ -314,6 +308,12 @@
 	.riemann-rectangle {
 		fill: crimson;
 		stroke: black;
+		stroke-width: 1;
+	}
+
+	.riemann-rectangle-no-stroke {
+		fill: crimson;
+		stroke: crimson;
 		stroke-width: 1;
 	}
 
