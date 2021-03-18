@@ -192,7 +192,7 @@
 		<g>
 			{#if context === 'Derivative'}
 				
-				<line stroke="red" stroke-dasharray="4,4" fill="none"
+				<line stroke="crimson" stroke-dasharray="4,4" fill="none"
 					x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
 					x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
 				/>
@@ -203,8 +203,8 @@
 					visibility={(deltaX !== 0) ? "visible" : "hidden"}
 				/> -->
 
-				<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="red"></circle>
-				<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="red"></circle>
+				<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="crimson"></circle>
+				<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="crimson"></circle>
 		
 				<!-- why does the y value need to be negative?-->
 				<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
