@@ -174,9 +174,11 @@
 
 	function renderLimit(): void{
 
-		const limit = `\\lim_{\\Delta x \\rightarrow ${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x}`;
+		//const limit = `\\lim_{\\Delta x \\rightarrow ${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x}`;
+		const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
 		
-		katex.render(limit, document.getElementById('lblDeltaX'), {output: 'html', displayMode: true})
+
+		katex.render(limit, document.getElementById('SlopeOfSecant'), {output: 'html', displayMode: true})
 	}
 
 	function g(n: number): string {
@@ -259,13 +261,16 @@
 
 	<p id = "SecantVsTangent">
 		{#if context === 'Derivative'}
-			<span id="SlopeOfSecant" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
+			<!-- <span id="SlopeOfSecant" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
 				Slope of secant: {slopeSecant.toFixed(2)}
 			</span>
 			|
 			<span use:tooltip data-title="Slope of the line between the points you control">
 				Slope of tagent: {slopeTangent.toFixed(2)}
-			</span> 
+			</span>  -->
+			<span id="SlopeOfSecant">
+				lim as Δx→−{deltaX.toFixed(2)} of f(x+Δx)−f(x)​ = {slopeSecant.toFixed(2)}
+			</span>
 		{:else}
 			<span id="AreaOfRectangles">
 				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
@@ -284,7 +289,7 @@
 		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX} on:input={renderLimit}>
 		
 		<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
-		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderEquation}>
+		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderLimit}>
 	{:else}
 		<label for="RectangleWidthValue">Rectangle Width: {(rectangleWidth > 0.01) ? rectangleWidth : 'Limit as Δx -> 0' }</label>
 		<input id="RectangleWidthValue" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={rectangleWidth}>
@@ -372,8 +377,8 @@
 		font-size: 30px;
 	}
 
-	#SlopeOfSecant, #AreaOfRectangles {
+	/* #SlopeOfSecant, #AreaOfRectangles {
 		color: crimson
-	}
+	} */
 
 </style>
