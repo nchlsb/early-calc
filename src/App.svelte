@@ -176,9 +176,10 @@
 
 		//const limit = `\\lim_{\\Delta x \\rightarrow ${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x}`;
 		const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+		//const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(${x.toFixed(2)} + \\Delta x) - f(${x.toFixed(2)})}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
 		
 
-		katex.render(limit, document.getElementById('SlopeOfSecant'), {output: 'html', displayMode: true})
+		katex.render(limit, document.getElementById('limit'), {output: 'html', displayMode: true})
 	}
 
 	function g(n: number): string {
@@ -268,8 +269,8 @@
 			<span use:tooltip data-title="Slope of the line between the points you control">
 				Slope of tagent: {slopeTangent.toFixed(2)}
 			</span>  -->
-			<span id="SlopeOfSecant">
-				lim as Δx→−{deltaX.toFixed(2)} of f(x+Δx)−f(x)​ = {slopeSecant.toFixed(2)}
+			<span id="limit">
+				lim as Δx → {deltaX.toFixed(2)} of f(x+Δx)−f(x)​ = {slopeSecant.toFixed(2)}
 			</span>
 		{:else}
 			<span id="AreaOfRectangles">
@@ -284,7 +285,7 @@
 
 	{#if context === 'Derivative'}
 		<label id="lblDeltaX" for="deltaX" >
-			Δx: {deltaX.toFixed(2).replace('0.00', 'Limit as Δx -> 0')}
+			Δx→{deltaX.toFixed(2)}
 		</label>
 		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX} on:input={renderLimit}>
 		
@@ -377,8 +378,8 @@
 		font-size: 30px;
 	}
 
-	/* #SlopeOfSecant, #AreaOfRectangles {
+	#AreaOfRectangles {
 		color: crimson
-	} */
+	}
 
 </style>
