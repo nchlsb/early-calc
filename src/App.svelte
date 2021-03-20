@@ -188,7 +188,7 @@
 		//const limit = `\\lim_{\\Delta x \\rightarrow \\infty} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${slopeSecant.toFixed(2)}`;
 
 
-		const limit = `\\lim_{\\Delta x \\rightarrow \\infty} \\sum_{i=1}^{\\color{crimson}${numberRectangles.toFixed(0)} } f(x_i)\\Delta x = \\color{crimson}${sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)}`;
+		const limit = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles.toFixed(0)}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)}`;
 
 
 
