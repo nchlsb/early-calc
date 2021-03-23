@@ -291,15 +291,15 @@
 			</span>
 		{:else}
 			<span id='IntegralDefinition'>
-				defautl text
+				n→{numberRectangles} lim ​i=1 ∑ n ​f(xi​)Δx = {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)}
 			</span>
-			<span id="AreaOfRectangles">
+			<!-- <span id="AreaOfRectangles">
 				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
 			</span>
 			|
 			<span>
 				Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
-			</span> 
+			</span>  -->
 		{/if}
 	</p>
 
