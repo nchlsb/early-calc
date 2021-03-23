@@ -312,13 +312,13 @@
 		<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
 		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderDerivativeDefinition}>
 	{:else}
-		<label for="RectangleWidthValue">Rectangle Width: {(rectangleWidth > 0.01) ? rectangleWidth : 'Limit as Δx -> 0' }</label>
-		<input id="RectangleWidthValue" type="range" min="0.01" step="0.01" max={Math.log(xMaxBound - xMinBound).toFixed(2)}  bind:value={rectangleWidth} on:input={renderIntegralDefinition}>
+		<label id="NumberRectangles" for="RectangleWidthValue">n→{numberRectangles}</label>
+		<input id="RectangleWidthValue" type="range" min="1" step="1" max="50"  bind:value={numberRectangles} on:input={renderIntegralDefinition}>
 
 		<label for="range1">interval bound 1: {integralBound1}</label>
-		<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
+		<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1} on:input={renderIntegralDefinition}>
 		<label for="bound-range2">interval bound 2: {integralBound2}</label>
-		<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
+		<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2} on:input={renderIntegralDefinition}>
 		
 		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
 		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
