@@ -189,8 +189,8 @@
 <div class="outer">
 <div class="container">
 	<p>
-		<button use:tooltip data-title="How quickly does a curve change?"  class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
-		<button use:tooltip data-title="What is the area under a curve?" class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
+		<button class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
+		<button class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
 	</p>
 
 	{#each functions as f, functionIndex}
@@ -292,7 +292,7 @@
 		</label>
 		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}>
 		
-		<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
+		<label for="deltaX">x: {x.toFixed(2)}</label>
 		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}>
 	{:else}
 		<label id="NumberRectangles" for="RectangleWidthValue">n→{numberRectangles}</label>
