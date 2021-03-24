@@ -137,7 +137,7 @@
 	// ********************* controls *********************
 
 	let context: Context
-	$: context = "Integral";
+	$: context = "Derivative"
 
 	let selectedFunctionIndex = 0;
 
