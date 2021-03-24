@@ -73,6 +73,8 @@
 		x2: xMaxBound, y2: tangent(xMaxBound)
 	}
 
+	$: derivativeDef =`\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+
 	// ********************* integrals *********************
 
 	let rectangleStrategy: RectangleStrategy
@@ -160,8 +162,6 @@
 		}
 	
 		//renderEquation()
-
-		(context === "Derivative") ? renderDerivativeDefinition() : renderIntegralDefinition();
 	});
 
 	function renderEquation(): void {
@@ -181,32 +181,32 @@
 		// 	document.getElementById('differenceEquation5'), {output: 'html'})
 	}
 
-	function renderDerivativeDefinition(): void {
-		console.log("renderDerivativeDefinition")
-		//const limit = `\\lim_{\\Delta x \\rightarrow ${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x}`;
-		const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
-		//const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(${x.toFixed(2)} + \\Delta x) - f(${x.toFixed(2)})}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+	// function renderDerivativeDefinition(): void {
+	// 	console.log("renderDerivativeDefinition")
+	// 	//const limit = `\\lim_{\\Delta x \\rightarrow ${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x}`;
+	// 	const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+	// 	//const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(${x.toFixed(2)} + \\Delta x) - f(${x.toFixed(2)})}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
 		
 
-		katex.render(limit, document.getElementById('limit'), {output: 'html', displayMode: true})
-	}
+	// 	katex.render(limit, document.getElementById('limit'), {output: 'html', displayMode: true})
+	// }
 
 	
-	function renderIntegralDefinition(): void {		
-		// //const limit = `\\lim_{\\Delta x \\rightarrow \\infty} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${slopeSecant.toFixed(2)}`;
-		// const limit = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumRectangles.toFixed(2)}`;
+	// function renderIntegralDefinition(): void {		
+	// 	// //const limit = `\\lim_{\\Delta x \\rightarrow \\infty} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${slopeSecant.toFixed(2)}`;
+	// 	// const limit = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumRectangles.toFixed(2)}`;
 
-		// katex.render(limit, document.getElementById('IntegralDefinition'), {output: 'html', displayMode: true})
-	}
+	// 	// katex.render(limit, document.getElementById('IntegralDefinition'), {output: 'html', displayMode: true})
+	// }
 
-	function handelFunctionChange(functionIndex) {
-		// selectedFunctionIndex = functionIndex;
-		// //f = functions[selectedFunctionIndex].implementation;
-		// //sumRectangles = sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height);
+	// function handelFunctionChange(functionIndex) {
+	// 	// selectedFunctionIndex = functionIndex;
+	// 	// //f = functions[selectedFunctionIndex].implementation;
+	// 	// //sumRectangles = sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height);
 		
-		// console.log(f.toString(), sumRectangles);
-		// (context === "Derivative") ? renderDerivativeDefinition() : renderIntegralDefinition();
-	}
+	// 	// console.log(f.toString(), sumRectangles);
+	// 	// (context === "Derivative") ? renderDerivativeDefinition() : renderIntegralDefinition();
+	// }
 
 	function g(n: number): string {
 		return n.toFixed(2)
@@ -216,9 +216,8 @@
 <div class="outer">
 <div class="container">
 	<p>
-		<button use:tooltip data-title="How quickly does a curve change?"  class={context === 'Derivative' ? 'highlighted' : ''}  on:click={function() {context = 'Derivative'; renderDerivativeDefinition()}}>Derivatives</button>
+		<button use:tooltip data-title="How quickly does a curve change?"  class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
 		<button use:tooltip data-title="What is the area under a curve?" class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
-		<button on:click={_ => renderIntegralDefinition()}>Update Intergeral</button>
 	</p>
 
 	{#each functions as f, functionIndex}
@@ -298,8 +297,8 @@
 			</span>  -->
 			<span id="limit">
 				<span>
-					lim as Δx → {deltaX.toFixed(2)} of f(x+Δx)−f(x)​ =
-				</span> dfdf {slopeSecant.toFixed(2)}
+					<Katex math={derivativeDef}/>
+				</span>
 			</span>
 		{:else}
 			<span id='IntegralDefinition'>
@@ -322,18 +321,18 @@
 		<label id="lblDeltaX" for="deltaX" >
 			Δx→{deltaX.toFixed(2)}
 		</label>
-		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX} on:input={renderDerivativeDefinition}>
+		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}>
 		
 		<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
-		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderDerivativeDefinition}>
+		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}>
 	{:else}
 		<label id="NumberRectangles" for="RectangleWidthValue">n→{numberRectangles}</label>
-		<input id="RectangleWidthValue" type="range" min="1" step="1" max="50"  bind:value={numberRectangles} on:input={renderIntegralDefinition}>
+		<input id="RectangleWidthValue" type="range" min="1" step="1" max="50"  bind:value={numberRectangles}>
 
 		<label for="range1">interval bound 1: {integralBound1}</label>
-		<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1} on:input={renderIntegralDefinition}>
+		<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
 		<label for="bound-range2">interval bound 2: {integralBound2}</label>
-		<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2} on:input={renderIntegralDefinition}>
+		<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}>
 		
 		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
 		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
