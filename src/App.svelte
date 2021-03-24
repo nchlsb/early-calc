@@ -2,6 +2,7 @@
 	import type { Point, Context, RectangleStrategy, Rectangle } from "./helpers";
 	import { range, slope, twoPointForm, visitStrategy, sumBy} from "./helpers";
 	import * as katex from "katex";
+	import Katex from "./Katex.svelte"
 	import { onMount } from 'svelte/internal';
 	import { tooltip } from './tooltip';
 
@@ -126,8 +127,9 @@
 		return sum
 	})()
 
-	let test: string;
-	$: test = katex.renderToString(`\\lim_{n \\rightarrow \\color{crimson}${numberRectangles.toFixed(0)}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)}`, {output: 'html', displayMode: true}) ;
+	$: integeralDef = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumRectangles.toFixed(2)}`
+
+
 
 	
 	// ********************* controls *********************
@@ -191,17 +193,19 @@
 
 	
 	function renderIntegralDefinition(): void {		
-		//const limit = `\\lim_{\\Delta x \\rightarrow \\infty} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${slopeSecant.toFixed(2)}`;
-		const limit = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles.toFixed(0)}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)}`;
-	
-		katex.render(limit, document.getElementById('IntegralDefinition'), {output: 'html', displayMode: true})
+		// //const limit = `\\lim_{\\Delta x \\rightarrow \\infty} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${slopeSecant.toFixed(2)}`;
+		// const limit = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumRectangles.toFixed(2)}`;
+
+		// katex.render(limit, document.getElementById('IntegralDefinition'), {output: 'html', displayMode: true})
 	}
 
-
 	function handelFunctionChange(functionIndex) {
-		selectedFunctionIndex = functionIndex;
-
-		(context === "Derivative") ? renderDerivativeDefinition() : renderIntegralDefinition();
+		// selectedFunctionIndex = functionIndex;
+		// //f = functions[selectedFunctionIndex].implementation;
+		// //sumRectangles = sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height);
+		
+		// console.log(f.toString(), sumRectangles);
+		// (context === "Derivative") ? renderDerivativeDefinition() : renderIntegralDefinition();
 	}
 
 	function g(n: number): string {
@@ -214,10 +218,11 @@
 	<p>
 		<button use:tooltip data-title="How quickly does a curve change?"  class={context === 'Derivative' ? 'highlighted' : ''}  on:click={function() {context = 'Derivative'; renderDerivativeDefinition()}}>Derivatives</button>
 		<button use:tooltip data-title="What is the area under a curve?" class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
+		<button on:click={_ => renderIntegralDefinition()}>Update Intergeral</button>
 	</p>
 
 	{#each functions as f, functionIndex}
-		<button class={functionIndex === selectedFunctionIndex ? 'highlighted' : ''} on:click={() => handelFunctionChange(functionIndex)}><span id={f.id}>{f.representation}</span></button>
+		<button class={functionIndex === selectedFunctionIndex ? 'highlighted' : ''} on:click={() => selectedFunctionIndex = functionIndex}><span id={f.id}>{f.representation}</span></button>
 	{/each}
 	
 
@@ -298,7 +303,7 @@
 			</span>
 		{:else}
 			<span id='IntegralDefinition'>
-				n→{numberRectangles} lim ​i=1 ∑ n ​f(xi​)Δx = {sumRectangles.toFixed(2)}
+				<Katex math={integeralDef}/>
 			</span>
 			<span>
 				{sumRectangles.toFixed(2)}
@@ -322,7 +327,7 @@
 		<label use:tooltip data-title="the number you input into the function you chose" for="deltaX">x: {x.toFixed(2)}</label>
 		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x} on:input={renderDerivativeDefinition}>
 	{:else}
-		<label id="NumberRectangles" for="RectangleWidthValue">{sumRectangles} | n→{numberRectangles}</label>
+		<label id="NumberRectangles" for="RectangleWidthValue">n→{numberRectangles}</label>
 		<input id="RectangleWidthValue" type="range" min="1" step="1" max="50"  bind:value={numberRectangles} on:input={renderIntegralDefinition}>
 
 		<label for="range1">interval bound 1: {integralBound1}</label>
