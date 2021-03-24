@@ -93,7 +93,7 @@
 	let integralUpperBound: number;
 	$: integralUpperBound = Math.max(integralBound1, integralBound2);
 
-	let numberRectangles = 4//: number;
+	let numberRectangles = 5//: number;
 	//$: numberRectangles = (integralUpperBound - integralLowerBound) / rectangleWidth;
 
 	let riemannRectangles: Rectangle[]
@@ -181,33 +181,6 @@
 		// 	document.getElementById('differenceEquation5'), {output: 'html'})
 	}
 
-	// function renderDerivativeDefinition(): void {
-	// 	console.log("renderDerivativeDefinition")
-	// 	//const limit = `\\lim_{\\Delta x \\rightarrow ${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x}`;
-	// 	const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
-	// 	//const limit = `\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(${x.toFixed(2)} + \\Delta x) - f(${x.toFixed(2)})}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
-		
-
-	// 	katex.render(limit, document.getElementById('limit'), {output: 'html', displayMode: true})
-	// }
-
-	
-	// function renderIntegralDefinition(): void {		
-	// 	// //const limit = `\\lim_{\\Delta x \\rightarrow \\infty} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${slopeSecant.toFixed(2)}`;
-	// 	// const limit = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumRectangles.toFixed(2)}`;
-
-	// 	// katex.render(limit, document.getElementById('IntegralDefinition'), {output: 'html', displayMode: true})
-	// }
-
-	// function handelFunctionChange(functionIndex) {
-	// 	// selectedFunctionIndex = functionIndex;
-	// 	// //f = functions[selectedFunctionIndex].implementation;
-	// 	// //sumRectangles = sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height);
-		
-	// 	// console.log(f.toString(), sumRectangles);
-	// 	// (context === "Derivative") ? renderDerivativeDefinition() : renderIntegralDefinition();
-	// }
-
 	function g(n: number): string {
 		return n.toFixed(2)
 	}
@@ -224,7 +197,6 @@
 		<button class={functionIndex === selectedFunctionIndex ? 'highlighted' : ''} on:click={() => selectedFunctionIndex = functionIndex}><span id={f.id}>{f.representation}</span></button>
 	{/each}
 	
-
 	<!-- derivatives -->
 	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
 		<g>
@@ -303,9 +275,6 @@
 		{:else}
 			<span id='IntegralDefinition'>
 				<Katex math={integeralDef}/>
-			</span>
-			<span>
-				{sumRectangles.toFixed(2)}
 			</span>
 			<!-- <span id="AreaOfRectangles">
 				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
