@@ -130,15 +130,21 @@
 		return sum
 	})()
 
-	$: integeralDef = `\\lim_{n \\rightarrow \\color{crimson}${numberRectangles}} \\sum_{i=1}^n f(x_i)\\Delta x = \\color{crimson}${sumRectangles.toFixed(2)}`
+	$: integeralDef = `{\\color{${(nApprochesIninity) ? `lightgray` : `crimson`}} \\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x = ${sumRectangles.toFixed(2)}`
 
+	let nApprochesIninity = false;
+	
+	function handleNApprochesIninity(){
+		nApprochesIninity = !nApprochesIninity
+		
+		numberRectangles = (nApprochesIninity) ? 1000 : 100
 
-
+	}
 	
 	// ********************* controls *********************
 
 	let context: Context
-	$: context = "Derivative"
+	$: context = "Integral"//"Derivative"
 
 	let selectedFunctionIndex = 0;
 
@@ -275,7 +281,7 @@
 			</span>
 		{:else}
 			<span id='IntegralDefinition'>
-				<Katex math={integeralDef}/>
+				<Katex math={integeralDef} displayMode/>
 			</span>
 			<!-- <span id="AreaOfRectangles">
 				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
@@ -288,7 +294,7 @@
 	</p>
 
 	{#if context === 'Derivative'}
-		<label id="lblDeltaX" for="deltaX" >
+		<label for="deltaX" >
 			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
 		</label>
 		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}>
@@ -296,8 +302,13 @@
 		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
 		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}>
 	{:else}
-		<label id="NumberRectangles" for="RectangleWidthValue">n→{numberRectangles}</label>
-		<input id="RectangleWidthValue" type="range" min="1" step="1" max="50"  bind:value={numberRectangles}>
+		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(!nApprochesIninity) ? numberRectangles : '∞'}</label>
+		<span>
+			<input type="range" min="1" step="1" max="100"  bind:value={numberRectangles}>	
+			<button on:click={handleNApprochesIninity}>Go to ∞</button>
+		</span>
+
+
 
 		<label for="range1">interval bound 1: {integralBound1}</label>
 		<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
