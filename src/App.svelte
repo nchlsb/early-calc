@@ -73,7 +73,7 @@
 		x2: xMaxBound, y2: tangent(xMaxBound)
 	}
 	// comment is grayed out lim
-	$: derivativeDef =`{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+	$: derivativeDef = `{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} = ${slopeSecant.toFixed(2)}`;
 	//$: derivativeDef =`\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
 
 	// ********************* integrals *********************
@@ -270,7 +270,7 @@
 			</span>  -->
 			<span id="limit">
 				<span>
-					<Katex math={derivativeDef}/>
+					<Katex math={derivativeDef} displayMode/>
 				</span>
 			</span>
 		{:else}
@@ -289,11 +289,11 @@
 
 	{#if context === 'Derivative'}
 		<label id="lblDeltaX" for="deltaX" >
-			Δx→{deltaX.toFixed(2)}
+			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
 		</label>
 		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}>
 		
-		<label for="deltaX">x: {x.toFixed(2)}</label>
+		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
 		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}>
 	{:else}
 		<label id="NumberRectangles" for="RectangleWidthValue">n→{numberRectangles}</label>

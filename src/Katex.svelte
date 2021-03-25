@@ -3,12 +3,17 @@
 	export let math;
 	export let displayMode = false;
 
-    const options = {output: 'html', displayMode: true}
+    //const options = {output: 'html', displayMode: false}
 	
 	// const options = {
 	// 	displayMode: displayMode,
 	// 	throwOnError: false
 	// }
+
+	const options = {
+		output: 'html',
+		displayMode: displayMode,
+	}
 	
 	$: katexString = katex.renderToString(math, options);
 </script>
