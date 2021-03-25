@@ -72,8 +72,9 @@
 		x1: xMinBound, y1: tangent(xMinBound),
 		x2: xMaxBound, y2: tangent(xMaxBound)
 	}
-
-	$: derivativeDef =`\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+	// comment is grayed out lim
+	$: derivativeDef =`{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+	//$: derivativeDef =`\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
 
 	// ********************* integrals *********************
 
