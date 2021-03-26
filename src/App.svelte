@@ -130,7 +130,7 @@
 		return sum
 	})()
 
-	$: integeralDef = `{\\color{${(nApprochesIninity) ? `lightgray` : `crimson`}} \\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x = ${sumRectangles.toFixed(2)}`
+	$: integeralDef = `{\\color{${(!nApprochesIninity) ? `lightgray` : `crimson`}} \\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x = ${sumRectangles.toFixed(2)}`
 
 	let nApprochesIninity = false;
 	
@@ -304,8 +304,9 @@
 	{:else}
 		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(!nApprochesIninity) ? numberRectangles : '∞'}</label>
 		<span>
-			<input type="range" min="1" step="1" max="100"  bind:value={numberRectangles}>	
-			<button on:click={handleNApprochesIninity}>Go to ∞</button>
+			<!-- <input id='n' use:tooltip type="range" min="1" step="1" max="100" disabled={nApprochesIninity} class="{(!nApprochesIninity) ? "" : "grayout"}" bind:value={numberRectangles}>	 -->
+			<input id='n' use:tooltip type="range" min="1" step="1" max="100" on:input={() => nApprochesIninity = false} bind:value={numberRectangles}>	
+			<button on:click={handleNApprochesIninity}>{((!nApprochesIninity) ? 'Go to ∞' : 'Go to #')}</button>
 		</span>
 
 
@@ -395,6 +396,15 @@
 
 	#AreaOfRectangles {
 		color: crimson
+	}
+
+	.grayout {
+		opacity: 0.4; /* Real browsers */
+	}	
+
+	#n{
+		width: 85%;
+		display: inline;
 	}
 
 </style>
