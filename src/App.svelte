@@ -33,8 +33,13 @@
 	// ********************* derivatives *********************
 	const DELTA_X_APPROACHES_0 = 0.00001;
 
-	let deltaX = 1
-	
+	let deltaXSlider = [1];
+	$: deltaX = deltaXSlider[0]
+
+	let xSlider = [1]
+	let x: number;
+	$: x = xSlider[0]
+
 	let secantPoint1: Point
 	$: secantPoint1 = {x: x, y: f(x)}
 
@@ -82,28 +87,20 @@
 	let rectangleStrategy: RectangleStrategy
 	$: rectangleStrategy = 'Left'
 
-	let sliderRectangleWidth = 2;
 	let rectangleWidth: number;
-	$: rectangleWidth = Math.abs((integralBounds[1] - integralBounds[0]) / numberRectangles[0])//sliderRectangleWidth//Math.exp(sliderRectangleWidth) - 1;
+	$: rectangleWidth = Math.abs((integralUpperBound - integralLowerBound) / numberRectangles)//sliderRectangleWidth//Math.exp(sliderRectangleWidth) - 1;
 
-	let integralBound1 = -DEFAULT_BOUND_MAGNITUDE
-	let integralBound2 = DEFAULT_BOUND_MAGNITUDE
-
-	let integralBounds = [-DEFAULT_BOUND_MAGNITUDE, DEFAULT_BOUND_MAGNITUDE]
-	$: integralBounds = [integralBounds[0], integralBounds[1]]
+	let integralBoundsSlider = [-DEFAULT_BOUND_MAGNITUDE, DEFAULT_BOUND_MAGNITUDE]
 	
-	// let bound2[0]: number;
-	// $: bound2[0] = bound2[0]//Math.min(integralBound1, integralBound2);
+	$: integralLowerBound = integralBoundsSlider[0];
+	$: integralUpperBound = integralBoundsSlider[1];
 
-	// let bound2[1]: number;
-	// $: bound2[1] = bound2[1] //Math.max(integralBound1, integralBound2);
-
-	let numberRectangles = [5]//: number;
-	//$: numberRectangles = (bound2[1] - bound2[0]) / rectangleWidth;
+	let numberRectanglesSlider = [5]
+	$: numberRectangles = numberRectanglesSlider[0]
 
 	let riemannRectangles: Rectangle[]
-	$: riemannRectangles = range(numberRectangles[0]).map(n => {
-		const x = integralBounds[0] + (n * (integralBounds[1] - integralBounds[0]) / numberRectangles[0]);
+	$: riemannRectangles = range(numberRectangles).map(n => {
+		const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / numberRectangles);
 
 		const y = f(x + visitStrategy(rectangleStrategy, {
 			whenLeft: 0,
@@ -126,8 +123,8 @@
 	$: actualSum = (() => {
 		let sum = 0
 	
-		for(let n = 0; n < ((integralBounds[1] - integralBounds[0]) / DELTA_X_APPROACHES_0); n++) {
-			const x = integralBounds[0] + (n * (integralBounds[1] - integralBounds[0]) / ((integralBounds[1] - integralBounds[0]) / DELTA_X_APPROACHES_0));
+		for(let n = 0; n < ((integralUpperBound - integralLowerBound) / DELTA_X_APPROACHES_0); n++) {
+			const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / ((integralUpperBound - integralLowerBound) / DELTA_X_APPROACHES_0));
 			sum += Math.abs(f(x))
 		}
 	
@@ -141,7 +138,7 @@
 	function handleNApprochesIninity(){
 		nApprochesIninity = !nApprochesIninity
 		
-		numberRectangles[0] = (nApprochesIninity) ? 1000 : 100
+		numberRectangles = (nApprochesIninity) ? 1000 : 100
 
 	}
 
@@ -150,7 +147,9 @@
 	// ********************* controls *********************
 
 	let context: Context
-	$: context = "Integral"//"Derivative"
+	$: context = "Derivative"
+	//$: context = "Integral"//"Derivative"
+
 
 	let selectedFunctionIndex = 0;
 
@@ -162,8 +161,6 @@
 		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
 		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
 	];
-
-	let x = 0;
 	
 	// ********************* equation rendering *********************
 
@@ -233,8 +230,8 @@
 				<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
 			{:else}
 				<!-- bounds of intergral -->
-				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralBounds[0]} y1={yMinBound} x2={integralBounds[0]} y2={yMaxBound} />
-				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralBounds[1]} y1={yMinBound} x2={integralBounds[1]} y2={yMaxBound} />
+				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
+				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
 				{#each riemannRectangles as rectangle}
 					<rect
 						class={(rectangleWidth > 0.1) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
@@ -303,14 +300,27 @@
 		<label for="deltaX" >
 			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
 		</label>
-		<input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}>
+		<!-- <input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}> -->
+		<RangeSlider 
+				min={-1} 
+				max={1}
+				step={0.01} 
+				bind:values={deltaXSlider}		
+				range={false}
+		/>
 		
 		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
-		<input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}>
+		<!-- <input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}> -->
+		<RangeSlider 
+			min={xMinBound} 
+			max={xMaxBound}
+			step={0.01} 
+			bind:values={xSlider}		
+			range={false}
+		/>
 	{:else}
-		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(!nApprochesIninity) ? numberRectangles[0] : '∞'}</label>
+		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(!nApprochesIninity) ? numberRectangles : '∞'}</label>
 		<span>
-			<!-- <input id='n' use:tooltip type="range" min="1" step="1" max="100" disabled={nApprochesIninity} class="{(!nApprochesIninity) ? "" : "grayout"}" bind:value={numberRectangles}>	 -->
 			<RangeSlider 
 				id='n'
 				min={1} 
@@ -318,18 +328,16 @@
 				pips 
 				all='label' 
 				on:input={() => nApprochesIninity = false} 
-				bind:values={numberRectangles}
-				pipstep={20}
-				
+				bind:values={numberRectanglesSlider}
+				pipstep={20}		
 			/>
 			<!-- formatter={ v => (v !== MAX_NUM_RECTANGLES) ?v : '∞'  } -->
-			<!-- <input id='n' type="range" min="1" step="1" max="100" on:input={() => nApprochesIninity = false} bind:value={numberRectangles}>	 -->
-			<button on:click={handleNApprochesIninity}>{((!nApprochesIninity) ? 'Go to ∞' : 'Go to #')}</button>
+			<button on:click={handleNApprochesIninity}>{(!nApprochesIninity) ? 'Go to ∞' : 'Go to #'}</button>
 		</span>
 		<RangeSlider 
 			min={xMinBound} 
 			max={xMaxBound} 
-			bind:values={integralBounds}
+			bind:values={integralBoundsSlider}
 			pips 
 			all='label' 
 		/>	
