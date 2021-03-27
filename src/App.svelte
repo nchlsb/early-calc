@@ -311,7 +311,8 @@
 		
 		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
 		<!-- <input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}> -->
-		<RangeSlider 
+		<RangeSlider  
+			class={'rangeSlider'}
 			min={xMinBound} 
 			max={xMaxBound}
 			step={0.01} 
@@ -335,6 +336,7 @@
 			<button on:click={handleNApprochesIninity}>{(!nApprochesIninity) ? 'Go to ∞' : 'Go to #'}</button>
 		</span>
 		<RangeSlider 
+			range 
 			min={xMinBound} 
 			max={xMaxBound} 
 			bind:values={integralBoundsSlider}
@@ -438,5 +440,19 @@
 		width: 50%;
 		display: inline;
 	}
+
+	.rangeSlider  {
+ 		--range-handle: crimson;
+	}
+
+	.rangeSlider.pip-labels {
+		color: crimson
+	} 
+
+	.rangeSlider.range {
+		color: crimson
+	}
+
+	
 
 </style>
