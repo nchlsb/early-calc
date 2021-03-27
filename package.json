@@ -6,7 +6,7 @@
     "dev": "rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
-    "test": "mocha -r ts-node/register tests/**/*.spec.ts || true", 
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts || true",
     "updateDocs": "rm -r ./docs/* && cp -r ./public/* ./docs/"
   },
   "devDependencies": {
@@ -25,6 +25,7 @@
     "svelte": "^3.29.4",
     "svelte-check": "^1.1.6",
     "svelte-preprocess": "^4.5.2",
+    "svelte-range-slider-pips": "^1.7.0",
     "ts-node": "^9.1.1",
     "tslib": "^2.0.3",
     "typescript": "^3.9.3"
