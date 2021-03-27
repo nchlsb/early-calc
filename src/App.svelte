@@ -340,8 +340,7 @@
 			min={xMinBound} 
 			max={xMaxBound} 
 			bind:values={integralBoundsSlider}
-			pips 
-			all='label' 
+			step={0.01}
 		/>	
 
 
