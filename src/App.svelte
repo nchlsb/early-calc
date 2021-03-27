@@ -96,7 +96,7 @@
 	$: integralUpperBound = integralBoundsSlider[1];
 
 	let numberRectanglesSlider = [5]
-	$: numberRectangles = numberRectanglesSlider[0]
+	$: numberRectangles = (nApprochesIninity) ? 1000 : numberRectanglesSlider[0]
 
 	let riemannRectangles: Rectangle[]
 	$: riemannRectangles = range(numberRectangles).map(n => {
@@ -134,21 +134,22 @@
 	$: integeralDef = `{\\color{${(!nApprochesIninity) ? `lightgray` : `crimson`}} \\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x = ${sumRectangles.toFixed(2)}`
 
 	let nApprochesIninity = false;
+	$: nApprochesIninity = (numberRectanglesSlider[0] === MAX_NUM_RECTANGLES + 1) 
 	
-	function handleNApprochesIninity(){
-		nApprochesIninity = !nApprochesIninity
+	// function handleNApprochesIninity(){
+	// 	nApprochesIninity = !nApprochesIninity
 		
-		numberRectangles = (nApprochesIninity) ? 1000 : 100
+	// 	numberRectangles = (nApprochesIninity) ? 1000 : 100
 
-	}
+	// }
 
 	const MAX_NUM_RECTANGLES = 100
 	
 	// ********************* controls *********************
 
 	let context: Context
-	$: context = "Derivative"
-	//$: context = "Integral"//"Derivative"
+	// $: context = "Derivative"
+	$: context = "Integral"
 
 
 	let selectedFunctionIndex = 0;
@@ -320,20 +321,19 @@
 			range={false}
 		/>
 	{:else}
-		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(!nApprochesIninity) ? numberRectangles : '∞'}</label>
+		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesIninity) ? `∞` : numberRectangles}</label>
 		<span>
 			<RangeSlider 
 				id='n'
 				min={1} 
-				max={MAX_NUM_RECTANGLES} 
+				max={MAX_NUM_RECTANGLES + 1} 
 				pips 
 				all='label' 
-				on:input={() => nApprochesIninity = false} 
 				bind:values={numberRectanglesSlider}
-				pipstep={20}		
+				pipstep={20}	
+				formatter={value => (value === MAX_NUM_RECTANGLES + 1) ? '∞' : value}	
 			/>
-			<!-- formatter={ v => (v !== MAX_NUM_RECTANGLES) ?v : '∞'  } -->
-			<button on:click={handleNApprochesIninity}>{(!nApprochesIninity) ? 'Go to ∞' : 'Go to #'}</button>
+			<!-- <button on:click={handleNApprochesIninity}>{(nApprochesIninity) ? 'Go to #': 'Go to ∞'}</button> -->
 		</span>
 		<RangeSlider 
 			range 
