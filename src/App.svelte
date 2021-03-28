@@ -455,6 +455,7 @@
 	#bounds, #NumberRectanglesSlider {
 		--range-range: crimson;
 		--range-handle-focus: rgb(177, 27, 57);
+		--range-handle: rgb(177, 27, 57);
 		--range-range-inactive: rgb(177, 27, 57);
 		padding-bottom: 25px;
 	}
