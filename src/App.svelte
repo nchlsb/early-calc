@@ -313,7 +313,6 @@
 		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
 		<!-- <input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}> -->
 		<RangeSlider  
-			class={'rangeSlider'}
 			min={xMinBound} 
 			max={xMaxBound}
 			step={0.01} 
@@ -322,9 +321,8 @@
 		/>
 	{:else}
 		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesIninity) ? `∞` : numberRectangles}</label>
-		<span>
+		<span id='NumberRectanglesSlider'>
 			<RangeSlider 
-				id='n'
 				min={1} 
 				max={MAX_NUM_RECTANGLES + 1} 
 				pips 
@@ -335,13 +333,17 @@
 			/>
 			<!-- <button on:click={handleNApprochesIninity}>{(nApprochesIninity) ? 'Go to #': 'Go to ∞'}</button> -->
 		</span>
-		<RangeSlider 
-			range 
-			min={xMinBound} 
-			max={xMaxBound} 
-			bind:values={integralBoundsSlider}
-			step={0.01}
-		/>	
+
+		<span id='bounds'>
+			<RangeSlider 
+				range 
+				min={xMinBound} 
+				max={xMaxBound} 
+				bind:values={integralBoundsSlider}
+				step={0.01}
+			/>	
+		</span>
+
 
 
 		<!-- <label for="range1">interval bound 1: {integralBound1}</label>
@@ -440,16 +442,11 @@
 		display: inline;
 	}
 
-	.rangeSlider  {
- 		--range-handle: crimson;
-	}
-
-	.rangeSlider.pip-labels {
-		color: crimson
-	} 
-
-	.rangeSlider.range {
-		color: crimson
+	#bounds, #NumberRectanglesSlider {
+		--range-range: crimson;
+		--range-handle-focus: rgb(177, 27, 57);
+		--range-range-inactive: rgb(177, 27, 57);
+		padding-bottom: 25px;
 	}
 
 	
