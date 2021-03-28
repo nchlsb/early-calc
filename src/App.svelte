@@ -79,7 +79,10 @@
 		x2: xMaxBound, y2: tangent(xMaxBound)
 	}
 	// comment is grayed out lim
-	$: derivativeDef = `{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} = ${slopeSecant.toFixed(2)}`;
+	$: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} ${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `=`} 
+		{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}
+		\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
 	//$: derivativeDef =`\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
 
 	// ********************* integrals *********************
@@ -131,7 +134,14 @@
 		return sum
 	})()
 
-	$: integeralDef = `{\\color{${(!nApprochesIninity) ? `lightgray` : `crimson`}} \\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x = ${sumRectangles.toFixed(2)}`
+	// $: integeralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesIninity) ? `\\approx` : `=`} {\\color{${(!nApprochesIninity) ? `lightgray` : `crimson`}} 
+	// 	\\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x
+	//  	= ${sumRectangles.toFixed(2).replace('-0.00', '0.00')}`
+
+	$: integeralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesIninity) ? `{\\color{crimson}\\:\\approx}` : `=`} 
+		{\\color{${(!nApprochesIninity) ? `lightgray` : `crimson`}} 
+		\\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x
+		= ${sumRectangles.toFixed(2).replace('-0.00', '0.00')}`	 
 
 	let nApprochesIninity = false;
 	$: nApprochesIninity = (numberRectanglesSlider[0] === MAX_NUM_RECTANGLES + 1) 
