@@ -78,15 +78,21 @@
 	let slopeTangent: number
 	$: slopeTangent = slope(tangentPoint1, tangentPoint2)
 
-	// let tangentLine: {x1: number, y1: number, x2: number, y2: number}
-	// $: tangentLine = {
-	// 	x1: xMinBound, y1: tangent(xMinBound),
-	// 	x2: xMaxBound, y2: tangent(xMaxBound)
-	// }
+	let tangentLine: {x1: number, y1: number, x2: number, y2: number}
+	$: tangentLine = {
+		x1: xMinBound, y1: tangent(xMinBound),
+		x2: xMaxBound, y2: tangent(xMaxBound)
+	}
 
-	$: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} ${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `=`} 
-		{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}
-		\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+	// $: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} ${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `=`} 
+	// 	{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}
+	// 	\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
+
+	$: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} 
+		${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
+		{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}} \\lim_{\\Delta x \\rightarrow 0}} 
+		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
 		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
 	
 
@@ -147,7 +153,7 @@
 		- functions[selectedFunctionIndex].integral(integralLowerBound)	
 		
 	// Displayed approximation or definition of an integral, depending on whether n approaches infinity 
-	$: integralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesInfinity) ? `{\\color{crimson}\\:\\approx}` : `=`} 
+	$: integralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesInfinity) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
 		{\\color{${(!nApprochesInfinity) ? `lightgray` : `crimson`}} 
 		\\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x
 		= ${((!nApprochesInfinity) ? riemannSum : integralValue).toFixed(2).replace('-0.00', '0.00')}`	 
@@ -241,11 +247,11 @@
 					x2={secantLine.x2} y2={secantLine.y2}
 				/>
 
-				<!-- <line stroke="grey" stroke-dasharray="4,4" fill="none"
-					x1={displayedTangentLine.x1} y1={displayedTangentLine.y1}
-					x2={displayedTangentLine.x2} y2={displayedTangentLine.y2}
+				<line stroke="grey" stroke-dasharray="4,4" fill="none"
+					x1={tangentLine.x1} y1={tangentLine.y1}
+					x2={tangentLine.x2} y2={tangentLine.y2}
 					visibility={(deltaX !== 0) ? "visible" : "hidden"}
-				/> -->
+				/>
 
 				<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="crimson"></circle>
 				<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="crimson"></circle>
