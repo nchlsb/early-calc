@@ -31,59 +31,64 @@
 	}), {x: xMaxBound, y: f(xMaxBound)}];
 
 	// ********************* derivatives *********************
+	// Aproximation of delta x -> 0
 	const DELTA_X_APPROACHES_0 = 0.00000001;
 
+	// Delta x
 	let deltaXSlider = [1];
 	$: deltaX = deltaXSlider[0]
 
+	// User input into the fucntion x
 	let xSlider = [1]
 	let x: number;
 	$: x = xSlider[0]
 
+	// Points of tangnet line
 	let secantPoint1: Point
 	$: secantPoint1 = {x: x, y: f(x)}
-
 	let secantPoint2: Point
 	$: secantPoint2 = (deltaX !== 0) ? {x: x + deltaX, y: f(x + deltaX)} : tangentPoint2
 
-	// let secantSlopeTextDisplayPoint: Point
-	// $: secantSlopeTextDisplayPoint = {x: x + deltaX + 0.5, y: f(x + deltaX) + 0.5}
+	// Points of secant line
+	let tangentPoint1: Point
+	$: tangentPoint1 = {x: x, y: f(x)}
+	let tangentPoint2: Point
+	$: tangentPoint2 = {x: x + DELTA_X_APPROACHES_0, y: f(x + DELTA_X_APPROACHES_0)}
 
+	// Function for secant line
 	let secant: (x: number) => number
 	$: secant = twoPointForm(secantPoint1, secantPoint2)
 
-	let displayedSecantLine: {x1: number, y1: number, x2: number, y2: number}
-	$: displayedSecantLine = {
+	// Slope of the secant
+	let slopeSecant: number
+	$: slopeSecant = (deltaX !== 0) ? slope(secantPoint1, secantPoint2) : slopeTangent
+
+	// Display of seecant lane 
+	let secantLine: {x1: number, y1: number, x2: number, y2: number}
+	$: secantLine = {
 		x1: xMinBound, y1: secant(xMinBound),
 		x2: xMaxBound, y2: secant(xMaxBound)
 	}
 
-	let tangentPoint1: Point
-	$: tangentPoint1 = {x: x, y: f(x)}
-
-	let tangentPoint2: Point
-	$: tangentPoint2 = {x: x + DELTA_X_APPROACHES_0, y: f(x + DELTA_X_APPROACHES_0)}
-
+	// Function for tangnet line
 	let tangent: (x: number) => number
 	$: tangent = twoPointForm(tangentPoint1, tangentPoint2)
 
+	// Slope of tangnet
 	let slopeTangent: number
 	$: slopeTangent = slope(tangentPoint1, tangentPoint2)
-	
-	let slopeSecant: number
-	$: slopeSecant = (deltaX !== 0) ? slope(secantPoint1, secantPoint2) : slopeTangent
 
-	let displayedTangentLine: {x1: number, y1: number, x2: number, y2: number}
-	$: displayedTangentLine = {
-		x1: xMinBound, y1: tangent(xMinBound),
-		x2: xMaxBound, y2: tangent(xMaxBound)
-	}
-	// comment is grayed out lim
+	// let tangentLine: {x1: number, y1: number, x2: number, y2: number}
+	// $: tangentLine = {
+	// 	x1: xMinBound, y1: tangent(xMinBound),
+	// 	x2: xMaxBound, y2: tangent(xMaxBound)
+	// }
+
 	$: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} ${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `=`} 
 		{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}
 		\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
 		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
-	//$: derivativeDef =`\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
+	
 
 	// ********************* integrals *********************
 	// Maximum user input of the slider before the user makes n -> infinity
@@ -232,8 +237,8 @@
 			{#if context === 'Derivative'}
 				
 				<line stroke="crimson" stroke-dasharray="4,4" fill="none"
-					x1={displayedSecantLine.x1} y1={displayedSecantLine.y1}
-					x2={displayedSecantLine.x2} y2={displayedSecantLine.y2}
+					x1={secantLine.x1} y1={secantLine.y1}
+					x2={secantLine.x2} y2={secantLine.y2}
 				/>
 
 				<!-- <line stroke="grey" stroke-dasharray="4,4" fill="none"
