@@ -165,8 +165,8 @@
 	// ********************* controls *********************
 
 	let context: Context
-	$: context = "Derivative"
-	//$: context = "Integral"
+	// $: context = "Derivative"
+	$: context = "Integral"
 
 	let selectedFunctionIndex = 0;
 
@@ -477,11 +477,11 @@
 	}
 
 	.slider {
-		--range-range: crimson;
 		--range-handle-focus: rgb(177, 27, 57);
 		--range-handle: rgb(177, 27, 57);
-		--range-range-inactive: rgb(177, 27, 57);
-		padding-bottom: 25px;
+		--range-handle-inactive: rgb(177, 27, 57);
+		--range-range: rgb(187, 187, 187);
+		--range-range-inactive: rgb(187, 187, 187);
 	}
 
 	
