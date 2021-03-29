@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Point, Context, RectangleStrategy, Rectangle } from "./helpers";
+	import type { Point, Context, RectangleStrategy, Rectangle, LimitStrategy } from "./helpers";
 	import { range, slope, twoPointForm, visitStrategy, sumBy} from "./helpers";
 	import RangeSlider from "svelte-range-slider-pips";
 	import * as katex from "katex";
@@ -35,14 +35,18 @@
 	const DELTA_X_APPROACHES_0 = 0.00000001;
 
 	// Delta x
-	let deltaXSlider = [1];
-	$: deltaX = deltaXSlider[0]
+	let deltaXSliderFromRight = [1];
+	let deltaXSliderFromLeft = [-1];
+	$: deltaX = (derivativeLimitStrategy === 'FromRight') ? deltaXSliderFromRight[0] : deltaXSliderFromLeft[0]
 
 	// User input into the fucntion x
 	let xSlider = [1]
 	let x: number;
 	$: x = xSlider[0]
 
+	// Wheather delta x -> 0 from the left or the right 
+	let derivativeLimitStrategy = 'FromRight'
+	
 	// Points of tangnet line
 	let secantPoint1: Point
 	$: secantPoint1 = {x: x, y: f(x)}
@@ -247,11 +251,11 @@
 					x2={secantLine.x2} y2={secantLine.y2}
 				/>
 
-				<line stroke="grey" stroke-dasharray="4,4" fill="none"
+				<!-- <line stroke="grey" stroke-dasharray="4,4" fill="none"
 					x1={tangentLine.x1} y1={tangentLine.y1}
 					x2={tangentLine.x2} y2={tangentLine.y2}
 					visibility={(deltaX !== 0) ? "visible" : "hidden"}
-				/>
+				/> -->
 
 				<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="crimson"></circle>
 				<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="crimson"></circle>
@@ -315,15 +319,26 @@
 		<label for="deltaX" >
 			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
 		</label>
-		<!-- <input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}> -->
+
 		<slider class="slider">
-			<RangeSlider 
-			min={-1} 
-			max={1}
-			step={0.01} 
-			bind:values={deltaXSlider}		
-			range={false}
-			/>
+			{#if derivativeLimitStrategy === 'FromRight'}
+				<RangeSlider 
+				step={0.01} 
+				bind:values={deltaXSliderFromRight}		
+				range={false}
+				min={0}
+				max={1}
+				/>
+			{:else}
+				<RangeSlider 
+				step={0.01} 
+				bind:values={deltaXSliderFromLeft}		
+				range={false}
+				min={-1}
+				max={0}
+				/>
+			{/if}
+			
 		</slider>
 		
 		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
@@ -337,6 +352,9 @@
 			range={false}
 			/>
 		</span>
+
+		<button class={derivativeLimitStrategy === 'FromLeft' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromLeft'}>From Left</button>
+		<button class={derivativeLimitStrategy === 'FromRight' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromRight'}>From Right</button>
 	{:else}
 		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesInfinity) ? `∞` : numberRectangles}</label>
 		<span class="slider">

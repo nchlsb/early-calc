@@ -7,6 +7,8 @@ export type Context = "Derivative" | "Integral"
 
 export type RectangleStrategy = 'Left' | 'Midpoint' | 'Right'
 
+export type LimitStrategy = 'FromLeft' | 'FromRight'
+
 export type Rectangle = {
     lowerLeftCorner: Point,
     width: number,
