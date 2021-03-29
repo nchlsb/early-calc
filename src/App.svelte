@@ -31,7 +31,7 @@
 	}), {x: xMaxBound, y: f(xMaxBound)}];
 
 	// ********************* derivatives *********************
-	const DELTA_X_APPROACHES_0 = 0.00001;
+	const DELTA_X_APPROACHES_0 = 0.00000001;
 
 	let deltaXSlider = [1];
 	$: deltaX = deltaXSlider[0]
@@ -86,21 +86,33 @@
 	//$: derivativeDef =`\\lim_{\\Delta x \\rightarrow \\color{crimson}${deltaX.toFixed(2)}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} =  \\color{crimson}${slopeSecant.toFixed(2)}`;
 
 	// ********************* integrals *********************
+	// Maximum user input of the slider before the user makes n -> infinity
+	const MAX_INPUT_RECTANGLES = 150
+	// Number of rectangles used to display integral when n approches infinity  
+	const DISPLAY_N_APPROCHES_INFINITY = 1000;
 
+	// Bounds of the integral 
+	let integralBoundsInput = [-DEFAULT_BOUND_MAGNITUDE, DEFAULT_BOUND_MAGNITUDE]
+	$: integralLowerBound = integralBoundsInput[0];
+	$: integralUpperBound = integralBoundsInput[1];
+
+	// Type of Riemann integral 
 	let rectangleStrategy: RectangleStrategy
 	$: rectangleStrategy = 'Left'
 
+	// Weather integral is approximate or note. AKA "n approches infinity"
+	let nApprochesInfinity = false;
+	$: nApprochesInfinity = (numberRectanglesInput[0] === MAX_INPUT_RECTANGLES + 1) 
+
+	// Number of rectangles in the Riemann integral 
+	let numberRectanglesInput = [5]
+	$: numberRectangles = (nApprochesInfinity) ? DISPLAY_N_APPROCHES_INFINITY : numberRectanglesInput[0]
+
+	// Width of each rectangle
 	let rectangleWidth: number;
 	$: rectangleWidth = Math.abs((integralUpperBound - integralLowerBound) / numberRectangles)//sliderRectangleWidth//Math.exp(sliderRectangleWidth) - 1;
 
-	let integralBoundsSlider = [-DEFAULT_BOUND_MAGNITUDE, DEFAULT_BOUND_MAGNITUDE]
-	
-	$: integralLowerBound = integralBoundsSlider[0];
-	$: integralUpperBound = integralBoundsSlider[1];
-
-	let numberRectanglesSlider = [5]
-	$: numberRectangles = (nApprochesIninity) ? 1000 : numberRectanglesSlider[0]
-
+	// Riemann rectangles
 	let riemannRectangles: Rectangle[]
 	$: riemannRectangles = range(numberRectangles).map(n => {
 		const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / numberRectangles);
@@ -119,42 +131,22 @@
 		};
 	});
 
-	let sumRectangles: number;
-	$: sumRectangles = sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height)
-	
-	let actualSum: number
-	$: actualSum = (() => {
-		let sum = 0
-	
-		for(let n = 0; n < ((integralUpperBound - integralLowerBound) / DELTA_X_APPROACHES_0); n++) {
-			const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / ((integralUpperBound - integralLowerBound) / DELTA_X_APPROACHES_0));
-			sum += Math.abs(f(x))
-		}
-	
-		return sum
-	})()
+	// Sum of all rectangles 
+	let riemannSum: number;
+	$: riemannSum = sumBy(riemannRectangles, rectangle => (rectangle.lowerLeftCorner.y === 0) ? 
+		rectangle.width * rectangle.height : 
+		-rectangle.width * rectangle.height)
 
-	// $: integeralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesIninity) ? `\\approx` : `=`} {\\color{${(!nApprochesIninity) ? `lightgray` : `crimson`}} 
-	// 	\\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x
-	//  	= ${sumRectangles.toFixed(2).replace('-0.00', '0.00')}`
-
-	$: integeralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesIninity) ? `{\\color{crimson}\\:\\approx}` : `=`} 
-		{\\color{${(!nApprochesIninity) ? `lightgray` : `crimson`}} 
-		\\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x
-		= ${sumRectangles.toFixed(2).replace('-0.00', '0.00')}`	 
-
-	let nApprochesIninity = false;
-	$: nApprochesIninity = (numberRectanglesSlider[0] === MAX_NUM_RECTANGLES + 1) 
-	
-	// function handleNApprochesIninity(){
-	// 	nApprochesIninity = !nApprochesIninity
+	// Real value of the integral when n -> infinity
+	$: integralValue = functions[selectedFunctionIndex].integral(integralUpperBound) 
+		- functions[selectedFunctionIndex].integral(integralLowerBound)	
 		
-	// 	numberRectangles = (nApprochesIninity) ? 1000 : 100
+	// Displayed approximation or definition of an integral, depending on whether n approaches infinity 
+	$: integralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesInfinity) ? `{\\color{crimson}\\:\\approx}` : `=`} 
+		{\\color{${(!nApprochesInfinity) ? `lightgray` : `crimson`}} 
+		\\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x
+		= ${((!nApprochesInfinity) ? riemannSum : integralValue).toFixed(2).replace('-0.00', '0.00')}`	 
 
-	// }
-
-	const MAX_NUM_RECTANGLES = 100
-	
 	// ********************* controls *********************
 
 	let context: Context
@@ -162,15 +154,32 @@
 	$: context = "Integral"
 
 
-	let selectedFunctionIndex = 0;
+	let selectedFunctionIndex = 3;
 
 	const functions = [
-		{id: 'sine', implementation: (x: number) => Math.sin(x), representation: 'f(x) = \\sin(x)'},
-		// {id: 'const', implementation: (x: number) => 1, representation: 'f(x) = 1'},
-		// {id: 'linear', implementation: (x: number) => x, representation: 'f(x) = x'},
-		{id: 'quadratic', implementation: (x: number) => x * x, representation: 'f(x) = x^2'},
-		{id: 'exponential', implementation: (x: number) => Math.exp(x), representation: 'f(x) = e^x'},
-		{id: 'cubic', implementation: (x: number) => (x - 1) * (x) * (x + 1), representation: 'f(x) = (x - 1)(x)(x + 1)'},
+		{
+			id: 'sine', 
+			implementation: (x: number) => Math.sin(x), 
+			integral: (x: number) => -Math.cos(x),
+			representation: 'f(x) = \\sin(x)'
+		},
+		{
+			id: 'quadratic', 
+			implementation: (x: number) => x * x, 
+			integral: (x: number) => Math.pow(x, 3) / 3,
+			representation: 'f(x) = x^2'},
+		{
+			id: 'exponential', 
+			implementation: (x: number) => Math.exp(x), 
+			integral: (x: number) => Math.exp(x),
+			representation: 'f(x) = e^x'
+		},
+		{
+			id: 'cubic', 
+			implementation: (x: number) => (x - 1) * (x) * (x + 1),
+			integral: (x: number) => (Math.pow(x, 2) * (Math.pow(x, 2) - 2)) / 4,
+			representation: 'f(x) = (x - 1)(x)(x + 1)'
+		},
 	];
 	
 	// ********************* equation rendering *********************
@@ -240,12 +249,12 @@
 				<!-- why does the y value need to be negative?-->
 				<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
 			{:else}
-				<!-- bounds of intergral -->
+				<!-- bounds of integral -->
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
 				{#each riemannRectangles as rectangle}
 					<rect
-						class={(rectangleWidth > 0.1) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
+						class={(rectangleWidth > 0.05) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
 						x={rectangle.lowerLeftCorner.x}
 						y={rectangle.lowerLeftCorner.y}
 						width={rectangle.width}
@@ -286,7 +295,7 @@
 			</span>
 			|
 			<span use:tooltip data-title="Slope of the line between the points you control">
-				Slope of tagent: {slopeTangent.toFixed(2)}
+				Slope of tangent: {slopeTangent.toFixed(2)}
 			</span>  -->
 			<span id="limit">
 				<span>
@@ -295,7 +304,7 @@
 			</span>
 		{:else}
 			<span id='IntegralDefinition'>
-				<Katex math={integeralDef} displayMode/>
+				<Katex math={integralDef} displayMode/>
 			</span>
 			<!-- <span id="AreaOfRectangles">
 				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
@@ -330,18 +339,20 @@
 			range={false}
 		/>
 	{:else}
-		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesIninity) ? `∞` : numberRectangles}</label>
+		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesInfinity) ? `∞` : numberRectangles}</label>
 		<span id='NumberRectanglesSlider'>
 			<RangeSlider 
 				min={1} 
-				max={MAX_NUM_RECTANGLES + 1} 
+				max={MAX_INPUT_RECTANGLES + 1} 
 				pips 
 				all='label' 
-				bind:values={numberRectanglesSlider}
+				bind:values={numberRectanglesInput}
 				pipstep={20}	
-				formatter={value => (value === MAX_NUM_RECTANGLES + 1) ? '∞' : value}	
+				formatter={value => (value === MAX_INPUT_RECTANGLES + 1) ? '∞' : value}	
+				float 
+				hover
+				springValues={{stiffness: 1, damping: 1 }}
 			/>
-			<!-- <button on:click={handleNApprochesIninity}>{(nApprochesIninity) ? 'Go to #': 'Go to ∞'}</button> -->
 		</span>
 
 		<span id='bounds'>
@@ -349,8 +360,11 @@
 				range 
 				min={xMinBound} 
 				max={xMaxBound} 
-				bind:values={integralBoundsSlider}
+				bind:values={integralBoundsInput}
 				step={0.01}
+				float 
+				hover
+				springValues={{stiffness: 1, damping: 1 }}
 			/>	
 		</span>
 
