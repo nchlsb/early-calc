@@ -150,11 +150,10 @@
 	// ********************* controls *********************
 
 	let context: Context
-	// $: context = "Derivative"
-	$: context = "Integral"
+	$: context = "Derivative"
+	//$: context = "Integral"
 
-
-	let selectedFunctionIndex = 3;
+	let selectedFunctionIndex = 0;
 
 	const functions = [
 		{
@@ -254,7 +253,7 @@
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
 				{#each riemannRectangles as rectangle}
 					<rect
-						class={(rectangleWidth > 0.05) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
+						class={(rectangleWidth > 0.1) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
 						x={rectangle.lowerLeftCorner.x}
 						y={rectangle.lowerLeftCorner.y}
 						width={rectangle.width}
@@ -287,32 +286,17 @@
 		</g>
 	</svg>
 
-
 	<p id = "SecantVsTangent">
 		{#if context === 'Derivative'}
-			<!-- <span id="SlopeOfSecant" use:tooltip data-title="Slope of the line at the x value if you made the two points infinitely close together">
-				Slope of secant: {slopeSecant.toFixed(2)}
-			</span>
-			|
-			<span use:tooltip data-title="Slope of the line between the points you control">
-				Slope of tangent: {slopeTangent.toFixed(2)}
-			</span>  -->
-			<span id="limit">
+			<span>
 				<span>
 					<Katex math={derivativeDef} displayMode/>
 				</span>
 			</span>
 		{:else}
-			<span id='IntegralDefinition'>
+			<span>
 				<Katex math={integralDef} displayMode/>
 			</span>
-			<!-- <span id="AreaOfRectangles">
-				Area of rectangles: {sumBy(riemannRectangles, rectangle => rectangle.width * rectangle.height).toFixed(2)} 
-			</span>
-			|
-			<span>
-				Area under curve: {(DELTA_X_APPROACHES_0 * actualSum).toFixed(2)}
-			</span>  -->
 		{/if}
 	</p>
 
@@ -321,26 +305,30 @@
 			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
 		</label>
 		<!-- <input id="deltaX" type="range" min="-1" step="0.01" max="1"  bind:value={deltaX}> -->
-		<RangeSlider 
-				min={-1} 
-				max={1}
-				step={0.01} 
-				bind:values={deltaXSlider}		
-				range={false}
-		/>
+		<slider class="slider">
+			<RangeSlider 
+			min={-1} 
+			max={1}
+			step={0.01} 
+			bind:values={deltaXSlider}		
+			range={false}
+			/>
+		</slider>
 		
 		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
 		<!-- <input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}> -->
-		<RangeSlider  
+		<span class="slider">
+			<RangeSlider  
 			min={xMinBound} 
 			max={xMaxBound}
 			step={0.01} 
 			bind:values={xSlider}		
 			range={false}
-		/>
+			/>
+		</span>
 	{:else}
 		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesInfinity) ? `∞` : numberRectangles}</label>
-		<span id='NumberRectanglesSlider'>
+		<span class="slider">
 			<RangeSlider 
 				min={1} 
 				max={MAX_INPUT_RECTANGLES + 1} 
@@ -351,11 +339,12 @@
 				formatter={value => (value === MAX_INPUT_RECTANGLES + 1) ? '∞' : value}	
 				float 
 				hover
-				springValues={{stiffness: 1, damping: 1 }}
+				
 			/>
 		</span>
+		<!-- springValues={{stiffness: 1, damping: 1 }} -->
 
-		<span id='bounds'>
+		<span class="slider">
 			<RangeSlider 
 				range 
 				min={xMinBound} 
@@ -364,16 +353,8 @@
 				step={0.01}
 				float 
 				hover
-				springValues={{stiffness: 1, damping: 1 }}
 			/>	
 		</span>
-
-
-
-		<!-- <label for="range1">interval bound 1: {integralBound1}</label>
-		<input class="bound-range1" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound1}>
-		<label for="bound-range2">interval bound 2: {integralBound2}</label>
-		<input class="bound-range2" type="range" min={xMinBound} max={xMaxBound} step=".01" bind:value={integralBound2}> -->
 		
 		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
 		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
@@ -466,7 +447,7 @@
 		display: inline;
 	}
 
-	#bounds, #NumberRectanglesSlider {
+	.slider {
 		--range-range: crimson;
 		--range-handle-focus: rgb(177, 27, 57);
 		--range-handle: rgb(177, 27, 57);
