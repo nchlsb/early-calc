@@ -3,6 +3,7 @@
 	import type { LimitStrategy, Point} from "./graphablefunctions";
 	import { slope, twoPointForm } from "./graphablefunctions";
 	import { range, sumBy} from "./helpers";
+	import { visitStrategy } from "./rectangles";
 	import RangeSlider from "svelte-range-slider-pips";
 	import * as katex from "katex";
 	import Katex from "./Katex.svelte"
