@@ -165,8 +165,8 @@
 	// ********************* controls *********************
 
 	let context: Context
-	// $: context = "Derivative"
-	$: context = "Integral"
+	$: context = "Derivative"
+	// $: context = "Integral"
 
 	let selectedFunctionIndex = 0;
 
@@ -301,26 +301,20 @@
 		</g>
 	</svg>
 
-	<p id = "SecantVsTangent">
+	<span class='equation'>
 		{#if context === 'Derivative'}
-			<span>
-				<span class="katex">
-					<Katex math={derivativeDef} displayMode/>
-				</span>
-			</span>
+			<Katex math={derivativeDef} displayMode/>
 		{:else}
-			<span>
-				<Katex math={integralDef} displayMode/>
-			</span>
+			<Katex math={integralDef} displayMode/>
 		{/if}
-	</p>
+	</span>
 
 	{#if context === 'Derivative'}
 		<label for="deltaX">
 			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
 		</label>
 
-		<slider id="deltaXInput" class="slider">
+		<span id="deltaXInput" class="slider">
 			{#if derivativeLimitStrategy === 'FromRight'}
 				<RangeSlider 
 				step={0.01} 
@@ -347,7 +341,7 @@
 				/>
 			{/if}
 			
-		</slider>
+		</span>
 		
 		<label for="xSliderInput"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
 		<span id="xSliderInput" class="slider">
@@ -470,22 +464,13 @@
 		font-size: 20px;
 	}
 
-	#SecantVsTangent {
-		font-size: 30px;
-	}
-
 	#AreaOfRectangles {
 		color: crimson
 	}
 
-	.grayout {
-		opacity: 0.4; /* Real browsers */
-	}	
-
-	#n {
-		width: 50%;
-		display: inline;
-	}
+	/* .grayout {
+		opacity: 0.4;
+	}	 */
 
 	.slider {
 		--range-handle-focus: rgb(177, 27, 57);
@@ -495,10 +480,20 @@
 		--range-range-inactive: rgb(187, 187, 187);
 	}
 
-	/* .katex { 
-		font-size: .5em !important;
-	}  */
+	.equation {
+		font-size: 25px;
+	}
 
+	@media screen and (min-width: 320px) {
+		.equation {
+			font-size: calc(15px + 6 * ((100vw - 320px) / 680));
+		}
+	}
 	
+	@media screen and (min-width: 1000px) {
+		.equation {
+			font-size: 30px;
+		}
+	} 	
 
 </style>
