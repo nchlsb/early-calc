@@ -1,6 +1,8 @@
 <script lang="ts">
-	import type { Point, Context, RectangleStrategy, Rectangle, LimitStrategy } from "./helpers";
-	import { range, slope, twoPointForm, visitStrategy, sumBy} from "./helpers";
+	import type { Rectangle, RectangleStrategy } from "./rectangles";
+	import type { LimitStrategy, Point} from "./graphablefunctions";
+	import { slope, twoPointForm } from "./graphablefunctions";
+	import { range, sumBy} from "./helpers";
 	import RangeSlider from "svelte-range-slider-pips";
 	import * as katex from "katex";
 	import Katex from "./Katex.svelte"
@@ -45,7 +47,7 @@
 	$: x = xSlider[0]
 
 	// Wheather delta x -> 0 from the left or the right 
-	let derivativeLimitStrategy = 'FromRight'
+	let derivativeLimitStrategy: LimitStrategy = 'FromRight'
 	
 	// Points of tangnet line
 	let secantPoint1: Point
@@ -164,6 +166,7 @@
 
 	// ********************* controls *********************
 
+	type Context = "Derivative" | "Integral"
 	let context: Context
 	$: context = "Derivative"
 	// $: context = "Integral"

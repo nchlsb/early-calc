@@ -1,21 +1,3 @@
-export type Point = {
-    x: number
-    y: number
-}
-
-export type Context = "Derivative" | "Integral"
-
-export type RectangleStrategy = 'Left' | 'Midpoint' | 'Right'
-
-export type LimitStrategy = 'FromLeft' | 'FromRight'
-
-export type Rectangle = {
-    lowerLeftCorner: Point,
-    width: number,
-    height: number
-}
-
-
 export function sumBy<T>(array: T[], getNumber: (a: T) => number): number {
     let sum = 0;
     for (let a of array) {
@@ -25,53 +7,6 @@ export function sumBy<T>(array: T[], getNumber: (a: T) => number): number {
     return sum;
 }
 
-export function productBy<T>(array: T[], getNumber: (a: T) => number): number {
-    let product = 1;
-    for (let a of array) {
-        product *= getNumber(a);
-    }
-
-    return product;
-}
-
-export type Maybe<T> = {
-    kind: 'Just'
-    value: T
-} | {
-    kind: 'Nothing'
-}
-
-export function orElse<T>(maybe: Maybe<T>, alternative: T): T {
-    return (maybe.kind === 'Just') ? maybe.value : alternative;
-}
-
-export function maxBy<T>(array: T[], getNumber: (a: T) => number): Maybe<T> {
-    if (array.length === 0) {
-        return {kind: 'Nothing'}
-    }
-
-    let max = array[0]
-
-    for (let a of array) {
-        max = (getNumber(a) > getNumber(max)) ? a : max;
-    }
-
-    return {kind: 'Just', value: max};
-}
-
-export function minBy<T>(array: T[], getNumber: (a: T) => number): Maybe<T> {
-    if (array.length === 0) {
-        return {kind: 'Nothing'}
-    }
-
-    let max = array[0]
-
-    for (let a of array) {
-        max = (getNumber(a) < getNumber(max)) ? a : max;
-    }
-
-    return {kind: 'Just', value: max};
-}
 
 export function range(n: number): number[] {
     let retVal: number[] = [];
@@ -83,30 +18,66 @@ export function range(n: number): number[] {
     return retVal;
 }
 
-export function endSwitch(x: never): never {
-    throw Error('Shouldn\'t get here.');
-}
 
-export function just<T>(value: T): Maybe<T> {
-    return {kind: 'Just', value: value}
-}
+// export function productBy<T>(array: T[], getNumber: (a: T) => number): number {
+//     let product = 1;
+//     for (let a of array) {
+//         product *= getNumber(a);
+//     }
 
-export function nothing<T>(): Maybe<T> {
-    return {kind: 'Nothing'}
-}
+//     return product;
+// }
 
-export function twoPointForm(point1: Point, point2: Point): (x: number) => number {
-    const m = slope(point1, point2);
-    return (x) => m * (x - point1.x) + point1.y;
-}
+// export type Maybe<T> = {
+//     kind: 'Just'
+//     value: T
+// } | {
+//     kind: 'Nothing'
+// }
 
-export function slope( point1: Point, point2: Point): number {
-    return (point2.y - point1.y) / (point2.x - point1.x);
-}
+// export function orElse<T>(maybe: Maybe<T>, alternative: T): T {
+//     return (maybe.kind === 'Just') ? maybe.value : alternative;
+// }
 
-export function point(x, y): Point {
-    return {x: x, y: y}
-}
+// export function maxBy<T>(array: T[], getNumber: (a: T) => number): Maybe<T> {
+//     if (array.length === 0) {
+//         return {kind: 'Nothing'}
+//     }
+
+//     let max = array[0]
+
+//     for (let a of array) {
+//         max = (getNumber(a) > getNumber(max)) ? a : max;
+//     }
+
+//     return {kind: 'Just', value: max};
+// }
+
+// export function minBy<T>(array: T[], getNumber: (a: T) => number): Maybe<T> {
+//     if (array.length === 0) {
+//         return {kind: 'Nothing'}
+//     }
+
+//     let max = array[0]
+
+//     for (let a of array) {
+//         max = (getNumber(a) < getNumber(max)) ? a : max;
+//     }
+
+//     return {kind: 'Just', value: max};
+// }
+
+// export function endSwitch(x: never): never {
+//     throw Error('Shouldn\'t get here.');
+// }
+
+// export function just<T>(value: T): Maybe<T> {
+//     return {kind: 'Just', value: value}
+// }
+
+// export function nothing<T>(): Maybe<T> {
+//     return {kind: 'Nothing'}
+// }
 
 // export function slope( x1: number, y1: number, x2: number, y2: number): Maybe<number>{
 //     return (x2-x1 != 0) ? 
@@ -134,26 +105,4 @@ Then make a second function divideBoth that takes an a1, a2, and a b, and return
 // }
 
 
-export function visitMaybe<A, B>(maybe: Maybe<A>, visitor: {whenJust: (a: A) => B, whenNothing: B}): B {
-    switch (maybe.kind) {
-        case 'Just':
-            return visitor.whenJust(maybe.value)
 
-        case 'Nothing':
-            return visitor.whenNothing
-    }
-}
-
-export function visitStrategy<T>(
-    rectangleStrategy: RectangleStrategy,
-    visitor: {whenLeft: T, whenMidpoint: T,	whenRight: T}
-): T {
-    switch (rectangleStrategy) {
-        case 'Left':
-            return visitor.whenLeft
-        case 'Midpoint':
-            return visitor.whenMidpoint
-        case 'Right':
-            return visitor.whenRight // visitor pattern
-    }
-}

@@ -1,6 +1,7 @@
-import { point, range, slope, twoPointForm } from '../src/helpers';
 import { expect } from 'chai';
 import 'mocha';
+import { range } from '../src/helpers'
+import { slope, point, twoPointForm } from '../src/graphablefunctions'
 
 describe("Range", () => {
   it("Should have length equal to the value of it's argument", () => {
