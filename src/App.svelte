@@ -304,7 +304,7 @@
 	<p id = "SecantVsTangent">
 		{#if context === 'Derivative'}
 			<span>
-				<span>
+				<span class="katex">
 					<Katex math={derivativeDef} displayMode/>
 				</span>
 			</span>
@@ -316,11 +316,11 @@
 	</p>
 
 	{#if context === 'Derivative'}
-		<label for="deltaX" >
+		<label for="deltaX">
 			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
 		</label>
 
-		<slider class="slider">
+		<slider id="deltaXInput" class="slider">
 			{#if derivativeLimitStrategy === 'FromRight'}
 				<RangeSlider 
 				step={0.01} 
@@ -328,6 +328,10 @@
 				range={false}
 				min={0}
 				max={1}
+				pips
+				first={'label'} 
+				last={'label'}
+				rest={false}
 				/>
 			{:else}
 				<RangeSlider 
@@ -336,20 +340,27 @@
 				range={false}
 				min={-1}
 				max={0}
+				pips
+				first={'label'} 
+				last={'label'}
+				rest={false}
 				/>
 			{/if}
 			
 		</slider>
 		
-		<label for="deltaX"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
-		<!-- <input id="x" type="range" step="0.01" min={xMinBound} max={xMaxBound} bind:value={x}> -->
-		<span class="slider">
+		<label for="xSliderInput"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
+		<span id="xSliderInput" class="slider">
 			<RangeSlider  
 			min={xMinBound} 
 			max={xMaxBound}
 			step={0.01} 
 			bind:values={xSlider}		
 			range={false}
+			pips
+			first={'label'} 
+			last={'label'}
+			rest={false}
 			/>
 		</span>
 
@@ -483,6 +494,10 @@
 		--range-range: rgb(187, 187, 187);
 		--range-range-inactive: rgb(187, 187, 187);
 	}
+
+	/* .katex { 
+		font-size: .5em !important;
+	}  */
 
 	
 
