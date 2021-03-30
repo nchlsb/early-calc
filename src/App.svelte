@@ -326,6 +326,7 @@
 				first={'label'} 
 				last={'label'}
 				rest={false}
+				springValues={{stiffness: 1, damping: 1 }}
 				/>
 			{:else}
 				<RangeSlider 
@@ -338,6 +339,7 @@
 				first={'label'} 
 				last={'label'}
 				rest={false}
+				springValues={{stiffness: 1, damping: 1 }}
 				/>
 			{/if}
 			
@@ -355,6 +357,7 @@
 			first={'label'} 
 			last={'label'}
 			rest={false}
+			springValues={{stiffness: 1, damping: 1 }}
 			/>
 		</span>
 
@@ -373,10 +376,9 @@
 				formatter={value => (value === MAX_INPUT_RECTANGLES + 1) ? '∞' : value}	
 				float 
 				hover
-				
+				springValues={{stiffness: 1, damping: 1 }}
 			/>
 		</span>
-		<!-- springValues={{stiffness: 1, damping: 1 }} -->
 
 		<span class="slider">
 			<RangeSlider 
@@ -387,6 +389,7 @@
 				step={0.01}
 				float 
 				hover
+				springValues={{stiffness: 1, damping: 1 }}
 			/>	
 		</span>
 		
