@@ -169,8 +169,8 @@
 
 	type Context = "Derivative" | "Integral"
 	let context: Context
-	$: context = "Derivative"
-	// $: context = "Integral"
+	// $: context = "Derivative"
+	$: context = "Integral"
 
 	let selectedFunctionIndex = 0;
 
@@ -269,7 +269,10 @@
 			{:else}
 				<!-- bounds of integral -->
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
-				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound} x2={integralUpperBound} y2={yMaxBound} />
+				<text class="integeralBound" x={integralLowerBound + 0.09} y={-yMinBound}>a</text>
+				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound - 0.1} y1={yMinBound} x2={integralUpperBound - 0.1} y2={yMaxBound} />
+				<text class="integeralBound" x={integralUpperBound - 0.35} y={-yMinBound}>b</text>
+
 				{#each riemannRectangles as rectangle}
 					<rect
 						class={(rectangleWidth > 0.1) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
@@ -278,7 +281,9 @@
 						width={rectangle.width}
 						height={rectangle.height}
 					/>
-			{/each}
+				{/each}
+
+
 			
 			{/if}
 			<!-- x and y axis -->
@@ -487,9 +492,9 @@
 		--range-range-inactive: rgb(187, 187, 187);
 	}
 
-	.equation {
+	/* .equation {
 		font-size: 25px;
-	}
+	} */
 
 	@media screen and (min-width: 320px) {
 		.equation {
@@ -502,5 +507,10 @@
 			font-size: 30px;
 		}
 	} 	
+
+	.integeralBound 
+	{
+		font-size: .25px;
+	}
 
 </style>
