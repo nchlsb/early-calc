@@ -269,9 +269,9 @@
 			{:else}
 				<!-- bounds of integral -->
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
-				<text class="integeralBound" x={integralLowerBound + 0.09} y={-yMinBound}>a</text>
+				<text class="integeralBound" x={integralLowerBound + 0.09} y={-yMinBound - 0.04}>a</text>
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound - 0.1} y1={yMinBound} x2={integralUpperBound - 0.1} y2={yMaxBound} />
-				<text class="integeralBound" x={integralUpperBound - 0.35} y={-yMinBound}>b</text>
+				<text class="integeralBound" x={integralUpperBound - 0.35} y={-yMinBound - 0.04}>b</text>
 
 				{#each riemannRectangles as rectangle}
 					<rect
