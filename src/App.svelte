@@ -268,10 +268,11 @@
 				<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
 			{:else}
 				<!-- bounds of integral -->
-				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound} x2={integralLowerBound} y2={yMaxBound} />
-				<text class="integeralBound" x={integralLowerBound + 0.09} y={-yMinBound - 0.04}>a</text>
-				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound - 0.1} y1={yMinBound} x2={integralUpperBound - 0.1} y2={yMaxBound} />
-				<text class="integeralBound" x={integralUpperBound - 0.35} y={-yMinBound - 0.04}>b</text>
+				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound + 0.3} x2={integralLowerBound} y2={yMaxBound} />
+				<text class="integeralBound" x={integralLowerBound} y={-yMinBound - 0.04}>{(integralLowerBound !== integralUpperBound) ? 'a' : ''}</text>
+				
+				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound + 0.3} x2={integralUpperBound} y2={yMaxBound} />
+				<text class="integeralBound" x={integralUpperBound - 0.15} y={-yMinBound - 0.04}>{(integralLowerBound !== integralUpperBound) ? 'b' : 'a, b'}</text>
 
 				{#each riemannRectangles as rectangle}
 					<rect
