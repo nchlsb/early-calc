@@ -158,7 +158,20 @@
 	// Real value of the integral when n -> infinity
 	$: integralValue = functions[selectedFunctionIndex].integral(integralUpperBound) 
 		- functions[selectedFunctionIndex].integral(integralLowerBound)	
-		
+	
+	// Location of the labels for the upper and lower bounds
+	let boundLabelPostion: number;
+	$: boundLabelPostion = (() => {	
+		if (integralUpperBound === xMaxBound && integralLowerBound === xMaxBound)
+			return integralUpperBound - 0.4
+		else if (integralUpperBound === xMinBound && integralLowerBound === xMinBound)
+			return integralUpperBound
+		else
+			return integralUpperBound - 0.15
+	})()
+	
+	
+
 	// Displayed approximation or definition of an integral, depending on whether n approaches infinity 
 	$: integralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesInfinity) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
 		{\\color{${(!nApprochesInfinity) ? `lightgray` : `crimson`}} 
@@ -270,9 +283,11 @@
 				<!-- bounds of integral -->
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound + 0.3} x2={integralLowerBound} y2={yMaxBound} />
 				<text class="integeralBound" x={integralLowerBound} y={-yMinBound - 0.04}>{(integralLowerBound !== integralUpperBound) ? 'a' : ''}</text>
-				
+	
 				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound + 0.3} x2={integralUpperBound} y2={yMaxBound} />
-				<text class="integeralBound" x={integralUpperBound - 0.15} y={-yMinBound - 0.04}>{(integralLowerBound !== integralUpperBound) ? 'b' : 'a, b'}</text>
+				<text class="integeralBound" x={boundLabelPostion} y={-yMinBound - 0.04}>
+					{(integralLowerBound !== integralUpperBound) ? 'b' : 'a, b'}
+				</text>
 
 				{#each riemannRectangles as rectangle}
 					<rect
