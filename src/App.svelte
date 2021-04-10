@@ -180,10 +180,11 @@
 
 	// ********************* controls *********************
 
-	type Context = "Derivative" | "Integral"
+	type Context = "Derivative" | "Integral" | "About"
 	let context: Context
-	// $: context = "Derivative"
-	$: context = "Integral"
+	$: context = "Derivative"
+	// $: context = "Integral"
+	// $: context = "About"
 
 	let selectedFunctionIndex = 0;
 
@@ -215,15 +216,15 @@
 	
 	// ********************* equation rendering *********************
 
-	onMount(() => {
+	// onMount(() => {
 
-		// functions at the top
-		for (let f of functions) {
-			katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'html'});
-		}
+	// 	// functions at the top
+	// 	for (let f of functions) {
+	// 		katex.render(f.representation, document.getElementById(`${f.id}`), {output: 'html'});
+	// 	}
 	
-		//renderEquation()
-	});
+	// 	//renderEquation()
+	// });
 
 	function renderEquation(): void {
 		// katex.render(`x = ${x}`, document.getElementById('xEquals'))
@@ -252,177 +253,203 @@
 	<p>
 		<button class={context === 'Derivative' ? 'highlighted' : ''}  on:click={_ => context = 'Derivative'}>Derivatives</button>
 		<button class={context === 'Integral' ? 'highlighted' : ''}  on:click={_ => context = 'Integral'}>Integral</button>
+		| <button class={context === 'About' ? 'highlighted' : ''}  on:click={_ => context = 'About'}>About</button>
+		
 	</p>
-
-	{#each functions as f, functionIndex}
-		<button class={functionIndex === selectedFunctionIndex ? 'highlighted' : ''} on:click={() => selectedFunctionIndex = functionIndex}><span id={f.id}>{f.representation}</span></button>
-	{/each}
-	
-	<!-- derivatives -->
-	<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
-		<g>
-			{#if context === 'Derivative'}
-				
-				<line stroke="crimson" stroke-dasharray="4,4" fill="none"
-					x1={secantLine.x1} y1={secantLine.y1}
-					x2={secantLine.x2} y2={secantLine.y2}
-				/>
-
-				<!-- <line stroke="grey" stroke-dasharray="4,4" fill="none"
-					x1={tangentLine.x1} y1={tangentLine.y1}
-					x2={tangentLine.x2} y2={tangentLine.y2}
-					visibility={(deltaX !== 0) ? "visible" : "hidden"}
-				/> -->
-
-				<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="crimson"></circle>
-				<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="crimson"></circle>
+	{#if context !== 'About'}
+		{#each functions as f, functionIndex}
+			<button class={functionIndex === selectedFunctionIndex ? 'highlighted' : ''} on:click={() => selectedFunctionIndex = functionIndex}>
+				<Katex math={f.representation}/>
+			</button>
+		{/each}
 		
-				<!-- why does the y value need to be negative?-->
-				<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
-			{:else}
-				<!-- bounds of integral -->
-				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound + 0.3} x2={integralLowerBound} y2={yMaxBound} />
-				<text class="integeralBound" x={integralLowerBound} y={-yMinBound - 0.04}>{(integralLowerBound !== integralUpperBound) ? 'a' : ''}</text>
-	
-				<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound + 0.3} x2={integralUpperBound} y2={yMaxBound} />
-				<text class="integeralBound" x={boundLabelPostion} y={-yMinBound - 0.04}>
-					{(integralLowerBound !== integralUpperBound) ? 'b' : 'a, b'}
-				</text>
-
-				{#each riemannRectangles as rectangle}
-					<rect
-						class={(rectangleWidth > 0.1) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
-						x={rectangle.lowerLeftCorner.x}
-						y={rectangle.lowerLeftCorner.y}
-						width={rectangle.width}
-						height={rectangle.height}
+		<!-- derivatives -->
+		<svg class="cartesian" viewBox="{xMinBound} {yMinBound} {(xMaxBound - xMinBound)} {(yMaxBound - yMinBound)}">
+			<g>
+				{#if context === 'Derivative'}
+					
+					<line stroke="crimson" stroke-dasharray="4,4" fill="none"
+						x1={secantLine.x1} y1={secantLine.y1}
+						x2={secantLine.x2} y2={secantLine.y2}
 					/>
-				{/each}
 
+					<!-- <line stroke="grey" stroke-dasharray="4,4" fill="none"
+						x1={tangentLine.x1} y1={tangentLine.y1}
+						x2={tangentLine.x2} y2={tangentLine.y2}
+						visibility={(deltaX !== 0) ? "visible" : "hidden"}
+					/> -->
 
+					<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="crimson"></circle>
+					<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="crimson"></circle>
 			
-			{/if}
-			<!-- x and y axis -->
-			<text class="AxisLabel" x={xMaxBound - 0.30} y={0.25}>+x</text>
-			<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
-			<line stroke="black" fill="none" x1="1"  y1={GRAPH_AXIS_MARK_LENGTH} x2="1"  y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<line stroke="black" fill="none" x1="2"  y1={GRAPH_AXIS_MARK_LENGTH} x2="2"  y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<line stroke="black" fill="none" x1="3"  y1={GRAPH_AXIS_MARK_LENGTH} x2="3"  y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<line stroke="black" fill="none" x1="4"  y1={GRAPH_AXIS_MARK_LENGTH} x2="4"  y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<line stroke="black" fill="none" x1="-1" y1={GRAPH_AXIS_MARK_LENGTH} x2="-1" y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<line stroke="black" fill="none" x1="-2" y1={GRAPH_AXIS_MARK_LENGTH} x2="-2" y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<line stroke="black" fill="none" x1="-3" y1={GRAPH_AXIS_MARK_LENGTH} x2="-3" y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<line stroke="black" fill="none" x1="-4" y1={GRAPH_AXIS_MARK_LENGTH} x2="-4" y2={-GRAPH_AXIS_MARK_LENGTH} />
-			<text class="AxisLabel" x={0.1} y={yMinBound + 0.2}>+y</text>
-			<line stroke="black" fill="none" x1="0" y1={yMinBound} x2="0" y2={yMaxBound} />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="1"  x2={GRAPH_AXIS_MARK_LENGTH} y2="1" />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="2"  x2={GRAPH_AXIS_MARK_LENGTH} y2="2" />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="3"  x2={GRAPH_AXIS_MARK_LENGTH} y2="3" />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="4"  x2={GRAPH_AXIS_MARK_LENGTH} y2="4" />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-1" x2={GRAPH_AXIS_MARK_LENGTH} y2="-1" />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-2" x2={GRAPH_AXIS_MARK_LENGTH} y2="-2" />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-3" x2={GRAPH_AXIS_MARK_LENGTH} y2="-3" />
-			<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-4" x2={GRAPH_AXIS_MARK_LENGTH} y2="-4" />
-			<!-- graph of function -->
-			<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
-		</g>
-	</svg>
+					<!-- why does the y value need to be negative?-->
+					<!-- <text x={x + deltaX + 0.5} y={-secant(x + deltaX)} font-size=".4">m={slope(secantPoint1, secantPoint2).toFixed(2)}</text> -->
+				{:else}
+					<!-- bounds of integral -->
+					<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralLowerBound} y1={yMinBound + 0.3} x2={integralLowerBound} y2={yMaxBound} />
+					<text class="integeralBound" x={integralLowerBound} y={-yMinBound - 0.04}>{(integralLowerBound !== integralUpperBound) ? 'a' : ''}</text>
+		
+					<line stroke="black" stroke-dasharray="2,2" fill="none" x1={integralUpperBound} y1={yMinBound + 0.3} x2={integralUpperBound} y2={yMaxBound} />
+					<text class="integeralBound" x={boundLabelPostion} y={-yMinBound - 0.04}>
+						{(integralLowerBound !== integralUpperBound) ? 'b' : 'a, b'}
+					</text>
 
-	<span class='equation'>
-		{#if context === 'Derivative'}
-			<Katex math={derivativeDef} displayMode/>
-		{:else}
-			<Katex math={integralDef} displayMode/>
-		{/if}
-	</span>
+					{#each riemannRectangles as rectangle}
+						<rect
+							class={(rectangleWidth > 0.1) ? "riemann-rectangle" : "riemann-rectangle-no-stroke"}
+							x={rectangle.lowerLeftCorner.x}
+							y={rectangle.lowerLeftCorner.y}
+							width={rectangle.width}
+							height={rectangle.height}
+						/>
+					{/each}
 
-	{#if context === 'Derivative'}
-		<label for="deltaX">
-			<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
-		</label>
 
-		<span id="deltaXInput" class="slider">
-			{#if derivativeLimitStrategy === 'FromRight'}
-				<RangeSlider 
-				step={0.01} 
-				bind:values={deltaXSliderFromRight}		
-				range={false}
-				min={0}
-				max={1}
-				pips
-				first={'label'} 
-				last={'label'}
-				rest={false}
-				springValues={{stiffness: 1, damping: 1 }}
-				/>
+				
+				{/if}
+				<!-- x and y axis -->
+				<text class="AxisLabel" x={xMaxBound - 0.30} y={0.25}>+x</text>
+				<line stroke="black" fill="none" x1={xMinBound} y1="0" x2={xMaxBound} y2="0" />
+				<line stroke="black" fill="none" x1="1"  y1={GRAPH_AXIS_MARK_LENGTH} x2="1"  y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<line stroke="black" fill="none" x1="2"  y1={GRAPH_AXIS_MARK_LENGTH} x2="2"  y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<line stroke="black" fill="none" x1="3"  y1={GRAPH_AXIS_MARK_LENGTH} x2="3"  y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<line stroke="black" fill="none" x1="4"  y1={GRAPH_AXIS_MARK_LENGTH} x2="4"  y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<line stroke="black" fill="none" x1="-1" y1={GRAPH_AXIS_MARK_LENGTH} x2="-1" y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<line stroke="black" fill="none" x1="-2" y1={GRAPH_AXIS_MARK_LENGTH} x2="-2" y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<line stroke="black" fill="none" x1="-3" y1={GRAPH_AXIS_MARK_LENGTH} x2="-3" y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<line stroke="black" fill="none" x1="-4" y1={GRAPH_AXIS_MARK_LENGTH} x2="-4" y2={-GRAPH_AXIS_MARK_LENGTH} />
+				<text class="AxisLabel" x={0.1} y={yMinBound + 0.2}>+y</text>
+				<line stroke="black" fill="none" x1="0" y1={yMinBound} x2="0" y2={yMaxBound} />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="1"  x2={GRAPH_AXIS_MARK_LENGTH} y2="1" />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="2"  x2={GRAPH_AXIS_MARK_LENGTH} y2="2" />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="3"  x2={GRAPH_AXIS_MARK_LENGTH} y2="3" />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="4"  x2={GRAPH_AXIS_MARK_LENGTH} y2="4" />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-1" x2={GRAPH_AXIS_MARK_LENGTH} y2="-1" />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-2" x2={GRAPH_AXIS_MARK_LENGTH} y2="-2" />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-3" x2={GRAPH_AXIS_MARK_LENGTH} y2="-3" />
+				<line stroke="black" fill="none" x1={-GRAPH_AXIS_MARK_LENGTH} y1="-4" x2={GRAPH_AXIS_MARK_LENGTH} y2="-4" />
+				<!-- graph of function -->
+				<polyline stroke="black" fill="none" points={points.map(point => `${point.x},${point.y}`).join(' ')} />
+			</g>
+		</svg>
+
+		<span class='equation'>
+			{#if context === 'Derivative'}
+				<Katex math={derivativeDef} displayMode/>
 			{:else}
-				<RangeSlider 
+				<Katex math={integralDef} displayMode/>
+			{/if}
+		</span>
+
+		{#if context === 'Derivative'}
+			<label for="deltaX">
+				<Katex math={`\\Delta x :`}></Katex> {deltaX.toFixed(2)}
+			</label>
+
+			<span id="deltaXInput" class="slider">
+				{#if derivativeLimitStrategy === 'FromRight'}
+					<RangeSlider 
+					step={0.01} 
+					bind:values={deltaXSliderFromRight}		
+					range={false}
+					min={0}
+					max={1}
+					pips
+					first={'label'} 
+					last={'label'}
+					rest={false}
+					springValues={{stiffness: 1, damping: 1 }}
+					/>
+				{:else}
+					<RangeSlider 
+					step={0.01} 
+					bind:values={deltaXSliderFromLeft}		
+					range={false}
+					min={-1}
+					max={0}
+					pips
+					first={'label'} 
+					last={'label'}
+					rest={false}
+					springValues={{stiffness: 1, damping: 1 }}
+					/>
+				{/if}
+				
+			</span>
+			
+			<label for="xSliderInput"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
+			<span id="xSliderInput" class="slider">
+				<RangeSlider  
+				min={xMinBound} 
+				max={xMaxBound}
 				step={0.01} 
-				bind:values={deltaXSliderFromLeft}		
+				bind:values={xSlider}		
 				range={false}
-				min={-1}
-				max={0}
 				pips
 				first={'label'} 
 				last={'label'}
 				rest={false}
 				springValues={{stiffness: 1, damping: 1 }}
 				/>
-			{/if}
+			</span>
+
+			<button class={derivativeLimitStrategy === 'FromLeft' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromLeft'}>From Left</button>
+			<button class={derivativeLimitStrategy === 'FromRight' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromRight'}>From Right</button>
+		{:else}
+			<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesInfinity) ? `∞` : numberRectangles}</label>
+			<span class="slider">
+				<RangeSlider 
+					min={1} 
+					max={MAX_INPUT_RECTANGLES + 1} 
+					pips 
+					all='label' 
+					bind:values={numberRectanglesInput}
+					pipstep={20}	
+					formatter={value => (value === MAX_INPUT_RECTANGLES + 1) ? '∞' : value}	
+					float 
+					hover
+					springValues={{stiffness: 1, damping: 1 }}
+				/>
+			</span>
+
+			<span class="slider">
+				<RangeSlider 
+					range 
+					min={xMinBound} 
+					max={xMaxBound} 
+					bind:values={integralBoundsInput}
+					step={0.01}
+					float 
+					hover
+					springValues={{stiffness: 1, damping: 1 }}
+				/>	
+			</span>
 			
-		</span>
-		
-		<label for="xSliderInput"><Katex math={`x :`}></Katex> {x.toFixed(2)}</label>
-		<span id="xSliderInput" class="slider">
-			<RangeSlider  
-			min={xMinBound} 
-			max={xMaxBound}
-			step={0.01} 
-			bind:values={xSlider}		
-			range={false}
-			pips
-			first={'label'} 
-			last={'label'}
-			rest={false}
-			springValues={{stiffness: 1, damping: 1 }}
-			/>
-		</span>
-
-		<button class={derivativeLimitStrategy === 'FromLeft' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromLeft'}>From Left</button>
-		<button class={derivativeLimitStrategy === 'FromRight' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromRight'}>From Right</button>
+			<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
+			<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
+			<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>	
+		{/if}
 	{:else}
-		<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesInfinity) ? `∞` : numberRectangles}</label>
-		<span class="slider">
-			<RangeSlider 
-				min={1} 
-				max={MAX_INPUT_RECTANGLES + 1} 
-				pips 
-				all='label' 
-				bind:values={numberRectanglesInput}
-				pipstep={20}	
-				formatter={value => (value === MAX_INPUT_RECTANGLES + 1) ? '∞' : value}	
-				float 
-				hover
-				springValues={{stiffness: 1, damping: 1 }}
-			/>
-		</span>
-
-		<span class="slider">
-			<RangeSlider 
-				range 
-				min={xMinBound} 
-				max={xMaxBound} 
-				bind:values={integralBoundsInput}
-				step={0.01}
-				float 
-				hover
-				springValues={{stiffness: 1, damping: 1 }}
-			/>	
-		</span>
-		
-		<button class={rectangleStrategy === 'Left' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Left'}>Left</button>
-		<button class={rectangleStrategy === 'Midpoint' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Midpoint'}>Midpoint</button>
-		<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>	
+			<h1>Calculus Might Not Be Easy</h1>
+				But this app helps visualize the transition from finite to infinite that is calculus
+				so you have something to understand instead of just rules to memorize.
+			<h1>Credits</h1>
+				<h2>Devlopers: 
+					<a href="https://github.com/schreiberbrett">Brett Schreiber</a> and
+					<a href="https://github.com/nchlsb">Nick Brady</a> 
+				</h2>
+				<h2>
+					Calculs Tutors Conulsted: Louis Esser, Richard Shaffer, and Steven Wood</h2>
+				<h2> 
+					Introduced the Devs to Eachother: Cal Doughan
+				</h2>
+				<h2>
+					Insperations:
+					<a href="https://www.desmos.com/calculator">Desmos</a> and
+					<a href="https://www.youtube.com/watch?v=WUvTyaaNkzM"> 3Blue1Brown</a> 
+				</h2>
+			<h1>Source Code</h1>
+				<a href="https://github.com/nchlsb/IntegralVisualizer">Link to GitHub</a> <p></p>
 	{/if}
 	<!-- <p id="differenceEquation1"></p>
 	<p id="differenceEquation2"></p>
