@@ -136,9 +136,9 @@
 		const x = integralLowerBound + (n * (integralUpperBound - integralLowerBound) / numberRectangles);
 
 		const y = f(x + visitStrategy(rectangleStrategy, {
-			whenLeft: 0,
-			whenMidpoint: (rectangleWidth / 2),
-			whenRight: rectangleWidth
+			Left: 0,
+			Midpoint: (rectangleWidth / 2),
+			Right: rectangleWidth
 		}))
 
 		// SVG can't process negative height 

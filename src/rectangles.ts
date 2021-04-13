@@ -8,26 +8,6 @@ export type Rectangle = {
     height: number
 }
 
-export function visitStrategy<T>(
-    rectangleStrategy: RectangleStrategy,
-    visitor: {whenLeft: T, whenMidpoint: T,	whenRight: T}
-): T {
-    switch (rectangleStrategy) {
-        case 'Left':
-            return visitor.whenLeft
-        case 'Midpoint':
-            return visitor.whenMidpoint
-        case 'Right':
-            return visitor.whenRight // visitor pattern
-    }
+export function visitStrategy<X extends string | number | symbol, Y>(x: X, whatToDo: Record<X, Y>): Y {
+    return whatToDo[x]
 }
-
-// export function visitMaybe<A, B>(maybe: Maybe<A>, visitor: {whenJust: (a: A) => B, whenNothing: B}): B {
-//     switch (maybe.kind) {
-//         case 'Just':
-//             return visitor.whenJust(maybe.value)
-
-//         case 'Nothing':
-//             return visitor.whenNothing
-//     }
-// }
