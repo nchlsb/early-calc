@@ -393,8 +393,8 @@
 				/>
 			</span>
 
-			<button class={derivativeLimitStrategy === 'FromLeft' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromLeft'}>From Left</button>
-			<button class={derivativeLimitStrategy === 'FromRight' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromRight'}>From Right</button>
+			<button class={derivativeLimitStrategy === 'FromLeft' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromLeft'}>Limit from left</button>
+			<button class={derivativeLimitStrategy === 'FromRight' ? 'highlighted' : ''}  on:click={_ => derivativeLimitStrategy = 'FromRight'}>Limit from right</button>
 		{:else}
 			<label id="NumberRectangles" for="RectangleWidthValue"><Katex math={`n :`}></Katex> {(nApprochesInfinity) ? `∞` : numberRectangles}</label>
 			<span class="slider">
@@ -430,26 +430,24 @@
 			<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>	
 		{/if}
 	{:else}
-			<h1>Calculus Might Not Be Easy</h1>
-				But this app helps visualize the transition from finite to infinite that is calculus
-				so you have something to understand instead of just rules to memorize.
-			<h1>Credits</h1>
-				<h2>Devlopers: 
+			<h1>Early Calculus Supplement App 1.0</h1>
+			<h2>Calculus Might Not Be Easy</h2>
+				<p>But this app helps visualize the transition from finite to infinite
+				so you have something to understand instead of just rules to memorize.</p>
+			<h2>Credits</h2>
+				<h3>Devlopers: 
 					<a href="https://github.com/schreiberbrett">Brett Schreiber</a> and
 					<a href="https://github.com/nchlsb">Nick Brady</a> 
-				</h2>
-				<h2>
-					Calculs Tutors Conulsted: Louis Esser, Richard Shaffer, and Steven Wood</h2>
-				<h2> 
-					Introduced the Devs to Eachother: Cal Doughan
-				</h2>
-				<h2>
+				</h3>
+				<h3>Calculs Tutors Conulsted: Louis Esser, Richard Shaffer, and Steven Wood</h3>
+				<h3> Introduced the Devs to Eachother: Cal Doughan</h3>
+				<h3>
 					Insperations:
 					<a href="https://www.desmos.com/calculator">Desmos</a> and
 					<a href="https://www.youtube.com/watch?v=WUvTyaaNkzM"> 3Blue1Brown</a> 
-				</h2>
-			<h1>Source Code</h1>
-				<a href="https://github.com/nchlsb/IntegralVisualizer">Link to GitHub</a> <p></p>
+				</h3>
+			<h2>Source Code</h2>
+				<a href="https://github.com/nchlsb/IntegralVisualizer">Link to GitHub</a>
 	{/if}
 	<!-- <p id="differenceEquation1"></p>
 	<p id="differenceEquation2"></p>
