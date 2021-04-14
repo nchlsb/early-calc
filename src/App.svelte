@@ -430,7 +430,7 @@
 			<button class={rectangleStrategy === 'Right' ? 'highlighted' : ''}  on:click={_ => rectangleStrategy = 'Right'}>Right</button>	
 		{/if}
 	{:else}
-			<h1>Early Calculus Supplement App 1.0</h1>
+			<h1>Early Calculus Supplement App</h1>
 			<h2>Calculus Might Not Be Easy</h2>
 				<p>But this app helps visualize the transition from finite to infinite
 				so you have something to understand instead of just rules to memorize.</p>
@@ -439,7 +439,9 @@
 					<a href="https://github.com/schreiberbrett">Brett Schreiber</a> and
 					<a href="https://github.com/nchlsb">Nick Brady</a> 
 				</h3>
-				<h3>Calculs Tutors Conulsted: Louis Esser, Richard Shaffer, and Steven Wood</h3>
+				<h3>Calculs Tutors Conulsted: 
+					<a href="https://www.math.ucla.edu/~esserl/?fbclid=IwAR0lUHqLf1uoD5DgY1yz1i_zEYqAunsRI8QsSmMvilNgDQOeewqyWLS3prQ">Louis Esser</a>, 
+					Richard Shaffer, and Steven Wood</h3>
 				<h3> Introduced the Devs to Eachother: Cal Doughan</h3>
 				<h3>
 					Insperations:
