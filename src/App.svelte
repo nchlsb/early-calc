@@ -465,7 +465,7 @@
 <style>
 	.outer {
 		width: 90%;
-		text-align: center;
+		margin: auto;
 	}
 
 	.riemann-rectangle {
@@ -491,11 +491,11 @@
 		}
 	}
 
-	input[type="range"], svg.cartesian {
+	/* input[type="range"], svg.cartesian {
 		width: min(65vh, 100%);
 		display: block;
 		margin: 0 auto;
-	}
+	} */
 
 	.container {
 		width: min(70vh, 100%);
@@ -544,13 +544,17 @@
 
 	@media screen and (min-width: 320px) {
 		.equation {
-			font-size: calc(15px + 6 * ((100vw - 320px) / 680));
+			font-size: calc(14px + 5 * ((100vw - 320px) / 680));
+			width: 90%;
+			margin: auto;
 		}
 	}
 	
 	@media screen and (min-width: 1000px) {
 		.equation {
 			font-size: 30px;
+			width: 90%;
+			margin: auto;
 		}
 	} 	
 
