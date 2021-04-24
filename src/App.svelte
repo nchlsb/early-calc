@@ -96,12 +96,26 @@
 	// 	\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
 	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
 
-	$: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
-		${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
-		{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}} \\lim_{\\Delta x \\rightarrow 0}} 
+	// $: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
+	// 	${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
+	// 	{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}} \\lim_{\\Delta x \\rightarrow 0}} 
+	// 	\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
+
+
+	$: derivativeDef = (deltaX !== 0) ? 
+		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
+		{\\color{crimson}\\:\\approx}
+		{\\color{lightgray} \\lim_{\\Delta x \\rightarrow 0}} 
 		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
-	
+		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}` 
+		: 
+		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
+		{\\color{crimson} \\boxed{ = 
+		{\\color{crimson} \\lim_{\\Delta x \\rightarrow 0}}}} 
+		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`
+
 
 	// ********************* integrals *********************
 	// Maximum user input of the slider before the user makes n -> infinity
