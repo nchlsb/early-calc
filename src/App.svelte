@@ -91,11 +91,6 @@
 		x2: xMaxBound, y2: tangent(xMaxBound)
 	}
 
-	// $: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} ${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `=`} 
-	// 	{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}}
-	// 	\\lim_{\\Delta x \\rightarrow 0}} \\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
-
 	// $: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
 	// 	${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
 	// 	{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}} \\lim_{\\Delta x \\rightarrow 0}} 
