@@ -98,18 +98,25 @@
 	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
 
 
+
+
+	// `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
+	// 	{\\color{crimson}\\:\\approx}
+	// 	{\\color{lightgray} \\lim_{\\Delta x \\rightarrow 0}} 
+	// 	\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}` 
+
 	$: derivativeDef = (deltaX !== 0) ? 
-		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
-		{\\color{crimson}\\:\\approx}
-		{\\color{lightgray} \\lim_{\\Delta x \\rightarrow 0}} 
+		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
+		{\\color{crimson} \\boxed{\\approx}} 
 		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}` 
+		= ${slopeTangent.toFixed(2).replace('-0.00', '0.00')}`
 		: 
 		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
 		{\\color{crimson} \\boxed{ = 
-		{\\color{crimson} \\lim_{\\Delta x \\rightarrow 0}}}} 
+		\\lim_{\\Delta x \\rightarrow 0}}} 
 		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`
+		= ${slopeTangent.toFixed(2).replace('-0.00', '0.00')}`
 
 
 	// ********************* integrals *********************
@@ -178,14 +185,16 @@
 		else
 			return integralUpperBound - 0.15
 	})()
-	
-	
-
+	 
 	// Displayed approximation or definition of an integral, depending on whether n approaches infinity 
-	$: integralDef = `\\int_{a}^{b} f(x)dx ${(!nApprochesInfinity) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
-		{\\color{${(!nApprochesInfinity) ? `lightgray` : `crimson`}} 
-		\\lim_{n \\rightarrow \\infty}} \\sum_{i=1}^n f(x_i)\\Delta x
-		= ${((!nApprochesInfinity) ? riemannSum : integralValue).toFixed(2).replace('-0.00', '0.00')}`	 
+	$: integralDef = (!nApprochesInfinity) ?
+		`\\int_{a}^{b} f(x)dx \\:
+		{\\color{crimson}\\boxed{\\approx}} \\sum_{i=1}^n f(x_i)\\Delta x
+		= ${riemannSum.toFixed(2).replace('-0.00', '0.00')}`
+		:	 
+		`\\int_{a}^{b} f(x)dx \\:  
+		{\\color{crimson}\\boxed{= \\lim_{n \\rightarrow \\infty}}} \\sum_{i=1}^n f(x_i)\\Delta x
+		= ${integralValue.toFixed(2).replace('-0.00', '0.00')}`
 
 	// ********************* controls *********************
 
