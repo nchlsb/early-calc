@@ -110,7 +110,7 @@
 		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
 		{\\color{crimson} \\boxed{\\approx}} 
 		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-		= ${slopeTangent.toFixed(2).replace('-0.00', '0.00')}`
+		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`
 		: 
 		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
 		{\\color{crimson} \\boxed{ = 
