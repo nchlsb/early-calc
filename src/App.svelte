@@ -430,6 +430,7 @@
 				/>
 			</span>
 
+			<label >Upper and lower bounds <Katex math={`(a,b)`}></Katex></label>
 			<span class="slider">
 				<RangeSlider 
 					range 
@@ -457,9 +458,10 @@
 					<a href="https://github.com/schreiberbrett">Brett Schreiber</a> and
 					<a href="https://github.com/nchlsb">Nick Brady</a> 
 				</h3>
-				<h3>Calculs Tutors Conulsted: 
+				<h3>Calculus Tutors Conulsted: 
 					<a href="https://www.math.ucla.edu/~esserl/?fbclid=IwAR0lUHqLf1uoD5DgY1yz1i_zEYqAunsRI8QsSmMvilNgDQOeewqyWLS3prQ">Louis Esser</a>, 
 					Richard Shaffer, and Steven Wood</h3>
+				<h3>UI/UX Consultant: Hannah Ross</h3>
 				<h3> Introduced the Devs to Eachother: Cal Doughan</h3>
 				<h3>
 					Insperations:
