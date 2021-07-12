@@ -91,33 +91,28 @@
 		x2: xMaxBound, y2: tangent(xMaxBound)
 	}
 
-	// $: derivativeDef = `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
-	// 	${(deltaX !== 0) ? `{\\color{crimson}\\:\\approx}` : `{\\color{crimson}\\:=}`} 
-	// 	{\\color{${(deltaX !== 0) ? `lightgray` : `crimson`}} \\lim_{\\Delta x \\rightarrow 0}} 
-	// 	\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`;
+	let userInputtingDeltX = false;
 
-
-
-
-	// `\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x)
-	// 	{\\color{crimson}\\:\\approx}
-	// 	{\\color{lightgray} \\lim_{\\Delta x \\rightarrow 0}} 
-	// 	\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}` 
-
-	$: derivativeDef = (deltaX !== 0) ? 
-		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
-		{\\color{crimson} \\boxed{\\approx}} 
+	$: derivativeDef =
+		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) 
+		{\\color{crimson}\\:${(deltaX !== 0) ? '\\approx' : '= \\lim_{\\Delta x \\rightarrow 0}'}\\:}
 		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
 		= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`
-		: 
-		`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
-		{\\color{crimson} \\boxed{ = 
-		\\lim_{\\Delta x \\rightarrow 0}}} 
-		\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
-		= ${slopeTangent.toFixed(2).replace('-0.00', '0.00')}`
 
+
+
+		
+	// $: derivativeDef = (deltaX !== 0) ? 
+	// 	`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
+	// 	{\\color{crimson} \\bold{\\approx}} 
+	// 	\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+	// 	= ${slopeSecant.toFixed(2).replace('-0.00', '0.00')}`
+	// 	: 
+	// 	`\\dfrac{\\mathrm{d}}{\\mathrm{d}x} f(x) \\:
+	// 	{\\color{crimson} \\boxed{ = 
+	// 	\\lim_{\\Delta x \\rightarrow 0}}} 
+	// 	\\frac{f(x + \\Delta x) - f(x)}{\\Delta x} 
+	// 	= ${slopeTangent.toFixed(2).replace('-0.00', '0.00')}`
 
 	// ********************* integrals *********************
 	// Maximum user input of the slider before the user makes n -> infinity
@@ -189,11 +184,11 @@
 	// Displayed approximation or definition of an integral, depending on whether n approaches infinity 
 	$: integralDef = (!nApprochesInfinity) ?
 		`\\int_{a}^{b} f(x)dx \\:
-		{\\color{crimson}\\boxed{\\approx}} \\sum_{i=1}^n f(x_i)\\Delta x
+		{\\color{crimson}\\bold{\\approx}} \\sum_{i=1}^n f(x_i)\\Delta x
 		= ${riemannSum.toFixed(2).replace('-0.00', '0.00')}`
 		:	 
 		`\\int_{a}^{b} f(x)dx \\:  
-		{\\color{crimson}\\boxed{= \\lim_{n \\rightarrow \\infty}}} \\sum_{i=1}^n f(x_i)\\Delta x
+		{\\color{crimson}\\bold{= \\lim_{n \\rightarrow \\infty}}} \\sum_{i=1}^n f(x_i)\\Delta x
 		= ${integralValue.toFixed(2).replace('-0.00', '0.00')}`
 
 	// ********************* controls *********************
@@ -297,7 +292,7 @@
 						visibility={(deltaX !== 0) ? "visible" : "hidden"}
 					/> -->
 
-					<circle use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="crimson"></circle>
+					<circle on:click={e => console.log(tooltip(e.currentTarget))} use:tooltip data-title={`(${x.toFixed(2)}, ${f(x).toFixed(2)})`} cx={x} cy={f(x)} r=".075" fill="crimson"></circle>
 					<circle use:tooltip data-title={`(${(x + deltaX).toFixed(2)}, ${f(x + deltaX).toFixed(2)})`} cx={x + deltaX} cy={f(x + deltaX)} r=".075" fill="crimson"></circle>
 			
 					<!-- why does the y value need to be negative?-->
