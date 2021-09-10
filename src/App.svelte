@@ -459,7 +459,7 @@
 				<h3>UI/UX Consultant: Hannah Ross</h3>
 				<h3> Introduced the Devs to Eachother: Cal Doughan</h3>
 				<h3>
-					Insperations:
+					Inspirations:
 					<a href="https://www.desmos.com/calculator">Desmos</a> and
 					<a href="https://www.youtube.com/watch?v=WUvTyaaNkzM"> 3Blue1Brown</a> 
 				</h3>

@@ -106,3 +106,17 @@ Then make a second function divideBoth that takes an a1, a2, and a b, and return
 
 
 
+function longestCommonPrefix(strs) {
+    for (let i = 0; i < strs.length; i++){
+        
+    const preFix = (str => str.substring(0, i + 1));
+        
+    if (!strs.map(s => preFix(s)).every(val => val === preFix))
+        return preFix(strs[0]);
+    }
+    
+    return '';
+};
+
+
+longestCommonPrefix(["flower","flow","flight"])
